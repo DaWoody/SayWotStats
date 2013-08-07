@@ -1,0 +1,76 @@
+/*
+*	CSS File
+*/
+html {
+	font-size:16px;
+}
+
+body {
+	font-size:0.625em;
+	background: rgba(129, 163, 208, 0.61);
+}
+
+.loading {
+	background: url('ajax-loader.gif') no-repeat center;
+}
+
+.disabled{
+	
+}
+
+#wrapper {
+	width:70%;
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#submit_btn {
+	margin-top:20px;
+	font-size:1.5em; /* 24/16 = 1.5em*/
+	display:block;
+	color:white;
+	width:280px;
+	height:80px;
+	min-height: 50px;
+	min-width: 100px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-o-border-radius:10px;
+	border-radius:10px;
+	box-shadow:inset 1px 1px 4px red;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3A4966), to(#4A4A4A), color-stop(.6,#333333));
+	background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
+	text-transform: uppercase;
+}
+
+#submit_btn:hover {
+	cursor:pointer;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555166), to(#666666), color-stop(.6,#0C1733));
+	background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
+}
+
+#search_player_form_section {
+	//border:1px solid red;
+}
+
+#search_player_form_section input[type=text]{
+	font-size:1.5em; /* 24/16 = 1.5em*/
+	display:block;
+	padding-left:20px;
+	width:260px;
+	height:70px;
+	min-height: 50px;
+	min-width: 100px;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-o-border-radius:10px;
+	border-radius:10px;
+	border:1px solid rgba(156,24,45, 0.5);
+}
+
+#player_search {
+	width:100%;
+	min-height:50px;
+}
+
+

@@ -1,0 +1,4 @@
+http://api.worldoftanks.eu/community/accounts/%PLAYER_ID%/api/%API_VER%/?source_token=%TOKEN%
+
+
+http://api.worldoftanks.eu/community/accounts/%DaWoody80%/api/%1.0%/?source_token=%WG-WoT_Assistant-1.3.2%
