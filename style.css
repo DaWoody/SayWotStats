@@ -7,7 +7,12 @@ html {
 
 body {
 	font-size:0.625em;
-	background: rgba(129, 163, 208, 0.61);
+	background: rgba(129, 163, 208, 0.61) url('funny_tank.png') no-repeat top left;;
+	text-shadow:1px 1px 2px #fff;
+}
+
+#header_section h1{
+	font-size:55px;
 }
 
 .loading {
@@ -19,12 +24,14 @@ body {
 }
 
 #wrapper {
+
 	width:70%;
 	margin-left:auto;
 	margin-right:auto;
 }
 
 #submit_btn {
+	border:none;
 	margin-top:20px;
 	font-size:1.5em; /* 24/16 = 1.5em*/
 	display:block;
@@ -37,7 +44,7 @@ body {
 	-webkit-border-radius:10px;
 	-o-border-radius:10px;
 	border-radius:10px;
-	box-shadow:inset 1px 1px 4px red;
+	box-shadow:inset -1px -1px 2px rgba(123,100,200,0.8);
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3A4966), to(#4A4A4A), color-stop(.6,#333333));
 	background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
 	text-transform: uppercase;
@@ -50,7 +57,8 @@ body {
 }
 
 #search_player_form_section {
-	//border:1px solid red;
+	margin-left:auto;
+	margin-right:auto;
 }
 
 #search_player_form_section input[type=text]{
@@ -65,10 +73,11 @@ body {
 	-webkit-border-radius:10px;
 	-o-border-radius:10px;
 	border-radius:10px;
-	border:1px solid rgba(156,24,45, 0.5);
+	border:1px solid rgba(50,50,150, 0.5);
 }
 
 #player_search {
+	margin-top:40px;
 	width:100%;
 	min-height:50px;
 }

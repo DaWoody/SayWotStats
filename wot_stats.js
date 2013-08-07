@@ -26,7 +26,7 @@ jQuery(document).ready(function(){
 	*	Calculate Total Time Played WOT
 	*/
 
-	$.fn.calculateTotalTimePlayed = function(battles) {
+	$.fn.calculateTotalTimePlayed = function(battles, playerName) {
 
 		/*
 		*	Based on an average battle time around 5 minutes..
@@ -50,7 +50,8 @@ jQuery(document).ready(function(){
 		//Do stuff here
 		//console.log('Has devoted days:' + timeInDaysRounded + ', hours:' + timeInHoursRounded + ', and ' + timeInMinutes + 'minutes of his life playing WOT ;)');
 		var timeContainer = $('<h1></h1>');
-		timeContainer.append('Has devoted ' + timeInDaysRounded + ' days.. '+ timeInHoursRounded + ' hours.. and ' + timeInMinutes + 'minutes of his life playing WOT ;)');
+		timeContainer.append('Based on an average of about 5 minutes per game...<br>')
+		timeContainer.append(playerName+ ' has devoted ' + timeInDaysRounded + ' days.. '+ timeInHoursRounded + ' hours.. and ' + timeInMinutes + ' minutes of his life playing WOT ;)');
 
 		//console.log(timeContainer);
 		player_time.html(timeContainer);
@@ -99,11 +100,13 @@ jQuery(document).ready(function(){
 				//Making the time display in UTC
 				timeCreatedUTC.setTime(timeCreatedUnix);
 
-				//
+				//The amount of battles played.
 				var amountOfBattlesPlayed = response.data.summary.battles_count;
+				//The name of the player
+				var tankerName = response.data.name;
 
 				//Call our Calculate Total Time Played function, this also writes to the DOM
-				player_search.calculateTotalTimePlayed(amountOfBattlesPlayed);	
+				player_search.calculateTotalTimePlayed(amountOfBattlesPlayed, tankerName);	
 
 				
 
