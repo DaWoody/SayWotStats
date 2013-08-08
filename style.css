@@ -1,6 +1,8 @@
 /*
 *	CSS File
 */
+@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+
 html {
 	font-size:16px;
 }
@@ -9,6 +11,7 @@ body {
 	font-size:0.625em;
 	background: rgba(129, 163, 208, 0.61) url('funny_tank.png') no-repeat top left;;
 	text-shadow:1px 1px 2px #fff;
+	font-family:'Open Sans', sans-serif;
 }
 
 #header_section h1{
@@ -77,9 +80,10 @@ body {
 }
 
 #player_search {
+	background:rgba(123,24,35, 0.3);
 	margin-top:40px;
 	width:100%;
-	min-height:50px;
+	//min-height:50px;
 }
 
 

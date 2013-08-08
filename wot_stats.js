@@ -16,47 +16,17 @@ jQuery(document).ready(function(){
 	var stats_button = $("#submit_btn");
 			
 	
+	/*
+	*	Some global variables coming from functions
+	*/
+
+	var test = 'hello';
+
+
+
 	//Building the API http request, internally
 	var httpFindPlayer = 'wot_find_player.php';
 	var httpShowPlayer = 'wot_show_player_stats.php';
-
-
-
-	/*
-	*	Calculate Total Time Played WOT
-	*/
-
-	$.fn.calculateTotalTimePlayed = function(battles, playerName) {
-
-		/*
-		*	Based on an average battle time around 5 minutes..
-		*/
-		var totalTimeInMinutes = battles*5;
-
-		//Getting the time in days..
-		var timeInDays = totalTimeInMinutes/(60*24);
-
-		//Rounding down the days..
-		var timeInDaysRounded = Math.floor(timeInDays);
-
-		//Getting the rest of the time in hours..
-		var timeInHours = (timeInDays-timeInDaysRounded)*24;
-
-		//Rounding down the hours...
-		var timeInHoursRounded = Math.floor(timeInHours);
-
-		var timeInMinutes = Math.round((timeInHours-timeInHoursRounded)*60);
-
-		//Do stuff here
-		//console.log('Has devoted days:' + timeInDaysRounded + ', hours:' + timeInHoursRounded + ', and ' + timeInMinutes + 'minutes of his life playing WOT ;)');
-		var timeContainer = $('<h1></h1>');
-		timeContainer.append('Based on an average of about 5 minutes per game...<br>')
-		timeContainer.append(playerName+ ' has devoted ' + timeInDaysRounded + ' days.. '+ timeInHoursRounded + ' hours.. and ' + timeInMinutes + ' minutes of his life playing WOT ;)');
-
-		//console.log(timeContainer);
-		player_time.html(timeContainer);
-
-	}
 
 
 
@@ -92,34 +62,41 @@ jQuery(document).ready(function(){
 				/*
 				*	Getting the account creation time
 				*/
-				var timeCreatedUnix = response.data.created_at;
-
-				//Creating the Date object
-				var timeCreatedUTC = new Date();
 				
-				//Making the time display in UTC
-				timeCreatedUTC.setTime(timeCreatedUnix);
 
-				//The amount of battles played.
-				var amountOfBattlesPlayed = response.data.summary.battles_count;
+				
+
+				
 				//The name of the player
 				var tankerName = response.data.name;
 
-				//Call our Calculate Total Time Played function, this also writes to the DOM
-				player_search.calculateTotalTimePlayed(amountOfBattlesPlayed, tankerName);	
+					
 
-				
+							
+
+				//Defining some variables
+				var timeCreatedUnix = response.data.created_at;
+				//The average winrate
+				var averageWinRate = response.data.ratings.battle_avg_performance.value;
+				//The amount of battles played.
+				var amountOfBattlesPlayed = response.data.summary.battles_count;				
 
 				//Get the tankers name and id
 				//var name = response.data.name;
 				//var id = response.data.items[0].id;
 
 				//var div_player = '<div><h1 class="player_search_result" data-id=' + id + '>' + name +'</h1></div>';
-				var stats_player = response.data.ratings.battle_avg_performance.value;
-				//Do cool stuff here when we get the player stats...
-				player_search.html('<h1>Right now.. the Average Battle Perfomance..:' + stats_player + '</h1>');
+				
+				/*
+				*	Call our different plugins here below
+				*/
 
-				console.log('Created at:' + timeCreatedUTC);
+				//Call our Calculate Total Time Played function, calles our plugin file, wot_stats_functions.js
+				player_time.calculateTotalTimePlayed(amountOfBattlesPlayed, tankerName);
+				player_search.averageWinRate(averageWinRate);
+
+				player_search.getAccountCreationTime(timeCreatedUnix);
+
 			},
 
 			error: function(response) {
