@@ -64,18 +64,20 @@ jQuery(document).ready(function(){
 			},
 
 			success: function(response) {
-
+				//console.log(response);
+				
 				//First we clear our DOM from previous searches
 				player_stats.html('');
 
-				/*
-				*	Call our different plugins here below
-				*/
-
-				//Call our Calculate Total Time Played function, calles our plugin file, wot_stats_functions.js
+				//Call our different plugins here below
 				player_stats.calculateTotalTimePlayed(response);
 				player_stats.averageWinRate(response);
+				player_stats.averageExperience(response);
+				player_stats.averageDamage(response);
+				player_stats.showHitPercentage(response);
+				player_stats.showLastUpdated(response);
 				player_stats.getAccountCreationTime(response);
+				
 
 			},
 
@@ -125,18 +127,25 @@ jQuery(document).ready(function(){
 
 				//contentType: 'application/json',
 				success: function(response) {
+
 					var status = response.status;
-					
-					//console.log(response);
+					/*
+					var statusCode = response.status_code;
+					var name = response.name;
+					var exist = response.data.filtered_count;
+					var id2 = response.data.items[0].id;
+					console.log('Ok this is the status:' + status + '..and the statusCOde:' + statusCode + 'amount of searches..' + exist + 'and id' + id2);
+					*/
+
 					//The error message we will print out if there is something wrong with the search
-					var htmlMsg = '<div><h1 class="player_stats_result">Ops the magic kitten did not find that Tanker, please try again ;)..</h1></div>';	
+					var htmlMsg = '<div><h1 class="player_stats_result">Ops the magic!! kitten did not find that Tanker, please try again ;)..</h1></div>';	
 
 					
 					if(status==="ok") {
 						//Since we know the status is ok, we check if the player exist.
 						var player_exist = response.data.filtered_count;
 						
-						if(player_exist===1){
+						if(player_exist>0){
 
 							//Get the id from the data, since now the player do exist.
 							var id = response.data.items[0].id;	
@@ -153,9 +162,7 @@ jQuery(document).ready(function(){
 						//Do stuff to DOM here when no player is found..
 						player_stats.html(htmlMsg);
 					}
-					
-					
-			
+	
 				},
 
 				error: function(response) {
