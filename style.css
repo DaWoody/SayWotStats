@@ -1,7 +1,12 @@
 /*
-*	CSS File
+*	Description:	CSS File for WOT-Stats
+*	Author:			Johan "DaWoody" Wedfelt
+*	
+*	Color Scheme:	
+*	TODO: Fix a bit fallback colors, gradients etc;
+*
 */
-@import url(http://fonts.googleapis.com/css?family=Open+Sans);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans&Quando);
 
 html {
 	font-size:16px;
@@ -9,13 +14,33 @@ html {
 
 body {
 	font-size:0.625em;
-	background: rgba(129, 163, 208, 0.61) url('funny_tank.png') no-repeat top left;;
-	text-shadow:1px 1px 2px #fff;
+	background: rgba(23, 68, 77 , 1) url('images/stripes-background.png');
+	//background: rgba(50, 100, 220 , 0.5) url('funny_tank.png') no-repeat top left;
+	text-shadow:1px 1px 2px rgb(85,47,40);
+	color: '#f9c2b7';
+	color: rgba(249,194,183,0.8);
 	font-family:'Open Sans', sans-serif;
 }
 
+a {
+	color: rgba(204,110,92,1);
+	text-shadow: 1px 1px 2px rgba(23, 68, 77 , 1);
+	-webkit-transition: color 0.4s;
+	-moz-transition: color 0.4s;
+	transition: color 0.4s;
+}
+
+a:hover {
+	color:rgb(249,184,93);
+}
+
+
+
 #header_section h1{
-	font-size:55px;
+	font-size:5.415666667em;    /* 65/12 =  5.415666667em */
+	font-family: 'Quando', serif;
+	text-align:center;
+	color:rgba(23, 68, 77 , 1);
 }
 
 .loading {
@@ -27,14 +52,20 @@ body {
 }
 
 #wrapper {
-
 	width:70%;
+	padding:0.83333em;
 	margin-left:auto;
 	margin-right:auto;
+	border:1px solid rgba(204,110,92,1);
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	-o-border-radius:10px;
+	border-radius:10px;
+	background:rgba(90,130,138,1) url('images/world-of-tanks-background.png') no-repeat top center;
 }
 
 #submit_btn {
-	border:none;
+	border:1px solid rgba(90,130,138,1);
 	margin-top:20px;
 	font-size:1.5em; /* 24/16 = 1.5em*/
 	display:block;
@@ -48,18 +79,31 @@ body {
 	-o-border-radius:10px;
 	border-radius:10px;
 	box-shadow:inset -1px -1px 2px rgba(123,100,200,0.8);
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#3A4966), to(#4A4A4A), color-stop(.6,#333333));
-	background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
+	-webkit-transition: background 0.4s;
+	-moz-transition: background 0.4s;
+	transition: background 0.4s;
+	/*
+	*	FIX EXTRA BACKGROUND RADIENT:::;
+	*/
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F83F9), to(#537694), color-stop(.6,#232675));
+	
 	text-transform: uppercase;
 }
 
 #submit_btn:hover {
 	cursor:pointer;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555166), to(#666666), color-stop(.6,#0C1733));
-	background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#537694), to(#7F83F9), color-stop(.6,#232675));
+	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555166), to(#666666), color-stop(.6,#0C1733));
+	//background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
 }
 
+
 #search_player_form_section {
+	margin-left:auto;
+	margin-right:auto;
+}
+
+#search_player_form_section input {
 	margin-left:auto;
 	margin-right:auto;
 }
@@ -76,14 +120,66 @@ body {
 	-webkit-border-radius:10px;
 	-o-border-radius:10px;
 	border-radius:10px;
-	border:1px solid rgba(50,50,150, 0.5);
+	border:1px solid rgba(204,110,92,1);
+	-webkit-transition: background 0.3s;
+	-moz-transition: background 0.3s;
+	transition: background 0.3s;
 }
 
-#player_search {
-	background:rgba(123,24,35, 0.3);
+#search_player_form_section input[type=text]:focus{
+	background: #fcffd9;
+}
+
+.highlighted {
+	border:1px solid red;
+}
+
+#player_stats {
 	margin-top:40px;
-	width:100%;
-	//min-height:50px;
+	//padding:10px;
+	-moz-border-radius:0.83333em;  /* 10/12 = 0.83333em */
+	-webkit-border-radius:0.833333em;
+	-o-border-radius:0.833333em;
+	border-radius:0.833333em;
+}
+
+#about {
+	
+}
+
+#about_link {
+	text-align:center;
+}
+
+#about_link span {
+	color: rgba(204,110,92,1);
+	text-shadow: 1px 1px 2px rgba(23, 68, 77 , 1);
+	-webkit-transition: color 0.4s;
+	-moz-transition: color 0.4s;
+	transition: color 0.4s;
+}
+
+#about_link span:hover {
+	cursor:pointer;
+	text-decoration:underline;
+	color:rgb(249,184,93);
 }
 
 
+/*
+*	Add some media-queries for responsive design
+*/
+
+@media (max-width:510px){
+	#header_section h1 {
+		/* Do stuff here if you like... */
+	}
+
+}
+
+@media (max-width:450px){
+	#wrapper{
+		width:100%;
+	}
+
+}

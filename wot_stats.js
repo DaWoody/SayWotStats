@@ -1,5 +1,12 @@
+/*
+*	Description: 	The jQuery engine for the site WOT-Stats
+*	Author: 		Johan "DaWoody" Wedfelt 
+*	AuthorURL:  	https://DaWoody@github.org
+*
+*
+*
+*/
 jQuery(document).ready(function(){
-
 	
 	/*
 	http://api.worldoftanks.eu/community/accounts/api/1.1/?source_token=WG-WoT_Assistant-1.3.2&search=DaWoody80&offset=0&limit=1
@@ -11,8 +18,7 @@ jQuery(document).ready(function(){
 	*/
 	var source_token 	= 	'WG-WoT_Assistant-1.4.1';
 	//The DOM elements to manipulate
-	var player_search = $("#player_search");
-	var player_time = $("#player_time");
+	var player_stats = $("#player_stats");
 	var stats_button = $("#submit_btn");
 			
 	
@@ -59,48 +65,22 @@ jQuery(document).ready(function(){
 
 			success: function(response) {
 
-				/*
-				*	Getting the account creation time
-				*/
-				
+				//First we clear our DOM from previous searches
+				player_stats.html('');
 
-				
-
-				
-				//The name of the player
-				var tankerName = response.data.name;
-
-					
-
-							
-
-				//Defining some variables
-				var timeCreatedUnix = response.data.created_at;
-				//The average winrate
-				var averageWinRate = response.data.ratings.battle_avg_performance.value;
-				//The amount of battles played.
-				var amountOfBattlesPlayed = response.data.summary.battles_count;				
-
-				//Get the tankers name and id
-				//var name = response.data.name;
-				//var id = response.data.items[0].id;
-
-				//var div_player = '<div><h1 class="player_search_result" data-id=' + id + '>' + name +'</h1></div>';
-				
 				/*
 				*	Call our different plugins here below
 				*/
 
 				//Call our Calculate Total Time Played function, calles our plugin file, wot_stats_functions.js
-				player_time.calculateTotalTimePlayed(amountOfBattlesPlayed, tankerName);
-				player_search.averageWinRate(averageWinRate);
-
-				player_search.getAccountCreationTime(timeCreatedUnix);
+				player_stats.calculateTotalTimePlayed(response);
+				player_stats.averageWinRate(response);
+				player_stats.getAccountCreationTime(response);
 
 			},
 
 			error: function(response) {
-				player_search.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
+				player_stats.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
 			}, 
 
 			timeout: 3000
@@ -131,14 +111,14 @@ jQuery(document).ready(function(){
 					url: apiFetchNameUrl
 				},
 				beforeSend: function() {
-					player_search.addClass('loading');
+					player_stats.addClass('loading');
 					stats_button.addClass('disabled');
 					stats_button.disabled = true;
 
 				},
 
 				complete: function() {
-					player_search.removeClass('loading');
+					player_stats.removeClass('loading');
 					stats_button.removeClass('disabled');
 					stats_button.disabled = false;
 				},
@@ -147,33 +127,39 @@ jQuery(document).ready(function(){
 				success: function(response) {
 					var status = response.status;
 					
-					if(status=="ok") {
-						//Do stuff here if ok. Plan is to now fetch the data from the other API, calling the next function.
+					//console.log(response);
+					//The error message we will print out if there is something wrong with the search
+					var htmlMsg = '<div><h1 class="player_stats_result">Ops the magic kitten did not find that Tanker, please try again ;)..</h1></div>';	
 
-
-							
-						//Get the tankers name and id
-						//var name = response.data.items[0].name;
-						var id = response.data.items[0].id;
-
-						//var div_player = '<div><h1 class="player_search_result" data-id=' + id + '>' + name +'</h1></div>';
+					
+					if(status==="ok") {
+						//Since we know the status is ok, we check if the player exist.
+						var player_exist = response.data.filtered_count;
 						
-						/*
-						*	Now we are gonna fetch the second set of data from the API
-						*/	
-						FetchPlayerStatistics(id);
+						if(player_exist===1){
+
+							//Get the id from the data, since now the player do exist.
+							var id = response.data.items[0].id;	
+							//And call our second Ajax call
+							FetchPlayerStatistics(id);
+						}
+						else {
+									//Do stuff to DOM here when no player is found..
+						player_stats.html(htmlMsg);
+						}
 
 					}
 					else{
 						//Do stuff to DOM here when no player is found..
-						player_search.html('<div><h1 class="player_search_result">Ops the magic kitten did not find that Tanker, please try again ;)..</h1></div>');
+						player_stats.html(htmlMsg);
 					}
+					
 					
 			
 				},
 
 				error: function(response) {
-					player_search.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
+					player_stats.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
 				},
 
 				timeout: 3000

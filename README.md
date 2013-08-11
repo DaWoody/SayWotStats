@@ -9,3 +9,9 @@ Lots of stuff ;).
 * Fix a good idea on how to use this app.
 * Better design
 * Prolly more stuff ;)...
+
+
+Recently Done:
+==========================================================
+* A bit better design
+* Refactored some of the functions into plugins
