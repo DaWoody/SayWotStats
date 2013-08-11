@@ -135,20 +135,21 @@ a:hover {
 }
 
 #player_stats {
-	margin-top:40px;
-	//padding:10px;
+	margin-top:3.33333em; /* 40/12 = 3.33333em */
 	-moz-border-radius:0.83333em;  /* 10/12 = 0.83333em */
 	-webkit-border-radius:0.833333em;
 	-o-border-radius:0.833333em;
 	border-radius:0.833333em;
+	min-height: 2.5em; /* 30/12 = 2.5 em*/
 }
 
 #about {
-	
+	margin-top:0.83333em;
 }
 
 #about_link {
-	text-align:center;
+	text-align:right;
+	margin-bottom:-0.4166667em; /* 5/12 = */ 
 }
 
 #about_link span {
