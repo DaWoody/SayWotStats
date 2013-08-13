@@ -19,15 +19,12 @@ jQuery(document).ready(function(){
 	var source_token 	= 	'WG-WoT_Assistant-1.4.1';
 	//The DOM elements to manipulate
 	var player_stats = $("#player_stats");
-	var stats_button = $("#submit_btn");
 			
 	
 	/*
-	*	Some global variables coming from functions
+	*	Some global variables, needed to compare data between the different AJAX calls
 	*/
-
-	var test = 'hello';
-
+	//var responseObject1, responseObject2 = false;
 
 
 	//Building the API http request, internally
@@ -36,59 +33,7 @@ jQuery(document).ready(function(){
 
 
 
-	/*
-	*	Fetch Player Statistics Function
-	*/
-	function FetchPlayerStatistics(id) {
-
-		var tankerId = id;
-		//API for fetching the player stats
-		var api_ver = '1.9'; /* 1.0 -> 1.1 */
-		
-		var apiFetchStatsUrl = 'http://api.worldoftanks.eu/community/accounts/' + tankerId + '/api/' + api_ver + '/?source_token=' + source_token;
-
-		$.ajax(httpShowPlayer, {
-			dataType: 'json',
-			method: 'post',
-			data: {
-				tanker_id: tankerId,
-				url: apiFetchStatsUrl
-			},
-
-			beforeSend: function() {
-				
-			},
-
-			complete: function() {
-				
-			},
-
-			success: function(response) {
-				//console.log(response);
-				
-				//First we clear our DOM from previous searches
-				player_stats.html('');
-
-				//Call our different plugins here below
-				player_stats.calculateTotalTimePlayed(response);
-				player_stats.averageWinRate(response);
-				player_stats.averageExperience(response);
-				player_stats.averageDamage(response);
-				player_stats.showHitPercentage(response);
-				player_stats.showLastUpdated(response);
-				player_stats.getAccountCreationTime(response);
-				
-
-			},
-
-			error: function(response) {
-				player_stats.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
-			}, 
-
-			timeout: 3000
-
-		});
-	}
+	
 
 
 	/*
@@ -114,28 +59,16 @@ jQuery(document).ready(function(){
 				},
 				beforeSend: function() {
 					player_stats.addClass('loading');
-					stats_button.addClass('disabled');
-					stats_button.disabled = true;
-
 				},
 
 				complete: function() {
 					player_stats.removeClass('loading');
-					stats_button.removeClass('disabled');
-					stats_button.disabled = false;
 				},
 
 				//contentType: 'application/json',
 				success: function(response) {
 
 					var status = response.status;
-					/*
-					var statusCode = response.status_code;
-					var name = response.name;
-					var exist = response.data.filtered_count;
-					var id2 = response.data.items[0].id;
-					console.log('Ok this is the status:' + status + '..and the statusCOde:' + statusCode + 'amount of searches..' + exist + 'and id' + id2);
-					*/
 
 					//The error message we will print out if there is something wrong with the search
 					var htmlMsg = '<div><h1 class="player_stats_result">Ops the magic!! kitten did not find that Tanker, please try again ;)..</h1></div>';	
@@ -146,15 +79,22 @@ jQuery(document).ready(function(){
 						var player_exist = response.data.filtered_count;
 						
 						if(player_exist>0){
-
 							//Get the id from the data, since now the player do exist.
 							var id = response.data.items[0].id;	
-							//And call our second Ajax call
-							FetchPlayerStatistics(id);
+
+							//Declaring our promises.
+							var playerTotalStatsPromise = AjaxPlayerTotalStats.fetchPlayerTotalStats(id);
+							var playerPastStatsPromise = AjaxPlayerPastStats.getPastStats(id); 
+
+							$.when(playerTotalStatsPromise,playerPastStatsPromise).done(function(response1, response2){
+								//Now lets send the collected AJAX responses to our engine to calculate stats.
+								CalculateStatsEngine(response1, response2);
+							});
+			
 						}
 						else {
-									//Do stuff to DOM here when no player is found..
-						player_stats.html(htmlMsg);
+							//Do stuff to DOM here when no player is found..
+							player_stats.html(htmlMsg);
 						}
 
 					}
@@ -166,6 +106,7 @@ jQuery(document).ready(function(){
 				},
 
 				error: function(response) {
+					//Show us an error when we get a failed AJAX call
 					player_stats.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
 				},
 
@@ -174,6 +115,127 @@ jQuery(document).ready(function(){
 			});
 	}
 
+
+	//Declaring first promise outer function
+	var AjaxPlayerTotalStats = {
+		
+		fetchPlayerTotalStats: function(id) {
+			//Declaring the promise
+			var promise = $.Deferred();
+
+			var tankerId = id;
+			//API for fetching the player stats
+			var api_ver = '1.9'; /* 1.0 -> 1.1 */
+			
+			var apiFetchStatsUrl = 'http://api.worldoftanks.eu/community/accounts/' + tankerId + '/api/' + api_ver + '/?source_token=' + source_token;
+
+			
+			$.ajax(httpShowPlayer, {
+				dataType: 'json',
+				method: 'post',
+				data: {
+					tanker_id: tankerId,
+					url: apiFetchStatsUrl
+				},
+
+				beforeSend: function() {
+					
+				},
+
+				complete: function() {
+					
+				},
+
+				success: function(response) {
+					promise.resolve(response);
+				},
+
+				error: function(response) {
+					player_stats.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
+				}, 
+
+				timeout: 3000
+
+			});
+
+			//Returning the promise
+			return promise;
+		}
+
+	}
+	
+
+
+
+	//Declaring a promise
+	var AjaxPlayerPastStats = {
+		getPastStats: function(id) {
+
+			var promise = $.Deferred();
+
+			var tankerId = id;
+
+			var	apiFetchStatsUrl = 'http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=eu&account_id=' + tankerId + '&hours_ago=24';
+
+			$.ajax(httpShowPlayer, {
+				data: {
+					tanker_id: tankerId,
+					url: apiFetchStatsUrl
+				},
+				dataType: 'json',
+				method: 'post',
+				success: function(response){
+
+					promise.resolve(response);
+					console.log('Ok we executed the GetPastStats function..');
+					//Do stuff here
+
+					//var test = responseObject1;
+					//console.log('Ok teh status for object 1, called from function2' + test);
+					//player_stats.showAverageDamagePast24(response);
+
+				},
+
+				error: function(response){
+					//Do error handling here..
+					console.log('Getting stats from the past went wrong!');
+				}
+			});
+
+			return promise;
+		}
+
+	}
+
+	
+	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
+	function CalculateStatsEngine(response1, response2) {
+
+		//var test1 = response1.status;
+		//var test2 = response2.status;
+		//DO stuff here
+		//console.log('Ok response 1 status is: ' + test1 + 'and response2  status_code is: ' + test2);
+	
+		//First we clear our DOM from previous searches
+		player_stats.html('');
+
+		//Call our different plugins here below
+
+		//Total Stats Plugins
+		player_stats.playerName(response1);
+		player_stats.calculateTotalTimePlayed(response1);
+		player_stats.averageWinRate(response1);
+		player_stats.averageExperience(response1);
+		player_stats.averageDamage(response1);
+		player_stats.totalDamage(response1);
+		player_stats.showHitPercentage(response1);
+
+		//General Plugins
+		player_stats.showLastUpdated(response1);
+		player_stats.getAccountCreationTime(response1);
+		player_stats.showClan(response1);
+				
+	}
 	
 	/*
 	*	Search Player Listener

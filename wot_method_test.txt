@@ -2,3 +2,12 @@ http://api.worldoftanks.eu/community/accounts/%PLAYER_ID%/api/%API_VER%/?source_
 
 
 http://api.worldoftanks.eu/community/accounts/%DaWoody80%/api/%1.0%/?source_token=%WG-WoT_Assistant-1.3.2%
+
+
+DaWoody80 id : 501113716 
+
+Get stats in Past
+
+http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=ru&account_id=%PLAYER_ID%&hours_ago=24&hours_ago=168&hours_ago=336
+
+http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=eu&account_id=501113716&hours_ago=24&hours_ago=168&hours_ago=336

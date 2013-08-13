@@ -15,7 +15,6 @@ html {
 body {
 	font-size:0.625em;
 	background: rgba(23, 68, 77 , 1) url('images/stripes-background.png');
-	//background: rgba(50, 100, 220 , 0.5) url('funny_tank.png') no-repeat top left;
 	text-shadow:1px 1px 2px rgb(85,47,40);
 	color: '#f9c2b7';
 	color: rgba(249,194,183,0.8);
@@ -57,19 +56,19 @@ a:hover {
 	margin-left:auto;
 	margin-right:auto;
 	border:1px solid rgba(204,110,92,1);
-	-moz-border-radius:10px;
-	-webkit-border-radius:10px;
-	-o-border-radius:10px;
-	border-radius:10px;
+	-moz-border-radius:0.833333em;
+	-webkit-border-radius:0.833333em;
+	-o-border-radius:0.833333em;
+	border-radius:0.833333em;
 	background:rgba(90,130,138,1) url('images/world-of-tanks-background.png') no-repeat top center;
 }
 
 #submit_btn {
-	border:1px solid rgba(90,130,138,1);
-	margin-top:20px;
-	font-size:1.5em; /* 24/16 = 1.5em*/
+	border:1px solid rgba(204,110,92,1);
+	margin-top:20px; /* 20/12 */
+	font-size:1.6em; 
 	display:block;
-	color:white;
+	color:rgb(249,184,93);
 	width:280px;
 	height:80px;
 	min-height: 50px;
@@ -78,21 +77,23 @@ a:hover {
 	-webkit-border-radius:10px;
 	-o-border-radius:10px;
 	border-radius:10px;
-	box-shadow:inset -1px -1px 2px rgba(123,100,200,0.8);
-	-webkit-transition: background 0.4s;
-	-moz-transition: background 0.4s;
-	transition: background 0.4s;
+	box-shadow:inset 0 0 6px rgba(204,110,92,1);
+	-webkit-transition: all 0.4s;
+	-moz-transition: all 0.4s;
+	transition: all 0.4s;
 	/*
 	*	FIX EXTRA BACKGROUND RADIENT:::;
 	*/
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F83F9), to(#537694), color-stop(.6,#232675));
-	
+	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F83F9), to(#537694), color-stop(.6,#232675));
+	background: rgba(23, 68, 77 , 1) url('images/stripes-background.png');
 	text-transform: uppercase;
 }
 
 #submit_btn:hover {
 	cursor:pointer;
-	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#537694), to(#7F83F9), color-stop(.6,#232675));
+	background: rgba(204,110,92,0.3) url('images/stripes-background.png');
+	color:white;
+	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#537694), to(#7F83F9), color-stop(.6,#232675));
 	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555166), to(#666666), color-stop(.6,#0C1733));
 	//background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
 }

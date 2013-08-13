@@ -5,6 +5,17 @@
 jQuery(document).ready(function(){
 	
 	/*
+	*	Show Tanker Name
+	*/
+
+	$.fn.playerName = function(response){
+		var container = $(this);
+		var playerName = response.data.name;
+		container.append('<h1>Tanker: ' + playerName + '</h1>');
+	} 
+
+
+	/*
 	*	Calculate Total Time Played WOT
 	*/
 	$.fn.calculateTotalTimePlayed = function(response) {
@@ -191,6 +202,52 @@ jQuery(document).ready(function(){
 		//Defining some variables
 		var hitPercentage = response.data.battles.hits_percents;
 		container.append('<h1>Hit percentage: ' + hitPercentage + '&#37;</h1>');
+	}
+
+	/*
+	*	Show Clan Name and Image
+	*/
+
+	$.fn.showClan = function(response){
+		
+		var container = $(this);
+		var clan = response.data.clan.clan;
+		
+		if(clan!==null){
+			var clanName = response.data.clan.clan.abbreviation
+			var clanImageUrl = response.data.clan.clan.emblems_urls.small;
+			var clanId = response.data.clan.clan.id;
+			var clanUrl = 'http://worldoftanks.eu/uc/clans/' + clanId + '-' + clanName + '/';
+			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img src="' + clanImageUrl + '" /></a>');
+			console.log('Yeasdf' + clanName);	
+		}
+		
+			
+	}
+
+	/*
+	*	Show total damage
+	*/
+
+	$.fn.totalDamage = function(response) {
+		var container = $(this);
+
+		var totalDamage = response.data.battles.damage_dealt;
+		container.append('<h1>Total damage: ' + totalDamage + '</h1>');
+
+	}
+
+	/*
+	*	Show average damage past 24 hours
+	*/
+
+	$.fn.showAverageDamagePast24 = function(response) {
+
+		//var test = responseObject1.data.battles.damage_dealt;
+
+		var damage24HoursAgo = response.stats[0].hours_ago;
+		console.log('Fetched from the third AJAX request, amount of hours ago: ' + damage24HoursAgo);
+		//console.log('Total DAAAMage' + test);
 	}
 
 });
