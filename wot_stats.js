@@ -240,8 +240,12 @@ jQuery(document).ready(function(){
 
 		//Recent Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
-		player_stats_recent.averageDamagePast24(response1, response2);
 		player_stats_recent.battlesPlayedPast24(response1, response2);
+		player_stats_recent.averageWinRatePast24(response1,response2);
+		player_stats_recent.averageExperiencePast24(response1, response2);
+		player_stats_recent.averageDamagePast24(response1, response2);
+		
+		
 		
 
 

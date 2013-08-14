@@ -161,7 +161,7 @@ a:hover {
 
 .recent_total_stats_headline_div span {
 	font-size: 0.7em;
-	margin-top:-10px;
+	margin-top:-0.8333em;
 }
 
 #total_stats {
@@ -176,7 +176,11 @@ a:hover {
 	float:right;
 	min-width:200px;
 	margin-left:20px;
-	//border:1px solid yellow;
+}
+
+.clan_image {
+	margin-bottom:-7px;
+	margin-left:5px;
 }
 
 .on_first_load_css_fix {

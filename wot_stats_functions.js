@@ -249,7 +249,7 @@ jQuery(document).ready(function(){
 			var clanImageUrl = response.data.clan.clan.emblems_urls.small;
 			var clanId = response.data.clan.clan.id;
 			var clanUrl = 'http://worldoftanks.eu/uc/clans/' + clanId + '-' + clanName + '/';
-			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img src="' + clanImageUrl + '" /></a>');	
+			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img class ="clan_image" src="' + clanImageUrl + '" /></a>');	
 		}
 		
 			
@@ -291,6 +291,10 @@ jQuery(document).ready(function(){
 		container.append('<h1>Average damage: ' +  averageDamageLast24Hours + '</h1>');
 	}
 
+	/*
+	*	Show amount of battles played the past 24 hours
+	*/
+
 	$.fn.battlesPlayedPast24 = function(response1, response2) {
 		var container = $(this);
 
@@ -303,5 +307,67 @@ jQuery(document).ready(function(){
 
 		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1>');
 	} 
+
+
+	/*
+	*	Show the average experience gained per game the past 24 hours
+	*/
+
+	$.fn.averageExperiencePast24 = function(response1, response2) {
+		//Define what we get in
+		var container = $(this);
+		//First we will get the amount of battles for the past 24 hours
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//Total amount of battles 24 hours ago
+		var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
+		//The amount of battles the last 24 hours
+		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+
+		//Now we will get the total xp gain and subtract how it looked 24 hours ago
+		//Get the total XP so far
+		var totalXpGained = response1.data.experience.xp;
+		//Get the total XP from 24 hours back
+		var totalXpGainedLast24 = response2.stats[0].stats.experience.xp;
+		//Subtract the difference to get the xp gained the past 24 hours
+		var xpGainedPast24 = totalXpGained - totalXpGainedLast24;
+		//Now we calculate the average xp gained per fight the last 24 hours
+		var averageXpGainedPast24 = Math.round(xpGainedPast24/battlesLast24Hours);
+		//Print it to the DOM
+		container.append('<h1>Average experience: ' + averageXpGainedPast24 + '</h1>');
+	}
+
+	$.fn.averageWinRatePast24 = function(response1, response2) {
+		//Define what we get in
+		var container = $(this);
+
+		//What to do.
+		//Get amount of battles and amount of wins, divide to get percentage
+
+		//First we will get the amount of battles for the past 24 hours
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//Total amount of battles 24 hours ago
+		var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
+		//The amount of battles the last 24 hours
+		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+
+		//Get amount of wins for the past 24 hours
+		//Get total wins, current
+		var totalWins = response1.data.summary.wins;
+		//Get total wins, 24 hours ago
+		var totalWinsLast24 = response2.stats[0].stats.summary.wins;
+		//Subtract to get amount of wins for the past 24 hours
+		var winsPast24 = totalWins - totalWinsLast24;
+		//Divide to get the win percentage from the past 24 hours
+		var winRatioPast24 = Math.round((winsPast24/battlesLast24Hours)*100);
+
+		//Print to DOM
+		container.append('<h1>Average winrate: ' + winRatioPast24 + '&#37;</h1>');
+
+
+
+
+	}
 
 });
