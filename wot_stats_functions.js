@@ -14,6 +14,25 @@ jQuery(document).ready(function(){
 		container.append('<h1>Tanker: ' + playerName + '</h1>');
 	} 
 
+	/*
+	*	Prints the headline to the total stats block
+	*/
+
+	$.fn.printTotalStatsHeader = function() {
+		var container = $(this);
+		var headline = '<div class="recent_total_stats_headline_div"><h1>Total</h1></div>';
+		container.prepend(headline);
+	}
+
+	/*
+	*	Prints the headline to the recent stats block
+	*/
+
+	$.fn.printRecentStatsHeader = function() {
+		var container = $(this);
+		var headline = '<div class="recent_total_stats_headline_div"><h1>Recent<br><span>(24 hours from last update)</span></h1></div>';
+		container.prepend(headline);
+	}
 
 	/*
 	*	Calculate Total Time Played WOT
@@ -140,14 +159,14 @@ jQuery(document).ready(function(){
 
 
 		//Write it back to the DOM
-		container.append('<h1>Average damage done: ' + averageDamage + '</h1>');
+		container.append('<h1>Average damage: ' + averageDamage + '</h1>');
 	}
 
 	/*
 	*	Show when the stats was last updated
 	*/
 
-	$.fn.showLastUpdated = function(response){
+	$.fn.lastUpdated = function(response){
 		//We define what we get in
 		var container = $(this);
 
@@ -188,7 +207,19 @@ jQuery(document).ready(function(){
 		// will display time in 10:30:23 format
 		var formattedTime = year + ' - ' + theMonth + ' - ' + theDate + ' - ' + hours + ':' + minutes + ':' + seconds;
 
-		container.append('<h1>Stats updated: ' + formattedTime + '</h1>');
+		container.append('<h1>Updated: ' + formattedTime + '</h1>');
+	}
+
+	/*
+	*	Show total battles played
+	*/
+
+	$.fn.totalBattlesPlayed = function(response) {
+		//We define what we get in
+		var container = $(this);
+		//Defining some variables
+		var totalBattlesPlayed = response.data.summary.battles_count;
+		container.append('<h1>Battles played: ' + totalBattlesPlayed + '</h1>');
 	}
 	
 
@@ -196,7 +227,7 @@ jQuery(document).ready(function(){
 	*	Show hit percentage
 	*/	
 
-	$.fn.showHitPercentage = function(response) {
+	$.fn.hitPercentage = function(response) {
 		//We define what we get in
 		var container = $(this);
 		//Defining some variables
@@ -208,7 +239,7 @@ jQuery(document).ready(function(){
 	*	Show Clan Name and Image
 	*/
 
-	$.fn.showClan = function(response){
+	$.fn.clan = function(response){
 		
 		var container = $(this);
 		var clan = response.data.clan.clan;
@@ -218,15 +249,14 @@ jQuery(document).ready(function(){
 			var clanImageUrl = response.data.clan.clan.emblems_urls.small;
 			var clanId = response.data.clan.clan.id;
 			var clanUrl = 'http://worldoftanks.eu/uc/clans/' + clanId + '-' + clanName + '/';
-			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img src="' + clanImageUrl + '" /></a>');
-			console.log('Yeasdf' + clanName);	
+			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img src="' + clanImageUrl + '" /></a>');	
 		}
 		
 			
 	}
 
 	/*
-	*	Show total damage
+	*	Show total damage, Is this used??:...
 	*/
 
 	$.fn.totalDamage = function(response) {
@@ -234,20 +264,44 @@ jQuery(document).ready(function(){
 
 		var totalDamage = response.data.battles.damage_dealt;
 		container.append('<h1>Total damage: ' + totalDamage + '</h1>');
-
 	}
 
 	/*
 	*	Show average damage past 24 hours
 	*/
 
-	$.fn.showAverageDamagePast24 = function(response) {
+	$.fn.averageDamagePast24 = function(response1, response2) {
 
-		//var test = responseObject1.data.battles.damage_dealt;
+		var container = $(this);
 
-		var damage24HoursAgo = response.stats[0].hours_ago;
-		console.log('Fetched from the third AJAX request, amount of hours ago: ' + damage24HoursAgo);
-		//console.log('Total DAAAMage' + test);
+		//Total damage 24 hours ago.	
+		var damage24HoursAgo = response2.stats[0].stats.battles.damage_dealt;
+		//Total damage, according to last update
+		var totalDamage = response1.data.battles.damage_dealt;
+		//The accumulated damage the last 24 hours
+		var damageLast24Hours = totalDamage - damage24HoursAgo;
+		//Total amount of battles 24 hours ago
+		var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//The amount of battles the last 24 hours
+		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+		//Calculate the average damage done last 24 hours.
+		var averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
+		container.append('<h1>Average damage: ' +  averageDamageLast24Hours + '</h1>');
 	}
+
+	$.fn.battlesPlayedPast24 = function(response1, response2) {
+		var container = $(this);
+
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//Total amount of battles 24 hours ago
+		var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
+		//The amount of battles the last 24 hours
+		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+
+		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1>');
+	} 
 
 });
