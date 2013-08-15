@@ -248,6 +248,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageExperiencePast24(response1, response2);
 		player_stats_recent.averageDamagePast24(response1, response2);
 		player_stats_recent.averageTierPast24(response1,response2);
+		player_stats_recent.favoriteVehiclePast24(response1, response2);
 		
 		
 		//Total Stats Plugins
@@ -257,7 +258,8 @@ jQuery(document).ready(function(){
 		player_stats_total.averageExperience(response1);
 		player_stats_total.averageDamage(response1);
 		player_stats_total.averageTier(response1);
-		player_stats_total.hitPercentage(response1);
+		player_stats_total.favoriteVehicleTotal(response1);
+		//player_stats_total.hitPercentage(response1);
 
 
 		//General Information Plugins

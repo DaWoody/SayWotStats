@@ -341,6 +341,10 @@ jQuery(document).ready(function(){
 		container.append('<h1>Average experience: ' + averageXpGainedPast24 + '</h1>');
 	}
 
+	/*
+	*	Shows average winrate from the past 24 hours
+	*/
+
 	$.fn.averageWinRatePast24 = function(response1, response2) {
 		//Define what we get in
 		var container = $(this);
@@ -370,8 +374,11 @@ jQuery(document).ready(function(){
 		container.append('<h1>Average winrate: ' + winRatioPast24 + '&#37;</h1>');
 	}
 
+	/*
+	*	Shows the average tier played in total
+	*/
 
-	$.fn.averageTier = function(response1){
+	$.fn.averageTier = function(response){
 		//Defining our container
 		var container = $(this);
 		//Defining some variables we need when we iterate through the array
@@ -379,7 +386,7 @@ jQuery(document).ready(function(){
 		var countMatchesLevelIteration = 0;
 
 		//Getting in our vehicles array from the object
-		var tanksArray = response1.data.vehicles;
+		var tanksArray = response.data.vehicles;
 		
 		for(var tank in tanksArray){
 			//Getting the specific tier for this tank
@@ -396,6 +403,10 @@ jQuery(document).ready(function(){
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTier + '</h1>');
 	}
+
+	/*
+	*	Shows the average tier from the past 24 hours
+	*/
 
 	$.fn.averageTierPast24 = function(response1, response2){
 		//Defining what we get in
@@ -432,5 +443,86 @@ jQuery(document).ready(function(){
 		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
 		//console.log('Average tier is: ' + averageTierPast24);
 
+	}
+
+	/*
+	*	This will show us the name and the image of the most played vehicle in total
+	*/
+
+	$.fn.favoriteVehicleTotal = function(response) {
+		//Define what we get in
+		var container = $(this);
+		//Define our vehicles array
+		var tanksArray = response.data.vehicles;
+		//Define our battles variable, this will increase as we iterate through
+		var mostBattlesPlayed = 0;
+		//Define the variable we will call to fetch the tank which is most used
+		var tankIdMostPlayed = null;
+
+		//Now we iterate through all vehicles
+		for(var tank in tanksArray){
+			//Fetch the amount of battles for this vehicle
+			var battles = tanksArray[tank].battle_count;
+			//If the battles in this vehicle is more than our current max, mostBattlesPlayed, then we update our mostBattlesPlayed with this amount of battles and set tankIdMostPlayed to this tank
+			if(battles>mostBattlesPlayed){
+				mostBattlesPlayed = battles;
+				tankIdMostPlayed = tank;
+			}
+		}
+		//Define the vehicle name of the most played tank
+		var vehicleName = tanksArray[tankIdMostPlayed].localized_name;
+		//Define part of the url we need to show the image of the most played tank
+		var vehiclePartImgUrl = tanksArray[tankIdMostPlayed].image_url;
+		//Define the whole url of the most played tank
+		var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+		//Print it to the DOM
+		container.append('<h1>Most played: ' + vehicleName + '<img class="vehicle_image" src="' + vehicleImgUrl + '">');
+	}
+
+	/*
+	*	Shows us the name and image of the most played vehicle from the past 24 hours
+	*/
+
+	$.fn.favoriteVehiclePast24 = function(response1, response2) {
+		//Define what we get in
+		var container = $(this);
+		//Define our first vehicles array, containing the most recent total stats 
+		var tanksArrayTotal = response1.data.vehicles;
+
+		//Define our second vehicles array containing the
+		var tanksArrayPast24 = response2.stats[0].stats.vehicles;
+
+		//Define our battles variable, this will increase as we iterate through
+		var mostBattlesPlayed = 0;
+		//Define the variable we will call to fetch the tank which is most used
+		var tankIdMostPlayed = null;
+
+		//Now we iterate through all vehicles
+		for(var tank in tanksArrayTotal){
+
+			//Fetch the amount of battles for this vehicle
+			var battlesTotal = tanksArrayTotal[tank].battle_count;
+
+			var battlesLast24Hours = tanksArrayPast24[tank].battle_count;
+
+			var battlesPast24 = battlesTotal - battlesLast24Hours;
+
+			//If the battles in this vehicle is more than our current max, mostBattlesPlayed, then we update our mostBattlesPlayed with this amount of battles and set tankIdMostPlayed to this tank
+			if(battlesPast24>mostBattlesPlayed){
+				mostBattlesPlayed = battlesPast24;
+				tankIdMostPlayed = tank;
+			}
+		}
+
+
+		//Define the vehicle name of the most played tank
+		var vehicleName = tanksArrayTotal[tankIdMostPlayed].localized_name;
+		//Define part of the url we need to show the image of the most played tank
+		var vehiclePartImgUrl = tanksArrayTotal[tankIdMostPlayed].image_url;
+		//Define the whole url of the most played tank
+		var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+
+		//Print it to the DOM
+		container.append('<h1>Most played: ' + vehicleName + '<img class="vehicle_image" src="' + vehicleImgUrl + '">');
 	}
 });

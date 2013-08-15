@@ -176,13 +176,17 @@ a:hover {
 }
 
 .clan_image {
-	margin-bottom:-7px;
-	margin-left:5px;
+	margin-bottom:-0.583333em; /* 7/12 = 0.583333em */
+	margin-left:0.4166667em; /*  5/12 = 0.4166667em */
+}
+
+.vehicle_image {
+	margin-bottom:-0.866667em; /* 10/12 = 0.83333em */
+	margin-left:0.4166667em;
 }
 
 .on_first_load_css_fix {
 	border-bottom:0px solid red !important;
-
 }
 
 .stats_showing {
