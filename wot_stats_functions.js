@@ -294,8 +294,6 @@ jQuery(document).ready(function(){
 		//Calculate the average damage done last 24 hours.
 		var averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
 		container.append('<h1>Average damage: ' +  averageDamageLast24Hours + '</h1>');
-		console.log('TTTEEEE dmg ' + averageDamageLast24Hours);
-		console.log('the dmg 24 hours ago:' + damage24HoursAgo + ', the totalDamage to last update: ' + totalDamage + 'the battles 24 hours ago' + battles24HoursAgo + 'The battles last 24 hours: ' + battlesLast24Hours);
 	}
 
 	/*
@@ -304,7 +302,6 @@ jQuery(document).ready(function(){
 
 	$.fn.battlesPlayedPast24 = function(response1, response2) {
 		var container = $(this);
-
 		//Total amount of battles, to last update.
 		var totalAmountOfBattles = response1.data.summary.battles_count;
 		//Total amount of battles 24 hours ago
@@ -377,89 +374,63 @@ jQuery(document).ready(function(){
 	$.fn.averageTier = function(response1){
 		//Defining our container
 		var container = $(this);
+		//Defining some variables we need when we iterate through the array
+		var countMatchesIteration = 0;
+		var countMatchesLevelIteration = 0;
 
 		//Getting in our vehicles array from the object
 		var tanksArray = response1.data.vehicles;
-
-		var countMatchesIteration = 0;
-
-		var countMatchesLevelIteration = 0;
-
-		console.log(tanksArray);
 		
 		for(var tank in tanksArray){
 			//Getting the specific tier for this tank
 			var tier = tanksArray[tank].level;
 			//Getting the number of battles played in this tank
 			var matches = tanksArray[tank].battle_count;
-			
-			//console.log('Tier: ' + tier);
-			//console.log('Matches: ' +  matches);
-
 			//Iterating over all tanks and counting the amount of total games played
 			countMatchesIteration = countMatchesIteration + matches;
-
 			//Iterating and summing up the product of this tank's matches*tier
 			countMatchesLevelIteration = countMatchesLevelIteration + (matches*tier);
-			//for(var i=0; i<tank.length; i++){
-			//Do stuff with each tank here
-			//console.log('Name: ' + tank[i].localized_name);
-			//}
-
 		}
-
+		//Do our average tier calculation
 		var averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
-		//console.log('Total number squared over matches: ' + countMatchesLevelIteration);
-		//console.log('Total battles played: ' + countMatchesIteration);
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTier + '</h1>');
-
 	}
 
 	$.fn.averageTierPast24 = function(response1, response2){
-		//Do stuff here
+		//Defining what we get in
+		var container = $(this);
 
+		//Defining our first array of vehicles for the data updated 24 hours ago, sent as objects
 		var tanksArrayPast24 = response2.stats[0].stats.vehicles;
-
+		//Defining our second array of vehicles for the data updated most recent, sent as objects
 		var tanksArrayTotal = response1.data.vehicles;
 
-		//Defining some variables
-		var countMatchesIterationTotal = 0;
-		var countMatchesLevelIterationTotal = 0;
-
+		//Defining some variables we will use to iterate through the arrays and build up the integers for calculation
 		var countMatchesIterationPast24 = 0;
 		var countMatchesLevelIterationPast24 = 0;
 
-
-		console.log(tanksArrayTotal);
-
-		console.log(tanksArrayPast24);
 		
 		for(var tank in tanksArrayTotal){
+			//Since both arrays will be equally long, this quick-fix of not controlling the length of the other array should do
 			//Getting the specific tier for this tank
 			var tier = tanksArrayTotal[tank].level;
 			//Getting the number of battles played in this tank
-			var matches = tanksArrayTotal[tank].battle_count;
-			
-			//console.log('Tier: ' + tier);
-			//console.log('Matches: ' +  matches);
-
-			//Iterating over all tanks and counting the amount of total games played
-			countMatchesIterationTotal = countMatchesIterationTotal + matches;
-
+			var matchesTotal = tanksArrayTotal[tank].battle_count;
+			//Getting the number of battles played in this tank, at least how it looked 24 hours ago
+			var matchesLast24 = tanksArrayPast24[tank].battle_count;
+			//Subtracting the difference to get the number of fights in this tank during the past 24 hours
+			var matchesPast24 = matchesTotal - matchesLast24;
+			//Iterating over all tanks and counting the amount of total games played the past 24 hours
+			countMatchesIterationPast24 = countMatchesIterationPast24 + matchesPast24;
 			//Iterating and summing up the product of this tank's matches*tier
-			countMatchesLevelIterationTotal = countMatchesLevelIterationTotal + (matches*tier);
-			//for(var i=0; i<tank.length; i++){
-			//Do stuff with each tank here
-			//console.log('Name: ' + tank[i].localized_name);
-			//}
-
+			countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesPast24*tier);
 		}
-
-		var averageTier = Math.round((countMatchesLevelIterationTotal/countMatchesIterationTotal)*100)/100;
-		//console.log('Total number squared over matches: ' + countMatchesLevelIteration);
-		//console.log('Total battles played: ' + countMatchesIteration);
-		console.log('Average tier is: ' + averageTier);
+		//Do our average tier calculation
+		var averageTierPast24 = Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
+		//Print it to the DOM
+		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
+		//console.log('Average tier is: ' + averageTierPast24);
 
 	}
 });

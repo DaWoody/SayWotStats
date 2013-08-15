@@ -6,12 +6,10 @@ Todo:
 ===========================================================================
 Lots of stuff ;).
 
-* Fix a good idea on how to use this app.
-* Better design
-* Prolly more stuff ;)...
+* Next up is checking the vehicle used the most
+* If demand is high... fix WN7! :D
 
 
 Recently Done:
 ==========================================================
-* A bit better design
-* Refactored some of the functions into plugins
+* Fixed more plugins, did fix the average tier for the past 24 hours etc

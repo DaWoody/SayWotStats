@@ -103,8 +103,7 @@ jQuery(document).ready(function(){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								CalculateStatsEngine(response1, response2);
 							});
-
-							console.log('We got past the status ok..hmss');
+							//remove our css class, when we are done
 							player_stats_container.removeClass('loading');
 			
 						}
@@ -227,10 +226,8 @@ jQuery(document).ready(function(){
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
 	function CalculateStatsEngine(response1, response2) {
 
-		//var test1 = response1.status;
-		//var test2 = response2.status;
-		//DO stuff here
-		//console.log('Ok response 1 status is: ' + test1 + 'and response2  status_code is: ' + test2);
+		
+		//DO stuff here, right now we are printing out data to the console so we its easy to track how create functions..
 		console.log('Player Total Stats Object:');
 		console.log(response1);
 		console.log('Player Recent Stats Object:');
@@ -250,24 +247,18 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageWinRatePast24(response1,response2);
 		player_stats_recent.averageExperiencePast24(response1, response2);
 		player_stats_recent.averageDamagePast24(response1, response2);
+		player_stats_recent.averageTierPast24(response1,response2);
 		
 		
-		
-
-
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
 		player_stats_total.totalBattlesPlayed(response1);
 		player_stats_total.averageWinRate(response1);
 		player_stats_total.averageExperience(response1);
 		player_stats_total.averageDamage(response1);
+		player_stats_total.averageTier(response1);
 		player_stats_total.hitPercentage(response1);
 
-		//testing
-		player_stats_total.averageTier(response1);
-
-		player_stats_total.averageTierPast24(response1,response2);
-		
 
 		//General Information Plugins
 		player_general_information.playerName(response1);
