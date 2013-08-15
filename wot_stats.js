@@ -1,7 +1,8 @@
 /*
-*	Description: 	The jQuery engine for the site WOT-Stats
+*	Description: 	The jQuery engine WoodyWotStats for the site WOT-Stats. Utilizing the unoffical WOT-API, (https://gist.github.com/bartku/4271798).
+*					This engine utilizes a different set of methods involving calculations on/and extracting data from the objects returned from the API. 					
 *	Author: 		Johan "DaWoody" Wedfelt 
-*	AuthorURL:  	https://DaWoody@github.org
+*	AuthorURL:  	https://github.com/DaWoody
 *
 *
 *
@@ -17,7 +18,7 @@ jQuery(document).ready(function(){
 	*	Some global variables
 	*/
 	var source_token 	= 	'WG-WoT_Assistant-1.4.1';
-	//The DOM elements to manipulate
+	//The DOM elements to manipulate, can be changed to your needs.
 	var player_stats_container = $("#player_stats_container");
 	var player_general_information = $("#player_general_information");
 	var player_stats_total = $("#total_stats");
@@ -37,7 +38,7 @@ jQuery(document).ready(function(){
 
 
 	/*
-	*	Do some css fixes
+	*	Do some css fixes on first page load
 	*/
 	player_stats_recent.addClass('on_first_load_css_fix');
 
@@ -74,7 +75,7 @@ jQuery(document).ready(function(){
 				},
 
 				complete: function() {
-					player_stats_container.removeClass('loading');
+					
 				},
 
 				//contentType: 'application/json',
@@ -83,7 +84,7 @@ jQuery(document).ready(function(){
 					var status = response.status;
 
 					//The error message we will print out if there is something wrong with the search
-					var htmlMsg = '<h1>Ops the magic!! kitten did not find that Tanker, please try again ;)..</h1>';	
+					var htmlMsg = '<h1>Ops the magic kitten did not find that Tanker, please try again ;)..</h1>';	
 
 					
 					if(status==="ok") {
@@ -104,10 +105,13 @@ jQuery(document).ready(function(){
 							});
 
 							console.log('We got past the status ok..hmss');
+							player_stats_container.removeClass('loading');
 			
 						}
 						else {
+							
 							//Do stuff to DOM here when no player is found..
+							player_stats_container.removeClass('loading');
 							player_general_information.html(htmlMsg);
 							player_stats_total.html('');
 							player_stats_recent.html('').addClass('on_first_load_css_fix');
@@ -116,6 +120,7 @@ jQuery(document).ready(function(){
 					}
 					else{
 						//Do stuff to DOM here when no player is found..
+						player_stats_container.removeClass('loading');
 						player_general_information.html(htmlMsg);
 						player_stats_total.html('');
 						player_stats_recent.html('').addClass('on_first_load_css_fix');;
@@ -126,6 +131,7 @@ jQuery(document).ready(function(){
 				error: function(response) {
 					console.log('error from the SearchPlayer AJAX call');
 					//Show us an error when we get a failed AJAX call
+					player_stats_container.removeClass('loading');
 					player_general_information.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
 					player_stats_total.html('');
 					player_stats_recent.html('').addClass('on_first_load_css_fix');;
@@ -256,6 +262,11 @@ jQuery(document).ready(function(){
 		player_stats_total.averageExperience(response1);
 		player_stats_total.averageDamage(response1);
 		player_stats_total.hitPercentage(response1);
+
+		//testing
+		player_stats_total.averageTier(response1);
+
+		player_stats_total.averageTierPast24(response1,response2);
 		
 
 		//General Information Plugins

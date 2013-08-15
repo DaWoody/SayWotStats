@@ -1,0 +1,15 @@
+WN7 formula:
+(1240-1040/(MIN(TIER,6))^0.164)*FRAGS
++DAMAGE*530/(184*e^(0.24*TIER)+130)
++SPOT*125*MIN(TIER, 3)/3
++MIN(DEF,2.2)*100
++((185/(0.17+e^((WINRATE-35)*-0.134)))-500)*0.45
+-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )]
+
+Would like to highlight that MIN() means the number capped at that value, so MIN(TIER, 5) means avg tier capped at 5, (so player avg tier is used if it is lower than 5, otherwise 5 is used) and MIN(DEF,2.2) means defense is capped at 2.2.
+
+
+WN7 SUMMARY 
+written by Neverwish, Crabeatoff and Praetor77
+Work on WN7 is a community effort. I consider everyone who has posted in this forum to have contributed their two cents into making WN what it is today. However, I would like to highlight the contribution of the people who have dedicated the most time and effort into making WN: 
+Key contributors: Tpapp157, Neatoman, Syndicate, Maokai, Makaze2048, Guerdon, DracoArgentum, Crabeatoff, TheKilltech,  etc. etc.

@@ -1,7 +1,7 @@
 /*
 *	Description:	CSS File for WOT-Stats
 *	Author:			Johan "DaWoody" Wedfelt
-*	
+*	Author URL:  	https://github.com/DaWoody
 *	Color Scheme:	
 *	TODO: Fix a bit fallback colors, gradients etc + converting to EM, % etc.. responsive;
 *
@@ -65,6 +65,10 @@ a:hover {
 	background:rgba(90,130,138,1) url('images/world-of-tanks-background.png') no-repeat top center;
 }
 
+#player_stats_container {
+	min-height:4em;
+}
+
 #submit_btn {
 	border:1px solid rgba(204,110,92,1);
 	margin-top:20px; /* 20/12 */
@@ -83,10 +87,6 @@ a:hover {
 	-webkit-transition: all 0.4s;
 	-moz-transition: all 0.4s;
 	transition: all 0.4s;
-	/*
-	*	FIX EXTRA BACKGROUND RADIENT:::;
-	*/
-	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#7F83F9), to(#537694), color-stop(.6,#232675));
 	background: rgba(23, 68, 77 , 1) url('images/stripes-background.png');
 	text-transform: uppercase;
 }
@@ -95,9 +95,6 @@ a:hover {
 	cursor:pointer;
 	background: rgba(204,110,92,0.3) url('images/stripes-background.png');
 	color:white;
-	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#537694), to(#7F83F9), color-stop(.6,#232675));
-	//background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#555166), to(#666666), color-stop(.6,#0C1733));
-	//background: -moz-linear-gradient(19% 75% 74deg,#3A4966, #4A4A4A);
 }
 
 
