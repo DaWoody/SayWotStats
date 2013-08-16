@@ -445,6 +445,71 @@ jQuery(document).ready(function(){
 
 	}
 
+
+	$.fn.arrayTestFunction = function(response1, response2){
+		
+		//Define our battles variable, this will increase as we iterate through
+		var mostBattlesPlayed = 0;
+		//Define the variable we will call to fetch the tank which is most used
+		
+
+		console.log('Begin...');
+		//Define our first vehicles array
+		var tanksArray1 = response1.data.vehicles;
+		var tanksArray2 = response2.stats[0].stats.vehicles
+		
+		//This is the new array with elements from both total and recent stats.
+		var tanksArrayJoined = [];
+		//This is the array that will hold new vehicle data
+		var tanksArrayNew = [];
+
+	
+
+		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
+		for(var tank2 in tanksArray2){
+
+			var tankName2 = tanksArray2[tank2].localized_name;
+			
+			for(var i=0; i<tanksArray1.length; i++){
+			
+				if(tanksArray1[i].localized_name===tankName2){
+					//console.log(tankName2)
+					//Spara undan tankvärdet här nu när vi hittat det
+					tanksArrayJoined.push(tanksArray1[i]);
+				}	
+			}
+		}	
+		console.log('This is the joined array:');
+		console.log(tanksArrayJoined);
+							
+
+
+		for(var tank1 in tanksArray1){
+
+			var tankName1 = tanksArray1[tank1].localized_name;
+			var tankExist = false;
+
+			for(var i=0; i<tanksArray2.length; i++){
+				var tankName2 = tanksArray2[i].localized_name;
+
+				if(tankName1 === tankName2){
+					tankExist = true;
+				}
+
+			}
+
+			if(tankExist===false){
+				//Do the splitting here, else do nothing..
+				tanksArrayNew.push(tanksArray1[tank1]);
+			}
+		}
+
+		console.log('The other array:');
+		console.log(tanksArrayNew);
+		console.log('Johan you freaaaking ROCK!');
+		
+	}
+
 	/*
 	*	This will show us the name and the image of the most played vehicle in total
 	*/
@@ -461,16 +526,22 @@ jQuery(document).ready(function(){
 
 		//Now we iterate through all vehicles
 		for(var tank in tanksArray){
+			
 			//Fetch the amount of battles for this vehicle
 			var battles = tanksArray[tank].battle_count;
+			
+			
 			//If the battles in this vehicle is more than our current max, mostBattlesPlayed, then we update our mostBattlesPlayed with this amount of battles and set tankIdMostPlayed to this tank
 			if(battles>mostBattlesPlayed){
 				mostBattlesPlayed = battles;
 				tankIdMostPlayed = tank;
 			}
 		}
-		//Define the vehicle name of the most played tank
-		var vehicleName = tanksArray[tankIdMostPlayed].localized_name;
+
+		if((tanksArray[tankIdMostPlayed].localized_name)!== null){
+			//Define the vehicle name of the most played tank
+			var vehicleName = tanksArray[tankIdMostPlayed].localized_name;
+		}
 		//Define part of the url we need to show the image of the most played tank
 		var vehiclePartImgUrl = tanksArray[tankIdMostPlayed].image_url;
 		//Define the whole url of the most played tank
@@ -514,9 +585,9 @@ jQuery(document).ready(function(){
 			}
 		}
 
-
 		//Define the vehicle name of the most played tank
 		var vehicleName = tanksArrayTotal[tankIdMostPlayed].localized_name;
+		
 		//Define part of the url we need to show the image of the most played tank
 		var vehiclePartImgUrl = tanksArrayTotal[tankIdMostPlayed].image_url;
 		//Define the whole url of the most played tank

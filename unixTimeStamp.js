@@ -1,4 +1,4 @@
-
+/*
 $.fn.fromUnixToDate = function(options) {
 	var settings = $.extend({unixTime:0}, options);
 
@@ -19,3 +19,4 @@ jQuery(document).ready(function(){
 		$('body').fromUnixToDate({unixTime:1332403882588});
 
 });
+*/
