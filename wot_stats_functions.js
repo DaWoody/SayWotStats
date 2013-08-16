@@ -409,63 +409,18 @@ jQuery(document).ready(function(){
 	*/
 
 	$.fn.averageTierPast24 = function(response1, response2){
-		//Defining what we get in
-		var container = $(this);
 
-		//Defining our first array of vehicles for the data updated 24 hours ago, sent as objects
-		var tanksArrayPast24 = response2.stats[0].stats.vehicles;
-		//Defining our second array of vehicles for the data updated most recent, sent as objects
-		var tanksArrayTotal = response1.data.vehicles;
-
-		//Defining some variables we will use to iterate through the arrays and build up the integers for calculation
-		var countMatchesIterationPast24 = 0;
-		var countMatchesLevelIterationPast24 = 0;
-
-		
-		for(var tank in tanksArrayTotal){
-			//Since both arrays will be equally long, this quick-fix of not controlling the length of the other array should do
-			//Getting the specific tier for this tank
-			var tier = tanksArrayTotal[tank].level;
-			//Getting the number of battles played in this tank
-			var matchesTotal = tanksArrayTotal[tank].battle_count;
-			//Getting the number of battles played in this tank, at least how it looked 24 hours ago
-			var matchesLast24 = tanksArrayPast24[tank].battle_count;
-			//Subtracting the difference to get the number of fights in this tank during the past 24 hours
-			var matchesPast24 = matchesTotal - matchesLast24;
-			//Iterating over all tanks and counting the amount of total games played the past 24 hours
-			countMatchesIterationPast24 = countMatchesIterationPast24 + matchesPast24;
-			//Iterating and summing up the product of this tank's matches*tier
-			countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesPast24*tier);
-		}
-		//Do our average tier calculation
-		var averageTierPast24 = Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
-		//Print it to the DOM
-		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
-		//console.log('Average tier is: ' + averageTierPast24);
-
-	}
-
-
-	$.fn.arrayTestFunction = function(response1, response2){
-		
-		//Define our battles variable, this will increase as we iterate through
-		var mostBattlesPlayed = 0;
-		//Define the variable we will call to fetch the tank which is most used
-		
-
-		console.log('Begin...');
 		//Define our first vehicles array
 		var tanksArray1 = response1.data.vehicles;
 		var tanksArray2 = response2.stats[0].stats.vehicles
 		
-		//This is the new array with elements from both total and recent stats.
+		//This is the new array with elements from total stats, that also resides in recent stats
 		var tanksArrayJoined = [];
-		//This is the array that will hold new vehicle data
+		//This is the array that will hold new vehicle data, only available through total stats..
 		var tanksArrayNew = [];
 
-	
-
 		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
+		//Here we will put our data that coincides over both recent and total stats, in a new array
 		for(var tank2 in tanksArray2){
 
 			var tankName2 = tanksArray2[tank2].localized_name;
@@ -473,17 +428,13 @@ jQuery(document).ready(function(){
 			for(var i=0; i<tanksArray1.length; i++){
 			
 				if(tanksArray1[i].localized_name===tankName2){
-					//console.log(tankName2)
-					//Spara undan tankvärdet här nu när vi hittat det
+					//Save the tank object in the new array, now that we found it
 					tanksArrayJoined.push(tanksArray1[i]);
 				}	
 			}
 		}	
-		console.log('This is the joined array:');
-		console.log(tanksArrayJoined);
-							
 
-
+		//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
 		for(var tank1 in tanksArray1){
 
 			var tankName1 = tanksArray1[tank1].localized_name;
@@ -504,11 +455,98 @@ jQuery(document).ready(function(){
 			}
 		}
 
-		console.log('The other array:');
-		console.log(tanksArrayNew);
-		console.log('Johan you freaaaking ROCK!');
+		//Defining what we get in
+		var container = $(this);
+
+		//Defining some variables we will use to iterate through the arrays and build up the integers for calculation
+		var countMatchesIterationPast24 = 0;
+		var countMatchesLevelIterationPast24 = 0;
+
+		
+		for(var tank in tanksArrayJoined){
+			//Getting the specific tier for this tank
+			var tier = tanksArrayJoined[tank].level;
+			//Getting the number of battles played in this tank
+			var matchesTotal = tanksArrayJoined[tank].battle_count;
+			//Getting the number of battles played in this tank, at least how it looked 24 hours ago
+			var matchesLast24 = tanksArray2[tank].battle_count;
+			//Subtracting the difference to get the number of fights in this tank during the past 24 hours
+			var matchesPast24 = matchesTotal - matchesLast24;
+			//Iterating over all tanks and counting the amount of total games played the past 24 hours
+			countMatchesIterationPast24 = countMatchesIterationPast24 + matchesPast24;
+			//Iterating and summing up the product of this tank's matches*tier
+			countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesPast24*tier);
+		}
+		//Do our average tier calculation
+		var averageTierPast24 = Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
+		//Print it to the DOM
+		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
+
+	}
+
+
+	$.fn.arraySplitFunction = function(response1, response2){
+
+		
+		//Define our first vehicles array
+		var tanksArray1 = response1.data.vehicles;
+		var tanksArray2 = response2.stats[0].stats.vehicles
+		
+		//This is the new array with elements from total stats, that also resides in recent stats
+		var tanksArrayJoined = [];
+		//This is the array that will hold new vehicle data, only available through total stats..
+		var tanksArrayNew = [];
+
+		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
+		//Here we will put our data that coincides over both recent and total stats, in a new array
+		for(var tank2 in tanksArray2){
+
+			var tankName2 = tanksArray2[tank2].localized_name;
+			
+			for(var i=0; i<tanksArray1.length; i++){
+			
+				if(tanksArray1[i].localized_name===tankName2){
+					//Save the tank object in the new array, now that we found it
+					tanksArrayJoined.push(tanksArray1[i]);
+				}	
+			}
+		}	
+
+		//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
+		for(var tank1 in tanksArray1){
+
+			var tankName1 = tanksArray1[tank1].localized_name;
+			var tankExist = false;
+
+			for(var i=0; i<tanksArray2.length; i++){
+				var tankName2 = tanksArray2[i].localized_name;
+
+				if(tankName1 === tankName2){
+					tankExist = true;
+				}
+
+			}
+
+			if(tankExist===false){
+				//Do the splitting here, else do nothing..
+				tanksArrayNew.push(tanksArray1[tank1]);
+			}
+		}
+
+		//console.log('The other array:');
+		//console.log(tanksArrayNew);
+		//console.log('Johan you freaaaking ROCK!');
+
+		//Now lets do cool stuff with our new arrays!
+
+		//Define our battles variable, this will increase as we iterate through
+		//var mostBattlesPlayed = 0;
+		//Define the variable we will call to fetch the tank which is most used	
+	
 		
 	}
+
+
 
 	/*
 	*	This will show us the name and the image of the most played vehicle in total
@@ -555,13 +593,59 @@ jQuery(document).ready(function(){
 	*/
 
 	$.fn.favoriteVehiclePast24 = function(response1, response2) {
+		
+		//Define our first vehicles array
+		var tanksArray1 = response1.data.vehicles;
+		var tanksArray2 = response2.stats[0].stats.vehicles
+		
+		//This is the new array with elements from total stats, that also resides in recent stats
+		var tanksArrayJoined = [];
+		//This is the array that will hold new vehicle data, only available through total stats..
+		var tanksArrayNew = [];
+
+		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
+		//Here we will put our data that coincides over both recent and total stats, in a new array
+		for(var tank2 in tanksArray2){
+
+			var tankName2 = tanksArray2[tank2].localized_name;
+			
+			for(var i=0; i<tanksArray1.length; i++){
+			
+				if(tanksArray1[i].localized_name===tankName2){
+					//Save the tank object in the new array, now that we found it
+					tanksArrayJoined.push(tanksArray1[i]);
+				}	
+			}
+		}	
+
+		//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
+		for(var tank1 in tanksArray1){
+
+			var tankName1 = tanksArray1[tank1].localized_name;
+			var tankExist = false;
+
+			for(var i=0; i<tanksArray2.length; i++){
+				var tankName2 = tanksArray2[i].localized_name;
+
+				if(tankName1 === tankName2){
+					tankExist = true;
+				}
+
+			}
+
+			if(tankExist===false){
+				//Do the splitting here, else do nothing..
+				tanksArrayNew.push(tanksArray1[tank1]);
+			}
+		}
+		console.log('tanksArray2:');
+		console.log(tanksArray2);
+
+		console.log('tanksArrayJoined');
+		console.log(tanksArrayJoined);
+		
 		//Define what we get in
 		var container = $(this);
-		//Define our first vehicles array, containing the most recent total stats 
-		var tanksArrayTotal = response1.data.vehicles;
-
-		//Define our second vehicles array containing the
-		var tanksArrayPast24 = response2.stats[0].stats.vehicles;
 
 		//Define our battles variable, this will increase as we iterate through
 		var mostBattlesPlayed = 0;
@@ -569,12 +653,12 @@ jQuery(document).ready(function(){
 		var tankIdMostPlayed = null;
 
 		//Now we iterate through all vehicles
-		for(var tank in tanksArrayTotal){
+		for(var tank in tanksArrayJoined){
 
 			//Fetch the amount of battles for this vehicle
-			var battlesTotal = tanksArrayTotal[tank].battle_count;
+			var battlesTotal = tanksArrayJoined[tank].battle_count;
 
-			var battlesLast24Hours = tanksArrayPast24[tank].battle_count;
+			var battlesLast24Hours = tanksArray2[tank].battle_count;
 
 			var battlesPast24 = battlesTotal - battlesLast24Hours;
 
@@ -586,14 +670,15 @@ jQuery(document).ready(function(){
 		}
 
 		//Define the vehicle name of the most played tank
-		var vehicleName = tanksArrayTotal[tankIdMostPlayed].localized_name;
+		var vehicleName = tanksArrayJoined[tankIdMostPlayed].localized_name;
 		
 		//Define part of the url we need to show the image of the most played tank
-		var vehiclePartImgUrl = tanksArrayTotal[tankIdMostPlayed].image_url;
+		var vehiclePartImgUrl = tanksArrayJoined[tankIdMostPlayed].image_url;
 		//Define the whole url of the most played tank
 		var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
 
 		//Print it to the DOM
 		container.append('<h1>Most played: ' + vehicleName + '<img class="vehicle_image" src="' + vehicleImgUrl + '">');
+		
 	}
 });
