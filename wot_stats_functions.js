@@ -559,8 +559,8 @@ jQuery(document).ready(function(){
 		var tanksArray = response.data.vehicles;
 		//Define our battles variable, this will increase as we iterate through
 		var mostBattlesPlayed = 0;
-		//Define the variable we will call to fetch the tank which is most used
-		var tankIdMostPlayed = null;
+		//Define the variable we will call to fetch the tank which is most used, we start with a really large number since then it won't be undefined in the array, but just not show up
+		var tankIdMostPlayed = 99999999;
 
 		//Now we iterate through all vehicles
 		for(var tank in tanksArray){
@@ -574,18 +574,28 @@ jQuery(document).ready(function(){
 				mostBattlesPlayed = battles;
 				tankIdMostPlayed = tank;
 			}
-		}
 
-		if((tanksArray[tankIdMostPlayed].localized_name)!== null){
+		}
+		//We check to see if there are any battles played at all
+		if(typeof(tanksArray[tankIdMostPlayed])!== 'undefined'){
 			//Define the vehicle name of the most played tank
 			var vehicleName = tanksArray[tankIdMostPlayed].localized_name;
+			//Define part of the url we need to show the image of the most played tank
+			var vehiclePartImgUrl = tanksArray[tankIdMostPlayed].image_url;
+			//Define the whole url of the most played tank
+			var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+
+			var vehicleImgObject = '<img class="vehicle_image" src="' + vehicleImgUrl + '">';
 		}
-		//Define part of the url we need to show the image of the most played tank
-		var vehiclePartImgUrl = tanksArray[tankIdMostPlayed].image_url;
-		//Define the whole url of the most played tank
-		var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+		else{
+			var vehicleName = '..Never gonna..';
+			var vehiclePartImgUrl = '';
+			var vehicleImgObject = '';
+		}
+		
+		
 		//Print it to the DOM
-		container.append('<h1>Most played: ' + vehicleName + '<img class="vehicle_image" src="' + vehicleImgUrl + '">');
+		container.append('<h1>Most played: ' + vehicleName + vehicleImgObject);
 	}
 
 	/*
@@ -650,7 +660,7 @@ jQuery(document).ready(function(){
 		//Define our battles variable, this will increase as we iterate through
 		var mostBattlesPlayed = 0;
 		//Define the variable we will call to fetch the tank which is most used
-		var tankIdMostPlayed = null;
+		var tankIdMostPlayed = 999999999;
 
 		//Now we iterate through all vehicles
 		for(var tank in tanksArrayJoined){
@@ -669,6 +679,7 @@ jQuery(document).ready(function(){
 			}
 		}
 
+		/*
 		//Define the vehicle name of the most played tank
 		var vehicleName = tanksArrayJoined[tankIdMostPlayed].localized_name;
 		
@@ -676,9 +687,26 @@ jQuery(document).ready(function(){
 		var vehiclePartImgUrl = tanksArrayJoined[tankIdMostPlayed].image_url;
 		//Define the whole url of the most played tank
 		var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+		*/
 
+		//We check to see if there are any battles played at all
+		if(typeof(tanksArrayJoined[tankIdMostPlayed])!== 'undefined'){
+			//Define the vehicle name of the most played tank
+			var vehicleName = tanksArrayJoined[tankIdMostPlayed].localized_name;
+			//Define part of the url we need to show the image of the most played tank
+			var vehiclePartImgUrl = tanksArrayJoined[tankIdMostPlayed].image_url;
+			//Define the whole url of the most played tank
+			var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
+
+			var vehicleImgObject = '<img class="vehicle_image" src="' + vehicleImgUrl + '">';
+		}
+		else{
+			var vehicleName = '..give you up!..';
+			var vehiclePartImgUrl = '';
+			var vehicleImgObject = '';
+		}
 		//Print it to the DOM
-		container.append('<h1>Most played: ' + vehicleName + '<img class="vehicle_image" src="' + vehicleImgUrl + '">');
+		container.append('<h1>Most played: ' + vehicleName + vehicleImgObject);
 		
 	}
 });
