@@ -1,8 +1,8 @@
 /*
-*	WOT-Stats functions defined as plugins
-*	Author: Johan "DaWoody" Wedfelt
-*	Author URL: https://github.com/DaWoody
-*	License: Open License, use as you see fit, just leave a reference to the author
+*	Description: 	Functions defined as plugins for the site, Say Wot? - stats (http://saywotstats.net)
+*	Author: 		Johan "DaWoody" Wedfelt
+*	Author 			URL: https://github.com/DaWoody
+*	License:   		GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
 *	
 *
 */
@@ -12,17 +12,24 @@ jQuery(document).ready(function(){
 	/*
 	*	Show Tanker Name
 	*/
-
 	$.fn.playerName = function(response){
 		var container = $(this);
 		var playerName = response.data.name;
 		container.append('<h1>Tanker: ' + playerName + '</h1>');
 	} 
 
+
+	/*
+	*	Show Player Server
+	*/
+	$.fn.printServer = function(server) {
+		var container = $(this);
+		container.append('<h1>Server: ' + server + '</h1>');
+	}
+
 	/*
 	*	Prints the headline to the total stats block
 	*/
-
 	$.fn.printTotalStatsHeader = function() {
 		var container = $(this);
 		var headline = '<div class="recent_total_stats_headline_div"><h1>Total</h1></div>';
@@ -32,7 +39,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Prints the headline to the recent stats block
 	*/
-
 	$.fn.printRecentStatsHeader = function() {
 		var container = $(this);
 		var headline = '<div class="recent_total_stats_headline_div"><h1>Recent<br><span>(24 hours from last update)</span></h1></div>';
@@ -218,7 +224,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show total battles played
 	*/
-
 	$.fn.totalBattlesPlayed = function(response) {
 		//We define what we get in
 		var container = $(this);
@@ -231,7 +236,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show hit percentage
 	*/	
-
 	$.fn.hitPercentage = function(response) {
 		//We define what we get in
 		var container = $(this);
@@ -243,7 +247,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show Clan Name and Image
 	*/
-
 	$.fn.clan = function(response){
 		
 		var container = $(this);
@@ -263,7 +266,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show total damage, Is this used??:...
 	*/
-
 	$.fn.totalDamage = function(response) {
 		var container = $(this);
 
@@ -274,7 +276,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show average damage past 24 hours
 	*/
-
 	$.fn.averageDamagePast24 = function(response1, response2) {
 
 		var container = $(this);
@@ -299,7 +300,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show amount of battles played the past 24 hours
 	*/
-
 	$.fn.battlesPlayedPast24 = function(response1, response2) {
 		var container = $(this);
 		//Total amount of battles, to last update.
@@ -316,7 +316,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Show the average experience gained per game the past 24 hours
 	*/
-
 	$.fn.averageExperiencePast24 = function(response1, response2) {
 		//Define what we get in
 		var container = $(this);
@@ -344,7 +343,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows average winrate from the past 24 hours
 	*/
-
 	$.fn.averageWinRatePast24 = function(response1, response2) {
 		//Define what we get in
 		var container = $(this);
@@ -377,7 +375,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows the average tier played in total
 	*/
-
 	$.fn.averageTier = function(response){
 		//Defining our container
 		var container = $(this);
@@ -407,7 +404,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows the average tier from the past 24 hours
 	*/
-
 	$.fn.averageTierPast24 = function(response1, response2){
 
 		//Define our first vehicles array
@@ -484,7 +480,9 @@ jQuery(document).ready(function(){
 
 	}
 
-
+	/*
+	*	A test function...to split arrays..
+	*/
 	$.fn.arraySplitFunction = function(response1, response2){
 
 		
@@ -551,7 +549,6 @@ jQuery(document).ready(function(){
 	/*
 	*	This will show us the name and the image of the most played vehicle in total
 	*/
-
 	$.fn.favoriteVehicleTotal = function(response) {
 		//Define what we get in
 		var container = $(this);
@@ -593,7 +590,6 @@ jQuery(document).ready(function(){
 			var vehicleImgObject = '';
 		}
 		
-		
 		//Print it to the DOM
 		container.append('<h1>Most played: ' + vehicleName + vehicleImgObject);
 	}
@@ -601,7 +597,6 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows us the name and image of the most played vehicle from the past 24 hours
 	*/
-
 	$.fn.favoriteVehiclePast24 = function(response1, response2) {
 		
 		//Define our first vehicles array

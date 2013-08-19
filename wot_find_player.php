@@ -9,6 +9,4 @@
 	$tankerdata = json_decode($json, true);
 	print_r($json);
 
-
-
 ?>

@@ -1,3 +1,12 @@
+/*
+*	Description: 	Some functions to handle the visual/interactive part of forms and other elements for the site, Say Wot? - stats (http://saywotstats.net)
+*	Author: 		Johan "DaWoody" Wedfelt
+*	Author 			URL: https://github.com/DaWoody
+*	License:   		GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
+*	
+*
+*/
+
 jQuery(document).ready(function(){
 	
 	/*
@@ -5,7 +14,7 @@ jQuery(document).ready(function(){
 	*/
 	var label = $("#search_player_form_section").find("label");
 	var about = $("#about");
-	var about_link = $("#about_link").find('span');
+	var about_link = $("#about_link");
 	var textField = $("#search_player_form_section").find("input[type=text]");
 	var labelValue = label.text();
 	
@@ -38,16 +47,11 @@ jQuery(document).ready(function(){
 		about.toggle();
 	}
 
-	
-
 	//Create some listeners..
 	textField.on('blur', CheckField);
 	textField.on('focus', RemoveName);
 	about_link.on('click', showAbout);
 
-
-
-	//console.log('Ok this is awesome too..' +  labelValue);
 
 
 });
