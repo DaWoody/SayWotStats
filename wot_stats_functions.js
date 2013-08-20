@@ -374,6 +374,110 @@ jQuery(document).ready(function(){
 	}
 
 	/*
+	*	Calculates average capture points over all battles
+	*/
+	$.fn.averageCapPoints = function(response) {
+		var container = $(this);
+
+		var totalCapPoints = response.data.ratings.ctf_points.value;
+
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response.data.summary.battles_count;
+		
+		if(totalAmountOfBattles === 0){
+			var averageCapPoints = 0;
+		}
+		else {
+			var averageCapPoints = Math.round((totalCapPoints/totalAmountOfBattles)*100)/100;
+		}
+		container.append('<h1>Average capture points: ' + averageCapPoints + '</h1>');
+		
+	}
+
+	/*
+	*	Calculates average capture points over the last 24 hours
+	*/
+	$.fn.averageCapPointsPast24 = function(response1, response2) {
+		var container = $(this);
+
+		//Getting the total cap points
+		var totalCapPoints = response1.data.ratings.ctf_points.value;
+		//Getting total cap points from 24 hours ago
+		var totalCapPointsLast24 = response2.stats[0].stats.ratings.ctf_points.value;
+
+		var capPointsPast24 = totalCapPoints - totalCapPointsLast24;
+
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//Total amount of battles, 24 hours ago.
+		var totalAmountOfBattles24Last = response2.stats[0].stats.summary.battles_count;
+
+		var battlesPast24 = totalAmountOfBattles - totalAmountOfBattles24Last;
+
+
+		
+		if(battlesPast24 === 0){
+			var averageCapPoints = 0;
+		}
+		else {
+			var averageCapPoints = Math.round((capPointsPast24/battlesPast24)*100)/100;
+		}
+		
+		container.append('<h1>Average capture points: ' + averageCapPoints + '</h1>');
+		
+	}
+
+	/*
+	*	Calculate average defense points
+	*/
+	$.fn.averageDefPoints = function(response) {
+		var container = $(this);
+		//Get the total number of def points
+		var totalDefPoints = response.data.ratings.dropped_ctf_points.value;
+		//Total amount of battles, to last update.
+		var totalAmountOfBattles = response.data.summary.battles_count;
+
+		if(totalAmountOfBattles === 0){
+			var averageDefPoints = 0;
+		}
+		else {
+			var averageDefPoints = Math.round((totalDefPoints/totalAmountOfBattles)*100)/100;
+		}
+		
+		container.append('<h1>Average defence points: ' + averageDefPoints + '</h1>');
+	}
+
+
+	/*
+	*	Calculate average defense points last 24 hours
+	*/
+	$.fn.averageDefPointsPast24 = function(response1, response2) {
+		var container = $(this);
+		//Get the total number of def points
+		var totalDefPoints = response1.data.ratings.dropped_ctf_points.value;
+		//Get the total number of def points 24 hours ago
+		var totalDefPoints24Last = response2.stats[0].stats.ratings.dropped_ctf_points.value;
+		//Calculate the difference
+		var defPointsPast24 = totalDefPoints - totalDefPoints24Last;
+
+		//Total amount of battles, to last update
+		var totalAmountOfBattles = response1.data.summary.battles_count;
+		//Total amount of battles, 24 hours ago
+		var totalAmountOfBattlesLast24 = response2.stats[0].stats.summary.battles_count;
+		//Calculate the difference
+		var battlesPast24 = totalAmountOfBattles - totalAmountOfBattlesLast24;
+
+		if(battlesPast24 === 0){
+			var averageDefPoints = 0;
+		}
+		else {
+			var averageDefPoints = Math.round((defPointsPast24/battlesPast24)*100)/100;
+		}
+		container.append('<h1>Average defence points: ' + averageDefPoints + '</h1>');
+	}
+
+
+	/*
 	*	Shows the average tier played in total
 	*/
 	$.fn.averageTier = function(response){
@@ -531,17 +635,6 @@ jQuery(document).ready(function(){
 				tanksArrayNew.push(tanksArray1[tank1]);
 			}
 		}
-
-		//console.log('The other array:');
-		//console.log(tanksArrayNew);
-		//console.log('Johan you freaaaking ROCK!');
-
-		//Now lets do cool stuff with our new arrays!
-
-		//Define our battles variable, this will increase as we iterate through
-		//var mostBattlesPlayed = 0;
-		//Define the variable we will call to fetch the tank which is most used	
-	
 		
 	}
 
@@ -644,11 +737,13 @@ jQuery(document).ready(function(){
 				tanksArrayNew.push(tanksArray1[tank1]);
 			}
 		}
+		/*
 		console.log('tanksArray2:');
 		console.log(tanksArray2);
 
 		console.log('tanksArrayJoined');
 		console.log(tanksArrayJoined);
+		*/
 		
 		//Define what we get in
 		var container = $(this);
