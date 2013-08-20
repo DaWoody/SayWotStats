@@ -834,7 +834,7 @@ jQuery(document).ready(function(){
 		
 		//Get the winRate
 		function negative(number){
-			var newNumber = number*-2;
+			var newNumber = [number*-2]+10;
 			console.log(newNumber);
 		}
 
@@ -870,6 +870,9 @@ jQuery(document).ready(function(){
 		*	+MIN(DEF,2.2)*100
 		*	+((185/(0.17+e^((WINRATE-35)*-0.134)))-500)*0.45
 		*	-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )]
+		*
+		*	With my rewrittings and according to the code below it could be written such as:
+		* 	WN7 = fragsObject + damageObject + spottedObject + defencePointsObject + winRateObject + gamesObject
 		*/
 
 
@@ -971,7 +974,7 @@ jQuery(document).ready(function(){
 		var averageTier = averageTier(response);
 		var averageFrags = averageFrags(response);
 		var averageDamage = averageDamage(response);
-		var winRate = winRate(response);
+		var theWinRate = winRate(response);
 		var averageDefPoints = averageDefPoints(response);
 		var averageSpotted = averageSpotted(response);
 		var battlesPlayed = battlesPlayed(response);
@@ -1026,13 +1029,44 @@ jQuery(document).ready(function(){
 
 		
 		//The winRate function
-		var winRateObject = function(winRate){
-			var winRateResult = ((185/(0.17 + Math.exp((winRate-35)*-0.134)))-500)*0.45;
+		var winRateObject = function(theWinRate){
+			var winRateResult = ((185/(0.17 + Math.exp((theWinRate-35)*-0.134)))-500)*0.45;
 			return winRateResult;
 		}
 
-		//The
+		//The Games Played Top function
+		var gamesObject = function(battlesPlayed, averageTier){
+			//-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )]
+			var capped = 1;
+			if(averageTier>5){
+				capped = 0;
+			}	
+			//We separate the top and bottom part of the formula
+			var topPart = [((5-(averageTier))*125)*capped];
+			var bottomPart =  [1 + Math.exp((averageTier-Math.pow((battlesPlayed/220),(3/averageTier)))*1.5)];
+			//And put it back together in the end
+			var gamesObjectResult = topPart/bottomPart;
+			return gamesObjectResult;
+		}
+
+		/*
+		*	The whole formula WN7 put together looks something like this
+		*	WN7 = fragsObject + damageObject + spottedObject + defencePointsObject + winRateObject + gamesObject
+		*
+		*	So lets instatiate the objects and get our values for the things
+		*/
+		//Instating and getting the calculated values for each part of the formula
+		var frags = fragsObject(averageFrags, averageTier);
+		var damage = damageObject(averageDamage, averageTier);
+		var spotted = spottedObject(averageSpotted, averageTier);
+		var defencePoints = defencePointsObject(averageDefPoints);
+		var winRate = winRateObject(theWinRate);
+		var games = gamesObject(battlesPlayed, averageTier);
+
+		//Adding upp the values, and getting the wn7 value
+		var wn7 = frags + damage + spotted + defencePoints + winRate - games; 
 		
+		console.log('wn7 is awesome and is: ' + wn7);
 
 	}
 
