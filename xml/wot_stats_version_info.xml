@@ -13,4 +13,8 @@
 		All servers working except the SEA server atm. Working on implementing color codes for effiency visualization. Working on implementing WN7.
 	</version_info>
 
+	<dev_blog_url>
+		http://saywotstats.blogspot.se/
+	</dev_blog_url>	
+
 </xml>

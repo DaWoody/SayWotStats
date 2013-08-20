@@ -84,6 +84,18 @@ a:hover {
 	border:1px solid rgba(204,110,92,1);
 }
 
+#wot_stats_version_info a {
+	color:rgba(23, 68, 77 , 1);
+	text-shadow:1px 1px 2px white;
+	-webkit-transition: color 0.4s;
+	-moz-transition: color 0.4s;
+	transition: color 0.4s;
+}
+
+#wot_stats_version_info a:hover {
+	color:rgba(86,47,41, 0.8);
+}
+
 .loading {
 	background: url('ajax-loader.gif') no-repeat center;
 }
@@ -204,15 +216,15 @@ a:hover {
 #total_stats {
 	width:48%;
 	float:right;
-	min-width:200px; /* */
+	min-width:16.666667em; /* 200/12 = 16.666667em*/
 	border-right:1px solid rgba(204,110,92,1); 
 }
 
 #recent_stats {
 	width:48%;
 	float:right;
-	min-width:200px;
-	margin-left:20px;
+	min-width:16.666667em; /* 200/12 = 16.666667em*/
+	margin-left:1.6666667em; /* 20/12 = 16.666667em*/
 }
 
 .clan_image {
@@ -230,7 +242,7 @@ a:hover {
 }
 
 #server_version_about_section{
-
+	font-size:1.1em;
 }
 
 #server_about_wrapper{
@@ -246,6 +258,7 @@ a:hover {
 }
 
 #server_selection select {
+	font-size:12px;
 	color: rgba(204,110,92,1);
 	border: none !important;
 	width:9.5em;
@@ -269,6 +282,7 @@ a:hover {
 
 #about {
 	margin-top:0.83333em;
+	//font-size:12px;
 }
 
 #about_link {
@@ -276,6 +290,7 @@ a:hover {
 	width:9em;
 	text-align:right;
 	margin-top:2px;
+	//font-size:1.083333em; /* 13/12 =  1.0833333em*/
 }
 
 #about_link {

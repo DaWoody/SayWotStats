@@ -800,4 +800,240 @@ jQuery(document).ready(function(){
 		container.append('<h1>Most played: ' + vehicleName + vehicleImgObject);
 		
 	}
+
+
+	/*
+	*	Math test function
+	*/
+	$.fn.mathTest = function(response){
+		var number1 = 2;
+		var number2 = 2;
+
+		//var number3 = Math.pow(number1, number2);
+
+		var number4 = Math.exp(1);
+		console.log(number4);
+
+
+		/*
+		var frags = function(frags, tier){
+			//Set a variable that will make the term (our frags contribution) 0 if the tier is over 6.
+			var capped = 1;
+			if(tier>6){
+				capped = 0;
+			}
+
+			//Set up the formula, also we are adding the capped variable described above
+			var fragsResult = ((1240-(1040/(Math.pow(tier, 0.164))))*frags)*capped;
+
+			return fragsResult;	
+		}
+
+		frags(1000,5);
+		*/
+		
+		//Get the winRate
+		function negative(number){
+			var newNumber = number*-2;
+			console.log(newNumber);
+		}
+
+
+		negative(3);
+		
+	}
+
+
+	/*
+	*	The big bad boy forumula WN7 Coming up... this in total
+	*/
+	$.fn.wn7Total = function(response) {
+		//Defining our container
+		var container = $(this);
+
+		/* 
+		*	METHOD:
+		*	The formula is an addition of different complex terms,
+		*	which in turn consist of different factors weighted with
+		*	different typical statistical factors to make the value normalized
+		*	The main contributing parts of the formula seen without weights and normalization
+		*	is: Frags, Damage, Spot, DefencePoints, WinRate and a penalty based on uptill tier 5 and Games played. 
+		*	Frags*weight + Damage*weight + Spot*weight + DefencePoints*weight + WinRate*weight - GamesTop/GamesBelow*weight
+		*	To do this I will separate the formula in the different terms and then add upp the result.
+		*/
+
+		/*
+		*	WN7 formula: (Read more at: http://forum.worldoftanks.com/index.php?/topic/184017-wn7-what-is-it-and-how-does-it-work/)
+		*	(1240-1040/(MIN(TIER,6))^0.164)*FRAGS
+		*	+DAMAGE*530/(184*e^(0.24*TIER)+130)
+		*	+SPOT*125*MIN(TIER, 3)/3
+		*	+MIN(DEF,2.2)*100
+		*	+((185/(0.17+e^((WINRATE-35)*-0.134)))-500)*0.45
+		*	-[(5 - MIN(TIER,5))*125] / [1 + e^( ( TIER - (GAMESPLAYED/220)^(3/TIER) )*1.5 )]
+		*/
+
+
+		//First lets fetch the values we need, averagetier, games, averagespot, averagedefencepoints, winrate
+		//Starting with our average tier
+		function averageTier(response){
+				//Defining some variables we need when we iterate through the array
+				var countMatchesIteration = 0;
+				var countMatchesLevelIteration = 0;
+
+				//Getting in our vehicles array from the object
+				var tanksArray = response.data.vehicles;
+				
+				for(var tank in tanksArray){
+					//Getting the specific tier for this tank
+					var tier = tanksArray[tank].level;
+					//Getting the number of battles played in this tank
+					var matches = tanksArray[tank].battle_count;
+					//Iterating over all tanks and counting the amount of total games played
+					countMatchesIteration = countMatchesIteration + matches;
+					//Iterating and summing up the product of this tank's matches*tier
+					countMatchesLevelIteration = countMatchesLevelIteration + (matches*tier);
+				}
+				//Do our average tier calculation
+				var averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
+				return averageTier;
+		}
+
+		//Fetching the amount of battles we played
+		function battlesPlayed(response){
+			//Defining some variables
+			var totalBattlesPlayed = response.data.summary.battles_count;
+			return totalBattlesPlayed;
+		}	
+
+
+		//Fetching the average amount of frags
+		function averageFrags(response){
+			//Fetching the amount of battles
+			var totalBattlesPlayed = response.data.summary.battles_count;
+			//Fetching the amount of total frags
+			var totalFrags = response.data.battles.frags;
+			//Calculating average frags
+			var averageFrags = totalFrags/totalBattlesPlayed;
+			return averageFrags;
+		}
+
+		//Fetching average spoting per game
+		function averageSpotted(response){
+			//Get the total amount of spots
+			var totalSpotted = response.data.battles.spotted;
+			//Fetching the amount of battles
+			var totalBattlesPlayed = response.data.summary.battles_count;
+			//Get the average spot, by dividing the spots with battles
+			var averageSpotted = totalSpotted/totalBattlesPlayed;
+			return averageSpotted;
+		}
+
+		//Fetching average damage
+		function averageDamage(response){
+			//Defining some variables
+			var totalBattlesPlayed = response.data.summary.battles_count;
+			//Getting the total damage
+			var totalDamage = response.data.battles.damage_dealt;
+			//Calculate the average damage
+			var averageDamage = totalDamage/totalBattlesPlayed;
+			return averageDamage;
+		}
+
+		//Get the average def points
+		function averageDefPoints(response) {
+			//Get the total number of def points
+			var totalDefPoints = response.data.ratings.dropped_ctf_points.value;
+			//Total amount of battles, to last update.
+			var totalAmountOfBattles = response.data.summary.battles_count;
+
+			if(totalAmountOfBattles === 0){
+				var averageDefPoints = 0;
+			}
+			else {
+				var averageDefPoints = Math.round((totalDefPoints/totalAmountOfBattles)*100)/100;
+			}
+			return averageDefPoints;
+		}
+
+		//Get the winrate
+		function winRate(response){
+			//Get total amount of wins
+			var totalWins = response.data.summary.wins;
+			//Total amount of battles, to last update.
+			var totalAmountOfBattles = response.data.summary.battles_count;
+			//Calculate the win ratio
+			var winRate = (totalWins/totalAmountOfBattles)*100;
+			return winRate;
+		}
+
+
+		//Creating our objects from the functions above, these variables, containing values calculated fom the functions above, will go into our WN7 formula
+		var averageTier = averageTier(response);
+		var averageFrags = averageFrags(response);
+		var averageDamage = averageDamage(response);
+		var winRate = winRate(response);
+		var averageDefPoints = averageDefPoints(response);
+		var averageSpotted = averageSpotted(response);
+		var battlesPlayed = battlesPlayed(response);
+
+
+
+
+
+
+		//Lets start defining our functions as objects
+		//The frag function object needs average frags and average tier
+		var fragsObject = function(averageFrags, averageTier){
+			//Set a variable that will make the term (our frags contribution) 0 if the tier is over 6.
+			var capped = 1;
+			if(averageTier>6){
+				capped = 0;
+			}
+
+			//Set up the formula, also we are adding the capped variable described above
+			var fragsResult = ((1240-(1040/(Math.pow(averageTier, 0.164))))*averageFrags)*capped;
+			return fragsResult;	
+		}
+
+		//The Damage function object needs average damage and average tier
+		var damageObject = function(averageDamage, averageTier){
+			//Setting up the formula for the damage section, and then returning the result
+			var damageResult = (averageDamage*530)/(184*Math.exp(0.24*averageTier) + 130);
+			return damageResult;	
+		}
+
+		//The spotting function
+		var spottedObject = function(averageSpotted, averageTier){
+			//Setting the cap value for the average tier to 3
+			var capped = 1;
+			if(averageTier>3){
+				capped = 0;
+			}
+
+			var spottedResult = ((averageSpotted*125*averageTier)/3)*capped;
+			return spottedResult;
+		}
+
+		//The defence points function
+		var defencePointsObject = function(averageDefPoints){
+			//Set the max value of the averageDefPoints to be 2.2
+			if(averageDefPoints>2.2){
+				averageDefPoints = 2.2;
+			}
+			var defencePointsResult = Math.round(averageDefPoints*100);
+			return defencePointsResult;
+		}
+
+		
+		//The winRate function
+		var winRateObject = function(winRate){
+			var winRateResult = ((185/(0.17 + Math.exp((winRate-35)*-0.134)))-500)*0.45;
+			return winRateResult;
+		}
+
+		//The
+		
+
+	}
+
 });

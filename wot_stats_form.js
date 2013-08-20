@@ -39,13 +39,15 @@ jQuery(document).ready(function(){
 							var versionTitle = $(data).find('version_title').text();
 							var versionInfoHeader = $(data).find('version_info_title').text();
 							var versionInfo = $(data).find('version_info').text();
+							var dev_blog_url = $(data).find('dev_blog_url').text();
 
 							console.log(versionInfoHeader);
 
 							//Print it to the DOM
 							version_link.text(versionTitle);
-							version_info.html('<h3>' + versionInfoHeader + '</h3>');
+							version_info.html('<h3>' + versionInfoHeader + ' ' + versionTitle + '</h3>');
 							version_info.append(versionInfo);
+							version_info.append('Read more at the <a href="' + dev_blog_url + '">development blog</a>');
 						},
 						error: function(data) {
 							console.log('hhmm ok something went wrong..');
