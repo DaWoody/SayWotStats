@@ -51,13 +51,38 @@ a:hover {
 	margin-top:-0.4166667em; /*  5/12 = 0.4166667em*/
 }
 
-/*
-#wot_stats_version{
-	position:absolute;
-	margin-top:-180px;
-	margin-left:0px;
+#wot_stats_version_link {
+	text-align: center;
+	margin-top:-7px;
+	font-size:0.8em;
+	color: rgba(204,110,92,1);
+	text-shadow: 1px 1px 2px rgba(23, 68, 77 , 1);
+	-webkit-transition: color 0.4s;
+	-moz-transition: color 0.4s;
+	transition: color 0.4s;
 }
-*/
+
+#wot_stats_version_link:hover {
+	cursor:pointer;
+	text-decoration:underline;
+	color:rgb(249,184,93);
+}
+
+#wot_stats_version_info {
+	position:absolute;
+	margin-top:10px;
+	margin-left:25px;
+	width:280px;
+	padding:5px;
+	-moz-border-radius:0.833333em;
+	-webkit-border-radius:0.833333em;
+	-o-border-radius:0.833333em;
+	border-radius:0.833333em;
+	color:rgba(86,47,41, 0.8);
+	text-shadow:1px 1px 2px white;
+	background: rgb(249,184,93);
+	border:1px solid rgba(204,110,92,1);
+}
 
 .loading {
 	background: url('ajax-loader.gif') no-repeat center;
@@ -240,22 +265,7 @@ a:hover {
 }
 
 
-#wot_stats_version {
-	text-align: center;
-	margin-top:-7px;
-	font-size:0.8em;
-	color: rgba(204,110,92,1);
-	text-shadow: 1px 1px 2px rgba(23, 68, 77 , 1);
-	-webkit-transition: color 0.4s;
-	-moz-transition: color 0.4s;
-	transition: color 0.4s;
-}
 
-#wot_stats_version:hover {
-	cursor:pointer;
-	text-decoration:underline;
-	color:rgb(249,184,93);
-}
 
 #about {
 	margin-top:0.83333em;

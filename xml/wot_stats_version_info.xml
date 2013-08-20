@@ -1,0 +1,16 @@
+<xml>
+
+	<version_title>
+	V1.0 Beta
+	</version_title>
+
+	<version_info_title>
+		Version Information:
+	</version_info_title>	
+
+	<version_info>
+		Currently using unofficial Wot API version 1.X, working on a solution to move to 2.X.
+		All servers working except the SEA server atm. Working on implementing color codes for effiency visualization. Working on implementing WN7.
+	</version_info>
+
+</xml>

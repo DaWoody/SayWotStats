@@ -17,17 +17,48 @@ jQuery(document).ready(function(){
 	var about_link = $("#about_link");
 	var textField = $("#search_player_form_section").find("input[type=text]");
 	var labelValue = label.text();
+	var version_link = $('#wot_stats_version_link');
+	var version_info = $('#wot_stats_version_info');
 	
-	//Hiding the label from start...
+	//Hiding the label from start and the info box
 	label.hide();
 	about.hide();
+	version_info.hide();
 	//Setting the value of the textfield equal to that of the label
 	textField.val(labelValue);
+	
 
+	wotStatsVersionUrlXml = 'xml/wot_stats_version_info.xml';
+
+	var initWotStats = {
+		getVersion: function() {
+					$.ajax(wotStatsVersionUrlXml,{
+						dataType: 'xml',
+						success: function(data) {
+							//lets traverse through the data and build the DOM
+							var versionTitle = $(data).find('version_title').text();
+							var versionInfoHeader = $(data).find('version_info_title').text();
+							var versionInfo = $(data).find('version_info').text();
+
+							console.log(versionInfoHeader);
+
+							//Print it to the DOM
+							version_link.text(versionTitle);
+							version_info.html('<h3>' + versionInfoHeader + '</h3>');
+							version_info.append(versionInfo);
+						},
+						error: function(data) {
+							console.log('hhmm ok something went wrong..');
+						}
+					});
+		}	
+
+	}
+		
+	
 
 
 	//Create some functions
-
 	function RemoveName() {
 		textField.addClass('highlighted');
 		if(textField.val()=='Tanker Name'){
@@ -47,11 +78,20 @@ jQuery(document).ready(function(){
 		about.toggle();
 	}
 
-	//Create some listeners..
+	function showVersionInfo() {
+		version_info.toggle();
+	}
+
+	//Create some listeners for our 
 	textField.on('blur', CheckField);
 	textField.on('focus', RemoveName);
 	about_link.on('click', showAbout);
+	version_link.on('click', showVersionInfo);
 
+
+
+	//Init our form listener
+	initWotStats.getVersion();
 
 
 });

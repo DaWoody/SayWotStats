@@ -1,5 +1,6 @@
 /*
 *	Description: 	Functions defined as plugins for the site, Say Wot? - stats (http://saywotstats.net)
+*	VersionInfo:  	Using WOT API v1.X
 *	Author: 		Johan "DaWoody" Wedfelt
 *	Author 			URL: https://github.com/DaWoody
 *	License:   		GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
@@ -247,7 +248,7 @@ jQuery(document).ready(function(){
 	/*
 	*	Show Clan Name and Image
 	*/
-	$.fn.clan = function(response){
+	$.fn.clan = function(response, serverAbbreviation){
 		
 		var container = $(this);
 		var clan = response.data.clan.clan;
@@ -256,7 +257,7 @@ jQuery(document).ready(function(){
 			var clanName = response.data.clan.clan.abbreviation
 			var clanImageUrl = response.data.clan.clan.emblems_urls.small;
 			var clanId = response.data.clan.clan.id;
-			var clanUrl = 'http://worldoftanks.eu/uc/clans/' + clanId + '-' + clanName + '/';
+			var clanUrl = 'http://worldoftanks' + serverAbbreviation +  '/uc/clans/' + clanId + '-' + clanName + '/';
 			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img class ="clan_image" src="' + clanImageUrl + '" /></a>');	
 		}
 		

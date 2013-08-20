@@ -1,15 +1,13 @@
 /*
 *	Description: 	The jQuery engine WoodyWotStats for the site Say Wot?-Stats. Utilizing the unoffical WOT-API, (https://gist.github.com/bartku/4271798).
 *					This engine utilizes a different set of methods involving calculations on/and extracting data from the objects returned from the API. 					
+*	VersionInfo:  	Using WOT API v1.X	
 *	Author: 		Johan "DaWoody" Wedfelt 
 *	AuthorURL:  	https://github.com/DaWoody
 *	License:   	    GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
 *
-*
-*
 */
 jQuery(document).ready(function(){
-
 	/*
 	*	Some global variables
 	*/
@@ -21,21 +19,17 @@ jQuery(document).ready(function(){
 	var player_stats_total = $("#total_stats");
 	var player_stats_recent = $("#recent_stats");
 	var the_form = $('#search_player_form_section');
-	var version = $('#wot_stats_version');
 
 
 	//Building the API http request, internally
 	var httpFindPlayer = 'wot_find_player.php';
 	var httpShowPlayer = 'wot_show_player_stats.php';
 
-	//Defining what version
-	var sayWotVersion = 'V1.0 BETA';
 
-	/*
-	*	Do some css fixes on first page load
-	*/
+	
+	//Some CSS fixes on first load
 	player_stats_recent.addClass('on_first_load_css_fix');
-	version.text(sayWotVersion);
+
 
 
 	/*
@@ -49,7 +43,6 @@ jQuery(document).ready(function(){
 
 			//Here we need to fetch our options from the select input
 			var server = $('#server_selection').find('select').find('option:selected').val();
-			//console.log('From the start hohoho:' + selectOption);
 
 			switch(server){
 				case 'ru': {
@@ -58,15 +51,21 @@ jQuery(document).ready(function(){
 				}	
 				break;
 
-				case 'na': {
+				case 'us': {
 						serverName = 'North American';
 						serverAbbreviation = '.com';
 				}
 				break;
-
+				/*
 				case 'sea': {
 						serverName = 'South East Asian';
 						serverAbbreviation = '-sea.com';
+				}
+				break;
+				*/
+				case 'kr': {
+						serverName = 'Korean';
+						serverAbbreviation = '.kr';
 				}
 				break;
 
@@ -123,13 +122,15 @@ jQuery(document).ready(function(){
 							//Get the id from the data, since now the player do exist.
 							var id = response.data.items[0].id;	
 
+							console.log('player id is: ' + id);
+
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation);
 							var playerPastStatsPromise = AjaxPlayerPastStats.getPlayerPastStats(id, server); 
 
 							$.when(playerTotalStatsPromise,playerPastStatsPromise).done(function(response1, response2){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
-								CalculateStatsEngine(response1, response2, serverName);
+								CalculateStatsEngine(response1, response2, serverName, serverAbbreviation);
 							});
 							//remove our css class, when we are done
 							player_stats_container.removeClass('loading');
@@ -218,12 +219,9 @@ jQuery(document).ready(function(){
 
 	//Declaring the second promise as an object
 	var AjaxPlayerPastStats = {
-		getPlayerPastStats: function(id, serverName) {
+		getPlayerPastStats: function(id, server) {
 
 			var promise = $.Deferred();
-
-			//Fetching our server value
-			var server = serverName;
 
 			var tankerId = id;
 
@@ -257,7 +255,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, server) {
+	function CalculateStatsEngine(response1, response2, server, serverAbbreviation) {
 
 		
 		//Dev stuff below... could be removed later.
@@ -274,6 +272,7 @@ jQuery(document).ready(function(){
 
 		//Call our different plugins here below
 
+		
 		//Recent Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
 		player_stats_recent.battlesPlayedPast24(response1, response2);
@@ -283,8 +282,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageTierPast24(response1,response2);
 		player_stats_recent.favoriteVehiclePast24(response1, response2);
 		
-		
-		
+
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
 		player_stats_total.totalBattlesPlayed(response1);
@@ -295,10 +293,9 @@ jQuery(document).ready(function(){
 		player_stats_total.favoriteVehicleTotal(response1);
 		
 
-
 		//General Information Plugins
 		player_general_information.playerName(response1);
-		player_general_information.clan(response1);
+		player_general_information.clan(response1, serverAbbreviation);
 		player_general_information.printServer(server);
 		player_general_information.lastUpdated(response1);
 		
