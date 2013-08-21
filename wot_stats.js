@@ -4,6 +4,7 @@
 *	VersionInfo:  	Using WOT API v1.X	
 *	Author: 		Johan "DaWoody" Wedfelt 
 *	AuthorURL:  	https://github.com/DaWoody
+* 	Feedback/Dev:  	http://saywotstats.blogspot.se
 *	License:   	    GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
 *
 */
@@ -24,12 +25,9 @@ jQuery(document).ready(function(){
 	//Building the API http request, internally
 	var httpFindPlayer = 'wot_find_player.php';
 	var httpShowPlayer = 'wot_show_player_stats.php';
-
-
 	
 	//Some CSS fixes on first load
 	player_stats_recent.addClass('on_first_load_css_fix');
-
 
 
 	/*
@@ -83,11 +81,8 @@ jQuery(document).ready(function(){
 			var tankerName = $('#search_player_form_section').find('input[type=text]').val();
 			var apiFetchNameUrl	= 'http://api.worldoftanks' + serverAbbreviation +'/community/accounts/api/'+ api_ver +'/?source_token='+ source_token +'&search='+ tankerName +'&offset=0&limit=1';
 
-
 			//Do some quick css fixes to our DOM
 			player_stats_recent.removeClass('on_first_load_css_fix');	
-
-
 
 			$.ajax(httpFindPlayer, {
 				
@@ -213,9 +208,6 @@ jQuery(document).ready(function(){
 		}
 
 	}
-	
-
-
 
 	//Declaring the second promise as an object
 	var AjaxPlayerPastStats = {
@@ -307,8 +299,6 @@ jQuery(document).ready(function(){
 		
 
 		//Test plugins, before going live...or just for fun ;)
-		player_general_information.mathTest(response2);
-		//player_stats_recent.arraySplitFunction(response1, response2);
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
 		//player_general_information.calculateTotalTimePlayed(response1);

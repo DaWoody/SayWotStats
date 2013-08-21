@@ -2,7 +2,8 @@
 *	Description: 	Functions defined as plugins for the site, Say Wot? - stats (http://saywotstats.net)
 *	VersionInfo:  	Using WOT API v1.X
 *	Author: 		Johan "DaWoody" Wedfelt
-*	Author 			URL: https://github.com/DaWoody
+*	AuthorUrl 		https://github.com/DaWoody
+* 	Feedback/Dev:  	http://saywotstats.blogspot.se 
 *	License:   		GNU General Public License, version 3(GPL-3.0) (http://opensource.org/licenses/GPL-3.0)
 *	
 *
@@ -240,11 +241,14 @@ jQuery(document).ready(function(){
 	*	Show total battles played
 	*/
 	$.fn.totalBattlesPlayed = function(response) {
+		var statName = 'totalBattlesPlayed';
 		//We define what we get in
 		var container = $(this);
 		//Defining some variables
 		var totalBattlesPlayed = response.data.summary.battles_count;
-		container.append('<h1>Battles played: ' + totalBattlesPlayed + '</h1>');
+		//Lets get the color code for this specific stat
+		var color = container.printColorToStat(statName,totalBattlesPlayed);
+		container.append('<h1>Battles played: <span style="color:' + color + '">'+  totalBattlesPlayed + '</span></h1>');
 	}
 	
 
@@ -323,7 +327,6 @@ jQuery(document).ready(function(){
 		var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
 		//The amount of battles the last 24 hours
 		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
-
 		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1>');
 	} 
 
@@ -362,6 +365,9 @@ jQuery(document).ready(function(){
 		//Define what we get in
 		var container = $(this);
 
+		//We define what we send to the color code
+		var statName = 'averageWinRate';
+
 		//What to do.
 		//Get amount of battles and amount of wins, divide to get percentage
 
@@ -383,8 +389,11 @@ jQuery(document).ready(function(){
 		//Divide to get the win percentage from the past 24 hours
 		var winRatioPast24 = (Math.round(((winsPast24/battlesLast24Hours)*1000)))/10;
 
+		//Lets get the color code for this specific stat
+		var color = container.printColorToStat(statName,winRatioPast24);
+
 		//Print to DOM
-		container.append('<h1>Average winrate: ' + winRatioPast24 + '&#37;</h1>');
+		container.append('<h1>Average winrate: <span style="color:' + color + '">'+ winRatioPast24 + '&#37;</span></h1>');
 	}
 
 	/*
@@ -425,11 +434,9 @@ jQuery(document).ready(function(){
 		var totalAmountOfBattles = response1.data.summary.battles_count;
 		//Total amount of battles, 24 hours ago.
 		var totalAmountOfBattles24Last = response2.stats[0].stats.summary.battles_count;
-
+		//Calculate the battles the past 24 hours
 		var battlesPast24 = totalAmountOfBattles - totalAmountOfBattles24Last;
 
-
-		
 		if(battlesPast24 === 0){
 			var averageCapPoints = 0;
 		}
@@ -614,61 +621,7 @@ jQuery(document).ready(function(){
 
 	}
 
-	/*
-	*	A test function...to split arrays..
-	*/
-	$.fn.arraySplitFunction = function(response1, response2){
-
-		
-		//Define our first vehicles array
-		var tanksArray1 = response1.data.vehicles;
-		var tanksArray2 = response2.stats[0].stats.vehicles
-		
-		//This is the new array with elements from total stats, that also resides in recent stats
-		var tanksArrayJoined = [];
-		//This is the array that will hold new vehicle data, only available through total stats..
-		var tanksArrayNew = [];
-
-		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
-		//Here we will put our data that coincides over both recent and total stats, in a new array
-		for(var tank2 in tanksArray2){
-
-			var tankName2 = tanksArray2[tank2].localized_name;
-			
-			for(var i=0; i<tanksArray1.length; i++){
-			
-				if(tanksArray1[i].localized_name===tankName2){
-					//Save the tank object in the new array, now that we found it
-					tanksArrayJoined.push(tanksArray1[i]);
-				}	
-			}
-		}	
-
-		//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
-		for(var tank1 in tanksArray1){
-
-			var tankName1 = tanksArray1[tank1].localized_name;
-			var tankExist = false;
-
-			for(var i=0; i<tanksArray2.length; i++){
-				var tankName2 = tanksArray2[i].localized_name;
-
-				if(tankName1 === tankName2){
-					tankExist = true;
-				}
-
-			}
-
-			if(tankExist===false){
-				//Do the splitting here, else do nothing..
-				tanksArrayNew.push(tanksArray1[tank1]);
-			}
-		}
-		
-	}
-
-
-
+	
 	/*
 	*	This will show us the name and the image of the most played vehicle in total
 	*/
@@ -859,46 +812,14 @@ jQuery(document).ready(function(){
 
 
 	/*
-	*	Math test function
-	*/
-	$.fn.mathTest = function(response){
-		var number1 = 2;
-		var number2 = 2;
-
-		//var number3 = Math.pow(number1, number2);
-
-		var number4 = Math.exp(1);
-		console.log(number4);
-
-
-		
-		
-		//Fetching the average amount of frags
-		function averageFragsPast24(response2){
-			//Fetching the amount of battles in total
-			//var totalBattlesPlayed = response1.data.summary.battles_count;
-			//Total amount of battles 24 hours ago
-			//var battles24HoursAgo = response2.stats[0].stats.summary.battles_count;
-			//Fetching the amount of total frags
-			//var totalFrags = response1.data.battles.frags;
-			//Fetching the amount of frags 24 hours ago
-			var totalFragsLast24 = response2.stats[0].stats.battles.frags;
-			//Calculating average frags
-			//var averageFrags = totalFrags/totalBattlesPlayed;
-			console.log('OOOk average frags ' + totalFragsLast24);
-		}
-
-		averageFragsPast24(response);
-		
-	}
-
-
-	/*
 	*	WN7 Agreggated function calculation, for total stats
 	*/
 	$.fn.wn7Total = function(response) {
 		//Defining our container
 		var container = $(this);
+
+		//Defining for our color code
+		var statName = 'wn7';
 
 		/* 
 		*	METHOD:
@@ -1114,8 +1035,11 @@ jQuery(document).ready(function(){
 		//A rounded value of WN7 with 0 decimals
 		var wn7Rounded= Math.round(wn7);
 
+		//Define the variables we need to color our wn7 result
+		var color = container.printColorToStat(statName, wn7Rounded);
+
 		//Print the result to the DOM
-		container.append('<h1>WN7 Rating: ' + wn7Rounded + '</h1>');
+		container.append('<h1>WN7 Rating: <span style="color:' + color +'">'  + wn7Rounded + '</span></h1>');
 
 	}
 
@@ -1125,6 +1049,9 @@ jQuery(document).ready(function(){
 	$.fn.wn7Past24 = function(response1, response2) {
 		//Defining our container
 		var container = $(this);
+
+		//Defining for our color code
+		var statName = 'wn7';
 
 		/* 
 		*	METHOD:
@@ -1457,10 +1384,15 @@ jQuery(document).ready(function(){
 		//A rounded value of WN7 with 0 decimals
 		var wn7Rounded= Math.round(wn7);
 
+		//Define the variables we need to color our wn7 result
+		var color = container.printColorToStat(statName, wn7Rounded);
+
 		//Print the result to the DOM
-		container.append('<h1>WN7 Rating: ' + wn7Rounded + '</h1>');
+		container.append('<h1>WN7 Rating: <span style="color:' + color +'">'  + wn7Rounded + '</span></h1>');
 
+	
 
+		/*
 		//TEST CONSOLE PRINTS
 		//HMm lets see the errors..
 		console.log('wn7 RECENT STARTING FROM HERE:::::');
@@ -1487,7 +1419,7 @@ jQuery(document).ready(function(){
 		console.log('');
 		console.log('WN7 in total is: ' + wn7);
 		console.log('WN7Round in total is: ' + wn7Rounded);
-		
+		*/
 
 	}
 

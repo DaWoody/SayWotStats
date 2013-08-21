@@ -10,7 +10,7 @@
 
 	<version_info>
 		Currently using unofficial Wot API version 1.X
-		All servers working except the SEA server atm. Working on implementing color codes for effiency visualization. WN7 implementation for total and recent stats, done! :)
+		All servers working except the SEA server atm.
 	</version_info>
 
 	<dev_blog_url>
