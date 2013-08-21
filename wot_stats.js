@@ -282,6 +282,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageCapPointsPast24(response1, response2);
 		player_stats_recent.averageDefPointsPast24(response1, response2);
 		player_stats_recent.averageTierPast24(response1,response2);
+		player_stats_recent.wn7Past24(response1, response2);
 		player_stats_recent.favoriteVehiclePast24(response1, response2);
 		
 
@@ -306,7 +307,7 @@ jQuery(document).ready(function(){
 		
 
 		//Test plugins, before going live...or just for fun ;)
-		//player_general_information.mathTest(response1);
+		player_general_information.mathTest(response2);
 		//player_stats_recent.arraySplitFunction(response1, response2);
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
