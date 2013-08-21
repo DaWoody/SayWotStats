@@ -9,8 +9,8 @@
 	</version_info_title>	
 
 	<version_info>
-		Currently using unofficial Wot API version 1.X, working on a solution to move to 2.X.
-		All servers working except the SEA server atm. Working on implementing color codes for effiency visualization. Working on implementing WN7.
+		Currently using unofficial Wot API version 1.X
+		All servers working except the SEA server atm. Working on implementing color codes for effiency visualization. WN7 implementation for total and recent stats, done! :)
 	</version_info>
 
 	<dev_blog_url>

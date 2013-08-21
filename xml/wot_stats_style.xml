@@ -1,0 +1,91 @@
+<xml>
+	<stats>
+		<color_object>
+			<!-- Unicum -->
+			<color_1>
+				purple
+			</color_1>
+			<!-- Great -->
+			<color_2>
+				blue
+			</color_2>
+			<!-- Good -->
+			<color_3>
+				green
+			</color_3>
+			<!-- Average -->
+			<color_4>
+				yellow
+			</color_4>
+			<!-- Bad -->
+			<color_5>
+				red
+			</color_5>	
+		</color_object>	
+		<total_stats>
+			<winrate>
+				<rating_object>
+					<name>
+					Unicum
+					</name>
+
+					<range>
+						<value1>
+							1700
+						</value1>
+						<value2>
+							9999
+						</value2>	
+					</range>	
+					
+					<color>
+						purple
+					</color>	
+				</rating_object>
+
+				<rating_object>
+					<name>
+					Great
+					</name>
+
+					<range>
+						<value1>
+							1530
+						</value1>
+						<value2>
+							1699
+						</value2>	
+					</range>	
+					
+					<color>
+						blue
+					</color>	
+				</rating_object>
+
+				<rating_object>
+					<name>
+					Good
+					</name>
+
+					<range>
+						<value1>
+							1200
+						</value1>
+						<value2>
+							1529
+						</value2>	
+					</range>	
+					
+					<color>
+						green
+					</color>	
+				</rating_object>
+
+			</winrate>
+
+		</total_stats>
+
+		<recent_stats>
+		</recent_stats>	
+	</stats>	
+</xml>

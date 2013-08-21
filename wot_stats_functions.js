@@ -90,6 +90,9 @@ jQuery(document).ready(function(){
 		//We define what we get in
 		var container = $(this);
 
+		//We define what we send to the color code
+		var statName = 'averageWinRate';
+
 		//Get total battles
 		var totalBattlesPlayed = response.data.summary.battles_count;
 
@@ -98,8 +101,12 @@ jQuery(document).ready(function(){
 
 		//The average winrate
 		var averageWinRate = Math.round((totalWins/totalBattlesPlayed)*1000)/10;
+
+		//Lets get the color code for this specific stat
+		var color = container.printColorToStat(statName,averageWinRate);
+
 		//Write it back to the DOM
-		container.append('<h1>Average winrate: ' + averageWinRate + '&#37;</h1>');
+		container.append('<h1>Average winrate: <span style="color:' + color + '">'+ averageWinRate + '&#37;</span></h1>');
 	}
 
 
@@ -1109,35 +1116,6 @@ jQuery(document).ready(function(){
 
 		//Print the result to the DOM
 		container.append('<h1>WN7 Rating: ' + wn7Rounded + '</h1>');
-
-
-		/* TEST CONSOLE PRINTS
-		//HMm lets see the errors..
-		console.log('wn7 STARTING FROM HERE:::::');
-		console.log('General STATS, unmodified:');
-
-		console.log('tier: '+ averageTier);
-		console.log('frags: '+ averageFrags);
-		console.log('dmg :' + averageDamage);
-		console.log('winrate ' + theWinRate);
-		console.log('defpoints ' + averageDefPoints);
-		console.log('spotted ' + averageSpotted);
-		console.log('battles ' + battlesPlayed);
-
-		console.log('');
-
-		console.log('Modified STATS weighted parameters in WN7');
-		console.log('frags part: ' + frags);
-		console.log('damage part: ' + damage);
-		console.log('spotted part: ' + spotted);
-		console.log('defencePoints part: ' + defencePoints);
-		console.log('winRate part: ' + winRate);
-		console.log('games part: ' + games);
-
-		console.log('');
-		console.log('WN7 in total is: ' + wn7);
-		console.log('WN7Round in total is: ' + wn7Rounded);
-		*/
 
 	}
 
