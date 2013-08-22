@@ -38,7 +38,7 @@ jQuery(document).ready(function(){
 	function setWinRateColor(value){
 		var color;
 			//Unicum
-			if (value>60) {
+			if (value>=60) {
 				color = '#e2c0ff';
 			}
 			//Great
@@ -46,7 +46,7 @@ jQuery(document).ready(function(){
 				color = '#a1d7fd';
 			}
 			//Good
-			else if(value>51&&value<54) {
+			else if(value>51&&value<=54) {
 				color = '#68f06b';
 			}
 			//Average

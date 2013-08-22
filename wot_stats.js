@@ -29,7 +29,6 @@ jQuery(document).ready(function(){
 	//Some CSS fixes on first load
 	player_stats_recent.addClass('on_first_load_css_fix');
 
-
 	/*
 	*	Search Player Function
 	*/

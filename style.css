@@ -1,9 +1,8 @@
 /*
-*	Description:	CSS File for WOT-Stats
+*	Description:	CSS File for Say Wot? - Stats (http://saywotstats.net)
 *	Author:			Johan "DaWoody" Wedfelt
 *	Author URL:  	https://github.com/DaWoody
-*	Color Scheme:	
-*	TODO: Fix a bit fallback colors, gradients etc + converting to EM, % etc.. responsive;
+*	Feedback/Dev:   http://saywotstats.blogspot.se
 *
 */
 @import url(http://fonts.googleapis.com/css?family=Open+Sans&Quando);
@@ -53,7 +52,7 @@ a:hover {
 
 #wot_stats_version_link {
 	text-align: center;
-	margin-top:-7px;
+	margin-top:-0.58883em; /* 7/12 = 0.58883em */
 	font-size:0.8em;
 	color: rgba(204,110,92,1);
 	text-shadow: 1px 1px 2px rgba(23, 68, 77 , 1);
@@ -245,10 +244,6 @@ a:hover {
 	font-size:1.1em;
 }
 
-#server_about_wrapper{
-
-}
-
 #server_selection{
 	float:left;
 	background:transparent;
@@ -282,7 +277,6 @@ a:hover {
 
 #about {
 	margin-top:0.83333em;
-	//font-size:12px;
 }
 
 #about_link {
@@ -290,7 +284,6 @@ a:hover {
 	width:9em;
 	text-align:right;
 	margin-top:2px;
-	//font-size:1.083333em; /* 13/12 =  1.0833333em*/
 }
 
 #about_link {
