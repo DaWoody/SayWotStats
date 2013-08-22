@@ -105,15 +105,15 @@ jQuery(document).ready(function(){
 				color = '#a1d7fd';
 			}
 			//Good
-			else if(value>=10000&&value<14500) {
+			else if(value>=9000&&value<14500) {
 				color = '#68f06b';
 			}
 			//Average
-			else if(value>=3000&&value<10000){
+			else if(value>=1000&&value<9000){
 				color = '#f8ec87';
 			}
 			//Bad
-			else if(value<3000){
+			else if(value<1000){
 				color = '#f54747';
 			}
 			//Default color

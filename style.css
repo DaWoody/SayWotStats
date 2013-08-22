@@ -41,13 +41,16 @@ a:hover {
 	font-family: 'Quando', serif;
 	text-align:center;
 	color:rgba(23, 68, 77 , 1);
+	text-shadow:1px 1px 2px white;
 }
 
 #header_section h1#header_stats {
 	font-size: 2.166667em; /* 26/12 = 2.166667em*/
-	color:rgba(86,47,41, 0.8);
+	color: '#f9c2b7';
+	color: rgba(249,194,183,0.8);
+	text-shadow:1px 1px 2px rgb(85,47,40);
 	line-height:0.8em;
-	margin-top:-0.4166667em; /*  5/12 = 0.4166667em*/
+	margin-top:-1.2em; /*  25/12 = 2.0833333*/
 }
 
 #wot_stats_version_link {
@@ -113,7 +116,7 @@ a:hover {
 	-webkit-border-radius:0.833333em;
 	-o-border-radius:0.833333em;
 	border-radius:0.833333em;
-	background:rgba(90,130,138,1) url('images/world-of-tanks-background.png') no-repeat top center;
+	background:rgba(90,130,138,1) url('images/world-of-tanks-background3.png') no-repeat top center;
 }
 
 #player_stats_container {
