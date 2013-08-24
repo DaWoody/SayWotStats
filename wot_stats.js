@@ -19,6 +19,7 @@ jQuery(document).ready(function(){
 	var player_general_information = $("#player_general_information");
 	var player_stats_total = $("#total_stats");
 	var player_stats_recent = $("#recent_stats");
+	var player_stats_older = $("#older_stats");
 	var the_form = $('#search_player_form_section');
 
 
@@ -116,7 +117,7 @@ jQuery(document).ready(function(){
 							//Get the id from the data, since now the player do exist.
 							var id = response.data.items[0].id;	
 
-							console.log('player id is: ' + id);
+							//console.log('player id is: ' + id);
 
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation);
@@ -216,7 +217,7 @@ jQuery(document).ready(function(){
 
 			var tankerId = id;
 
-			var	apiFetchStatsUrl = 'http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=' + server + '&account_id=' + tankerId + '&hours_ago=24';
+			var	apiFetchStatsUrl = 'http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=' + server + '&account_id=' + tankerId + '&hours_ago=24&hours_ago=336';
 
 			$.ajax(httpShowPlayer, {
 				data: {
@@ -248,53 +249,86 @@ jQuery(document).ready(function(){
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
 	function CalculateStatsEngine(response1, response2, server, serverAbbreviation) {
 
-		
+		/*
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object:');
 		console.log(response1);
 		console.log('Player Recent Stats Object:');
 		console.log(response2);
+		*/
+
+		//First we modify our responses to work with our methods
+		//Data for total stats section
+		var responseData1 = response1.data;
+		//Data for 24 hours section
+		var responseData2 = response2.stats[0].stats;
+		//Data for 2 weeks section
+		var responseData3 = response2.stats[1].stats;
+
+
+
+		/*
+		//Dev stuff below... could be removed later.
+		console.log('Player Total Stats Object:');
+		console.log(responseData1);
+		console.log('Player Recent Stats Object:');
+		console.log(responseData2);
+		console.log('Player Older Stats Object:');
+		console.log(responseData3);
+		*/
+
 		
-		
-		//First we clear our DOM from previous searches
+		//We clear our DOM from previous searches
 		player_general_information.html('');
 		player_stats_recent.html('');
+		player_stats_older.html('');
 		player_stats_total.html('');
 
 		//Call our different plugins here below
 
 		
-		//Recent Stats Plugins
+		//24 Hours ago Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
-		player_stats_recent.battlesPlayedPast24(response1, response2);
-		player_stats_recent.averageWinRatePast24(response1,response2);
-		player_stats_recent.averageExperiencePast24(response1, response2);
-		player_stats_recent.averageDamagePast24(response1, response2);
-		player_stats_recent.averageCapPointsPast24(response1, response2);
-		player_stats_recent.averageDefPointsPast24(response1, response2);
-		player_stats_recent.averageTierPast24(response1,response2);
-		player_stats_recent.wn7Past24(response1, response2);
-		player_stats_recent.favoriteVehiclePast24(response1, response2);
+		player_stats_recent.battlesPlayedPast(responseData1, responseData2);
+		player_stats_recent.averageWinRatePast(responseData1,responseData2);
+		player_stats_recent.averageExperiencePast(responseData1, responseData2);
+		player_stats_recent.averageDamagePast(responseData1, responseData2);
+		player_stats_recent.averageCapPointsPast(responseData1, responseData2);
+		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
+		player_stats_recent.averageTierPast(responseData1,responseData2);
+		player_stats_recent.wn7Past(responseData1, responseData2);
+		player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
 		
+		//2 Weeks ago Stats Plugins
+		player_stats_older.printOlderStatsHeader();
+		player_stats_older.battlesPlayedPast(responseData1, responseData3);
+		player_stats_older.averageWinRatePast(responseData1,responseData3);
+		player_stats_older.averageExperiencePast(responseData1, responseData3);
+		player_stats_older.averageDamagePast(responseData1, responseData3);
+		player_stats_older.averageCapPointsPast(responseData1, responseData3);
+		player_stats_older.averageDefPointsPast(responseData1, responseData3);
+		player_stats_older.averageTierPast(responseData1,responseData3);
+		player_stats_older.wn7Past(responseData1, responseData3);
+		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
 
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
-		player_stats_total.totalBattlesPlayed(response1);
-		player_stats_total.averageWinRate(response1);
-		player_stats_total.averageExperience(response1);
-		player_stats_total.averageDamage(response1);
-		player_stats_total.averageCapPoints(response1);
-		player_stats_total.averageDefPoints(response1);
-		player_stats_total.averageTier(response1);
-		player_stats_total.wn7Total(response1);
-		player_stats_total.favoriteVehicleTotal(response1);
+		player_stats_total.totalBattlesPlayed(responseData1);
+		player_stats_total.averageWinRate(responseData1);
+		player_stats_total.averageExperience(responseData1);
+		player_stats_total.averageDamage(responseData1);
+		player_stats_total.averageCapPoints(responseData1);
+		player_stats_total.averageDefPoints(responseData1);
+		player_stats_total.averageTier(responseData1);
+		player_stats_total.wn7Total(responseData1);
+		player_stats_total.favoriteVehicleTotal(responseData1);
 		
 
 		//General Information Plugins
-		player_general_information.playerName(response1);
-		player_general_information.clan(response1, serverAbbreviation);
+		player_general_information.playerName(responseData1);
+		player_general_information.clan(responseData1, serverAbbreviation);
 		player_general_information.printServer(server);
-		player_general_information.lastUpdated(response1);
+		player_general_information.lastUpdated(responseData1);
 		
 
 		//Test plugins, before going live...or just for fun ;)

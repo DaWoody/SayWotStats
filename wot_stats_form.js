@@ -41,7 +41,7 @@ jQuery(document).ready(function(){
 							var versionInfo = $(data).find('version_info').text();
 							var dev_blog_url = $(data).find('dev_blog_url').text();
 
-							console.log(versionInfoHeader);
+							console.log('Say Wot Stats Engine ' + versionTitle + ' up and running! ;)');
 
 							//Print it to the DOM
 							version_link.text(versionTitle);
@@ -50,7 +50,7 @@ jQuery(document).ready(function(){
 							version_info.append('Read more at the <a href="' + dev_blog_url + '">development blog</a>');
 						},
 						error: function(data) {
-							console.log('hhmm ok something went wrong..');
+							console.log('hhmm ok something went wrong with the XML parsing..');
 						}
 					});
 		}	

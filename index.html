@@ -17,7 +17,6 @@ cheers!
 	<link rel="icon" type="image/x-icon" href="images/wot_stats_icon.png">
 </head>
 <body>
-<script>var _gaq = _gaq || [];</script>	
 <!-- Google Tag Manager -->
 <noscript><iframe src="//www.googletagmanager.com/ns.html?id=GTM-K7KNMK"
 height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -69,15 +68,23 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 	</section>
 	
 	<section id="player_total_recent_stats_container">
-		
-		<div id="recent_stats">
-			<!-- Here data will be inserted -->
+		<div>
+			<div id="recent_stats">
+				<!-- Here data will be inserted -->
+			</div>
+
+			<div id="older_stats">
+				<!-- Here data will be inserted -->
+			</div>
+			<div class="clear">&nbsp;</div>
 		</div>
 
-		<div id="total_stats">
-			<!-- Here data will be inserted -->
-		</div>
-		<div class="clear">&nbsp;</div>
+		<div id="total_stats_wrapper">
+			<div id="total_stats">
+				<!-- Here data will be inserted -->
+			</div>
+		</div>	
+		
 	</section>	
 </section>
 
@@ -97,7 +104,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 </section>
 
 <footer id="about">
-In august 2013, after some coffee, less to do on work (during summer holidays ofc;) and ideas on how kittens drive tanks, as my very good-looking alter-ego <a href="https://github.com/DaWoody">DaWoody</a>, utilizing the awesomeness of WOT open <a href="https://github.com/thunder-spb/wot-api-description">API's</a> (kudos to all who deserve it ;)), I decided to make my own statistics gathering web-engine for the game <a href="http://www.worldoftanks.com">World of Tanks</a>, by <a href="http://www.wargaming.com">Wargaming</a>. Say Wot?-Stats is the result. Good to know: if a player gets the value "NaN" showing up, it means that the calculations are trying to get a result from values that doesn't exist yet, for example if the player you want to check out haven't played any recent games, or any games at all.. you will probably see the "NaN" text showing up somewhere in the statistics section. Also if u want to follow the development of this site or have any good ideas on how to make this more, fun, better or whatever join the conversation on the <a href="http://saywotstats.blogspot.se/">development blog</a>, cheers! //DaWoody.
+In august 2013, after some coffee, less to do on work (during summer holidays ofc;) and ideas on how kittens drive tanks, as my cool alter-ego <a href="https://github.com/DaWoody">DaWoody</a>, utilizing the awesomeness of WOT open <a href="https://github.com/thunder-spb/wot-api-description">API's</a> (kudos to all who deserve it ;)), I decided to make my own statistics gathering web-engine for the game <a href="http://www.worldoftanks.com">World of Tanks</a>, by <a href="http://www.wargaming.com">Wargaming</a>. Say Wot?-Stats is the result. Good to know: if a player gets the value "NaN" showing up, it means that the calculations are trying to get a result from values that doesn't exist yet, for example if the player you want to check out haven't played any recent games, or any games at all.. you will probably see the "NaN" text showing up somewhere in the statistics section. Also if u want to follow the development of this site or have any good ideas on how to make this more, fun, better or whatever join the conversation on the <a href="http://saywotstats.blogspot.se/">development blog</a>, cheers! //DaWoody.
 </footer>
 
 </div><!-- #wrapper -->

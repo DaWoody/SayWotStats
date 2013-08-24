@@ -210,23 +210,32 @@ a:hover {
 	margin-top:0;
 }
 
-.recent_total_stats_headline_div span {
-	font-size: 0.7em;
-	margin-top:-0.8333em;
+#total_stats_wrapper {
+	width:100%; 
 }
 
 #total_stats {
-	width:48%;
-	float:right;
+	//margin:0px auto !important;
+	padding-top:0.4166667em;
+	//width:48%;
 	min-width:16.666667em; /* 200/12 = 16.666667em*/
-	border-right:1px solid rgba(204,110,92,1); 
+	padding-left:1.6666667em; /* 20/12 = 16.666667em*/
+	padding-right:1.6666667em;
+	border-top:1px solid rgba(204,110,92,1);
 }
 
 #recent_stats {
 	width:48%;
-	float:right;
+	float:left;
 	min-width:16.666667em; /* 200/12 = 16.666667em*/
-	margin-left:1.6666667em; /* 20/12 = 16.666667em*/
+	border-right:1px solid rgba(204,110,92,1);
+}
+
+#older_stats {
+	width:48%;
+	float:left;
+	min-width:16.666667em; /* 200/12 = 16.666667em*/
+	padding-left:10px;	
 }
 
 .clan_image {
@@ -308,17 +317,25 @@ a:hover {
 *	Add some media-queries for responsive design
 */
 
-@media (max-width:800px){
-	#total_stats {
-		width:100%;
-		border:none;
-	}
-
+@media (max-width:830px){
 	#recent_stats {
 		width:100%;
 		margin-left:0;
 		padding-bottom:1.2em;
+		border-right:none;
 		border-bottom: 1px solid rgba(204,110,92,1);
+	}
+
+	#older_stats {
+		width:100%;
+		padding-left:0;
+		padding-top:0.4166667em;
+		padding-bottom:1.2em;
+		border-right:none;
+	}
+
+	#total_stats {
+
 	}
 
 }
