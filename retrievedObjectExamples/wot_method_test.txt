@@ -1,0 +1,48 @@
+API 1.X
+
+http://api.worldoftanks.eu/community/accounts/%PLAYER_ID%/api/%API_VER%/?source_token=%TOKEN%
+
+
+http://api.worldoftanks.eu/community/accounts/%DaWoody80%/api/%1.0%/?source_token=%WG-WoT_Assistant-1.3.2%
+
+
+DaWoody80 id : 501113716 
+
+Get stats in Past
+
+http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=ru&account_id=%PLAYER_ID%&hours_ago=24&hours_ago=168&hours_ago=336
+
+http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=eu&account_id=501113716&hours_ago=24&hours_ago=168&hours_ago=336
+
+1000635994
+
+
+http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=us&account_id=2000563075&hours_ago=24
+
+
+API 2.X
+
+Player info
+
+(Nerf id, sea: 2000563075)
+APP-ID's
+RU -- 171745d21f7f98fd8878771da1000a31
+EU -- d0a293dc77667c9328783d489c8cef73
+NA -- 16924c431c705523aae25b6f638c54dd
+ASIA -- 39b4939f5f2460b3285bfa708e4b252c
+KR -- ffea0f1c3c5f770db09357d94fe6abfb
+
+Cluster API Address
+http://api.worldoftanks.ru
+http://api.worldoftanks.eu
+http://api.worldoftanks.com
+http://api.worldoftanks.asia
+http://api.worldoftanks.kr
+
+
+http://<CLUSTER_API_ADDRESS>/2.0/account/info/?application_id=<APP_ID>&account_id=<ACCOUNT_ID>
+
+
+Nerf sea test..
+http://api.worldoftanks.asia/2.0/account/info/?application_id=39b4939f5f2460b3285bfa708e4b252c&account_id=2000563075
+

@@ -820,6 +820,85 @@ jQuery(document).ready(function(){
 
 
 	/*
+	*	Average Spotted per game total
+	*/
+	$.fn.averageSpotted = function(response){
+		var container = $(this);
+		//Get the total amount of spots
+		var totalSpotted = response.battles.spotted;
+		//Fetching the amount of battles
+		var totalBattlesPlayed = response.summary.battles_count;
+		//Get the average spot, by dividing the spots with battles, and the rounding it for display
+		var averageSpotted = Math.round((totalSpotted/totalBattlesPlayed)*100)/100;
+		//Print to DOM
+		container.append('<h1>Average spotted: ' + averageSpotted + '</h1>');
+	}
+
+
+	/*
+	*	Average Spotted per game the last period
+	*/
+	$.fn.averageSpottedPast = function(response1, response2){
+		var container = $(this);
+		//Get the total amount of spots
+		var totalSpotted = response1.battles.spotted;
+		//Fetching the amount of battles
+		var totalBattlesPlayed = response1.summary.battles_count;
+		//Lets get the total spotted as it were 24 hours ago
+		var totalSpottedLast24 = response2.battles.spotted;
+		//Total amount of battles 24 hours ago
+		var battlesLast24Hours = response2.summary.battles_count;
+		//The amount of battles the last 24 hours
+		var battlesPast24 = totalBattlesPlayed - battlesLast24Hours;
+		//The amount of spots the last 24 hours
+		var spottedPast24 = totalSpotted - totalSpottedLast24;
+
+		//Get the average spot, by dividing the spots with battles
+		var averageSpotted = Math.round((spottedPast24/battlesPast24)*100)/100;
+		
+		container.append('<h1>Average spotted: ' + averageSpotted + '</h1>');
+	}
+
+
+	/*
+	*	Average Frags Total
+	*/
+	$.fn.averageFrags = function(response){
+		var container = $(this);
+		//Fetching the amount of battles
+		var totalBattlesPlayed = response.summary.battles_count;
+		//Fetching the amount of total frags
+		var totalFrags = response.battles.frags;
+		//Calculating average frags
+		var averageFrags = Math.round((totalFrags/totalBattlesPlayed)*100)/100;
+		container.append('<h1>Average kills: ' + averageFrags + '</h1>')
+	}	
+
+	/*
+	*	Average Frags Past
+	*/
+	$.fn.averageFragsPast = function(response1, response2){
+		var container = $(this);
+		//Fetching the amount of battles in total
+		var totalBattlesPlayed = response1.summary.battles_count;
+		//Total amount of battles 24 hours ago
+		var battles24HoursAgo = response2.summary.battles_count;
+		//Fetching the amount of total frags
+		var totalFrags = response1.battles.frags;
+		//Fetching the amount of frags 24 hours ago
+		var totalFragsLast24 = response2.battles.frags;
+		//Calculate total frags during the past 24 hours
+		var totalFragsPast24 = totalFrags - totalFragsLast24;
+		//Calculate total battles during the past 24 hours
+		var battlesPast24 = totalBattlesPlayed - battles24HoursAgo;
+		//Calculating average frags
+		var averageFrags = Math.round((totalFragsPast24/battlesPast24)*100)/100;
+		//Print it to the DOM
+		container.append('<h1>Average kills: ' + averageFrags + '</h1>')	
+	}
+
+
+	/*
 	*	WN7 Agreggated function calculation, for total stats
 	*/
 	$.fn.wn7Total = function(response) {

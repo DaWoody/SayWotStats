@@ -1,6 +1,6 @@
 <xml>
 	<version_title>
-	V1.1
+	V1.3
 	</version_title>
 
 	<version_info_title>
@@ -9,7 +9,7 @@
 
 	<version_info>
 		Currently using unofficial Wot API version 1.X
-		All servers working except the SEA server atm. V1.1 does show total statistics and statistics for the last 24 hours aswell as the last 2 weeks since the last server update.
+		All servers working except the SEA server atm. V1.3 does show total statistics and statistics for the last 24 hours aswell as the last 2 weeks since the last server update.
 	</version_info>
 
 	<dev_blog_url>

@@ -32,8 +32,16 @@ a:hover {
 	color:rgb(249,184,93);
 }
 
-.clear {
+.group:before,
+.group:after {
+	content:"";
+	display:table;
+}
+.group:after {
 	clear:both;
+}
+.group {
+	zoom:1;
 }
 
 #header_section h1{
@@ -208,6 +216,9 @@ a:hover {
 
 .recent_total_stats_headline_div h1 {
 	margin-top:0;
+	color:white;
+	text-shadow:1px 1px 2px rgba(23, 68, 77 , 1);
+	opacity:0.7;
 }
 
 #total_stats_wrapper {
@@ -215,9 +226,7 @@ a:hover {
 }
 
 #total_stats {
-	//margin:0px auto !important;
 	padding-top:0.4166667em;
-	//width:48%;
 	min-width:16.666667em; /* 200/12 = 16.666667em*/
 	padding-left:1.6666667em; /* 20/12 = 16.666667em*/
 	padding-right:1.6666667em;
@@ -250,6 +259,7 @@ a:hover {
 
 .on_first_load_css_fix {
 	border-bottom:0px solid red !important;
+	border-top:0px solid red !important;
 }
 
 #server_version_about_section{

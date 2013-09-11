@@ -29,6 +29,7 @@ jQuery(document).ready(function(){
 	
 	//Some CSS fixes on first load
 	player_stats_recent.addClass('on_first_load_css_fix');
+	player_stats_total.addClass('on_first_load_css_fix');
 
 	/*
 	*	Search Player Function
@@ -82,7 +83,8 @@ jQuery(document).ready(function(){
 			var apiFetchNameUrl	= 'http://api.worldoftanks' + serverAbbreviation +'/community/accounts/api/'+ api_ver +'/?source_token='+ source_token +'&search='+ tankerName +'&offset=0&limit=1';
 
 			//Do some quick css fixes to our DOM
-			player_stats_recent.removeClass('on_first_load_css_fix');	
+			player_stats_recent.removeClass('on_first_load_css_fix');
+			player_stats_total.removeClass('on_first_load_css_fix');	
 
 			$.ajax(httpFindPlayer, {
 				
@@ -136,8 +138,9 @@ jQuery(document).ready(function(){
 							//Do stuff to DOM here when no player is found..
 							player_stats_container.removeClass('loading');
 							player_general_information.html(htmlMsg);
-							player_stats_total.html('');
+							player_stats_total.html('').addClass('on_first_load_css_fix');
 							player_stats_recent.html('').addClass('on_first_load_css_fix');
+							player_stats_older.html('');
 						}
 
 					}
@@ -145,8 +148,9 @@ jQuery(document).ready(function(){
 						//Do stuff to DOM here when no player is found..
 						player_stats_container.removeClass('loading');
 						player_general_information.html(htmlMsg);
-						player_stats_total.html('');
-						player_stats_recent.html('').addClass('on_first_load_css_fix');;
+						player_stats_total.html('').addClass('on_first_load_css_fix');
+						player_stats_recent.html('').addClass('on_first_load_css_fix');
+						player_stats_older.html('');
 					}
 	
 				},
@@ -156,8 +160,9 @@ jQuery(document).ready(function(){
 					//Show us an error when we get a failed AJAX call
 					player_stats_container.removeClass('loading');
 					player_general_information.html('<h1>Ops seems like some gremlins are messing with the ' + serverName + ' server at the moment, please try again! ;)</h1>');
-					player_stats_total.html('');
-					player_stats_recent.html('').addClass('on_first_load_css_fix');;
+					player_stats_total.html('').addClass('on_first_load_css_fix');
+					player_stats_recent.html('').addClass('on_first_load_css_fix');
+					player_stats_older.html('');
 				},
 
 				timeout: 3000
@@ -197,8 +202,8 @@ jQuery(document).ready(function(){
 				error: function(response) {
 					console.log('error from getPlayerTotalStats');
 					player_general_information.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
-					player_stats_total.html('');
-					player_stats_recent.html('').addClass('on_first_load_css_fix');;
+					player_stats_total.html('').addClass('on_first_load_css_fix');
+					player_stats_recent.html('').addClass('on_first_load_css_fix');
 				}
 
 			});
@@ -236,7 +241,7 @@ jQuery(document).ready(function(){
 					console.log('error from AjaxPlayerPastStats');
 					player_general_information.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
 					player_stats_recent.html('').addClass('on_first_load_css_fix');
-					player_stats_total.html('');
+					player_stats_total.html('').addClass('on_first_load_css_fix');
 				}
 			});
 
@@ -293,7 +298,8 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageWinRatePast(responseData1,responseData2);
 		player_stats_recent.averageExperiencePast(responseData1, responseData2);
 		player_stats_recent.averageDamagePast(responseData1, responseData2);
-		player_stats_recent.averageCapPointsPast(responseData1, responseData2);
+		player_stats_recent.averageFragsPast(responseData1, responseData2);
+		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
 		player_stats_recent.averageTierPast(responseData1,responseData2);
 		player_stats_recent.wn7Past(responseData1, responseData2);
@@ -305,7 +311,8 @@ jQuery(document).ready(function(){
 		player_stats_older.averageWinRatePast(responseData1,responseData3);
 		player_stats_older.averageExperiencePast(responseData1, responseData3);
 		player_stats_older.averageDamagePast(responseData1, responseData3);
-		player_stats_older.averageCapPointsPast(responseData1, responseData3);
+		player_stats_older.averageFragsPast(responseData1, responseData3);
+		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
 		player_stats_older.averageTierPast(responseData1,responseData3);
 		player_stats_older.wn7Past(responseData1, responseData3);
@@ -317,7 +324,8 @@ jQuery(document).ready(function(){
 		player_stats_total.averageWinRate(responseData1);
 		player_stats_total.averageExperience(responseData1);
 		player_stats_total.averageDamage(responseData1);
-		player_stats_total.averageCapPoints(responseData1);
+		player_stats_total.averageFrags(responseData1);
+		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
 		player_stats_total.averageTier(responseData1);
 		player_stats_total.wn7Total(responseData1);
