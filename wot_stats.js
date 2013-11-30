@@ -138,7 +138,7 @@ jQuery(document).ready(function(){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								console.log('We succeded in retriveing both promises! YEAY');
 
-								CalculateStatsEngine(response1, response2, serverName, serverAbbreviation);
+								CalculateStatsEngine(response1, response2, serverName, serverAbbreviation, id);
 							});
 							//remove our css class, when we are done
 							player_stats_container.removeClass('loading');
@@ -254,7 +254,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, server, serverAbbreviation) {
+	function CalculateStatsEngine(response1, response2, server, serverAbbreviation, tankerId) {
 
 		
 		//Dev stuff below... could be removed later.
@@ -262,17 +262,18 @@ jQuery(document).ready(function(){
 		console.log(response1);
 		console.log('Player Recent Stats Object:');
 		console.log(response2);
+		console.log('The tankerId ' + tankerId);
 		
 
-		/*
+		
 		//First we modify our responses to work with our methods
 		//Data for total stats section
-		var responseData1 = response1.data;
-		//Data for 24 hours section
-		var responseData2 = response2.stats[0].stats;
-		//Data for 2 weeks section
-		var responseData3 = response2.stats[1].stats;
-		*/
+		var responseData1 = response1.data[tankerId];
+		//Data for older stats section
+		var responseData2 = response2.data[tankerId];
+
+		console.log(responseData1);
+
 
 
 		/*
@@ -320,6 +321,7 @@ jQuery(document).ready(function(){
 		player_stats_older.averageTierPast(responseData1,responseData3);
 		player_stats_older.wn7Past(responseData1, responseData3);
 		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
+		
 
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
@@ -333,20 +335,20 @@ jQuery(document).ready(function(){
 		player_stats_total.averageTier(responseData1);
 		player_stats_total.wn7Total(responseData1);
 		player_stats_total.favoriteVehicleTotal(responseData1);
-		
+		*/
 
 		//General Information Plugins
 		player_general_information.playerName(responseData1);
-		player_general_information.clan(responseData1, serverAbbreviation);
-		player_general_information.printServer(server);
-		player_general_information.lastUpdated(responseData1);
+		//player_general_information.clan(responseData1, serverAbbreviation);
+		//player_general_information.printServer(server);
+		//player_general_information.lastUpdated(responseData1);
 		
 
 		//Test plugins, before going live...or just for fun ;)
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
 		//player_general_information.calculateTotalTimePlayed(response1);
-		*/
+		
 				
 	}
 	

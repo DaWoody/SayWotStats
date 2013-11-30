@@ -14,9 +14,9 @@ jQuery(document).ready(function(){
 	/*
 	*	Show Tanker Name
 	*/
-	$.fn.playerName = function(response){
+	$.fn.playerName = function(response, tankerId){
 		var container = $(this);
-		var playerName = response.name;
+		var playerName = response.nickname;
 		container.append('<h1>Tanker: ' + playerName + '</h1>');
 	} 
 
