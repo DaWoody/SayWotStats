@@ -12,7 +12,7 @@ jQuery(document).ready(function(){
 	/*
 	*	Some global variables
 	*/
-	var source_token 	= 	'WG-WoT_Assistant-1.4.1';
+	var sourceToken 	= 	'WG-WoT_Assistant-1.4.1'; //NOT USED ANYMORE?
 
 	//The DOM elements to manipulate, can be changed to your needs.
 	var player_stats_container = $("#player_stats_container");
@@ -47,40 +47,48 @@ jQuery(document).ready(function(){
 				case 'ru': {
 						serverName = 'Russian';
 						serverAbbreviation = '.ru';	
+						apiKey = '171745d21f7f98fd8878771da1000a31';
 				}	
 				break;
 
 				case 'us': {
 						serverName = 'North American';
 						serverAbbreviation = '.com';
+						apiKey = '16924c431c705523aae25b6f638c54dd';
 				}
 				break;
-				/*
+				
 				case 'sea': {
 						serverName = 'South East Asian';
 						serverAbbreviation = '-sea.com';
+						apiKey = '39b4939f5f2460b3285bfa708e4b252c';
 				}
 				break;
-				*/
+				
 				case 'kr': {
 						serverName = 'Korean';
 						serverAbbreviation = '.kr';
+						apiKey = 'ffea0f1c3c5f770db09357d94fe6abfb';
 				}
 				break;
 
 				default: {
 						serverName = 'European';
 						serverAbbreviation = '.eu';
+						apiKey = 'd0a293dc77667c9328783d489c8cef73';
 				}
 
 			}
 
 			//API for fetching the player Name
-			var api_ver = '1.1'; /* 1.0 -> 1.1 */
+			var apiVer = '2.0'; /* 1.0 -> 1.1 */
 
 			//Fetching form data, needs to be updated every time the submit button is pressed...
 			var tankerName = $('#search_player_form_section').find('input[type=text]').val();
-			var apiFetchNameUrl	= 'http://api.worldoftanks' + serverAbbreviation +'/community/accounts/api/'+ api_ver +'/?source_token='+ source_token +'&search='+ tankerName +'&offset=0&limit=1';
+			var apiFetchNameUrl	= 'http://api.worldoftanks' + serverAbbreviation +'/'+ apiVer +'/account/list/?application_id='+ apiKey +'&search='+ tankerName +''; //+'&offset=0&limit=1';
+
+			//http://<CLUSTER_API_ADDRESS>/2.0/account/list/?application_id=<APP_ID>&search=<PARTIAL_NICKNAME>
+
 
 			//Do some quick css fixes to our DOM
 			player_stats_recent.removeClass('on_first_load_css_fix');
@@ -91,7 +99,7 @@ jQuery(document).ready(function(){
 				dataType: 'json',
 				method: 'post',
 				data: {
-					tanker_name: tankerName,
+					//tanker_name: tankerName,
 					url: apiFetchNameUrl
 				},
 				beforeSend: function() {
@@ -105,6 +113,8 @@ jQuery(document).ready(function(){
 				//contentType: 'application/json',
 				success: function(response) {
 
+					
+					
 					var status = response.status;
 
 					//The error message we will print out if there is something wrong with the search
@@ -113,35 +123,29 @@ jQuery(document).ready(function(){
 					
 					if(status==="ok") {
 						//Since we know the status is ok, we check if the player exist.
-						var player_exist = response.data.filtered_count;
 						
-						if(player_exist>0){
-							//Get the id from the data, since now the player do exist.
-							var id = response.data.items[0].id;	
+							var id = response.data[0].id;	
 
-							//console.log('player id is: ' + id);
+							console.log('player id is: ' + id);
 
+
+							
 							//Declaring our promises.
-							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation);
-							var playerPastStatsPromise = AjaxPlayerPastStats.getPlayerPastStats(id, server); 
+							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
+							var playerPastStatsPromise = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24); 
 
 							$.when(playerTotalStatsPromise,playerPastStatsPromise).done(function(response1, response2){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
+								console.log('We succeded in retriveing both promises! YEAY');
+
 								CalculateStatsEngine(response1, response2, serverName, serverAbbreviation);
 							});
 							//remove our css class, when we are done
 							player_stats_container.removeClass('loading');
-			
-						}
-						else {
 							
-							//Do stuff to DOM here when no player is found..
-							player_stats_container.removeClass('loading');
-							player_general_information.html(htmlMsg);
-							player_stats_total.html('').addClass('on_first_load_css_fix');
-							player_stats_recent.html('').addClass('on_first_load_css_fix');
-							player_stats_older.html('');
-						}
+			
+						
+						
 
 					}
 					else{
@@ -165,7 +169,7 @@ jQuery(document).ready(function(){
 					player_stats_older.html('');
 				},
 
-				timeout: 3000
+				timeout: 10000 //Really slow system now.. 10 seconds delay
 
 			});
 	}
@@ -173,18 +177,17 @@ jQuery(document).ready(function(){
 	//Declaring first promise as an object
 	var AjaxPlayerTotalStats = {
 		
-		getPlayerTotalStats: function(id, serverAbbreviation) {
+		getPlayerTotalStats: function(tankerId, serverAbbreviation, apiVer) {
 			//Declaring the promise
 			var promise = $.Deferred();
 
 			//Fetching our server value
 			var server = server;
 
-			var tankerId = id;
 			//API for fetching the player stats
-			var api_ver = '1.9'; /* 1.0 -> 1.1 */
+			//var apiVer = '2.0'; /* 1.0 -> 1.1 */
 			
-			var apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/community/accounts/' + tankerId + '/api/' + api_ver + '/?source_token=' + source_token;
+			var apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/account/info/?application_id=' + apiKey + '&account_id=' + tankerId;
 
 			
 			$.ajax(httpShowPlayer, {
@@ -216,13 +219,12 @@ jQuery(document).ready(function(){
 
 	//Declaring the second promise as an object
 	var AjaxPlayerPastStats = {
-		getPlayerPastStats: function(id, server) {
+		getPlayerPastStats: function(tankerId, serverAbbreviation, apiVer, hoursAgo) {
 
 			var promise = $.Deferred();
 
-			var tankerId = id;
 
-			var	apiFetchStatsUrl = 'http://dvstats.wargaming.net/userstats/2/stats/slice/?platform=android&server=' + server + '&account_id=' + tankerId + '&hours_ago=24&hours_ago=336';
+			var	apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/stats/accountbytime/?application_id=' + apiKey +'&account_id=' + tankerId + '&hours_ago=' + hoursAgo;
 
 			$.ajax(httpShowPlayer, {
 				data: {
@@ -254,14 +256,15 @@ jQuery(document).ready(function(){
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
 	function CalculateStatsEngine(response1, response2, server, serverAbbreviation) {
 
-		/*
+		
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object:');
 		console.log(response1);
 		console.log('Player Recent Stats Object:');
 		console.log(response2);
-		*/
+		
 
+		/*
 		//First we modify our responses to work with our methods
 		//Data for total stats section
 		var responseData1 = response1.data;
@@ -269,7 +272,7 @@ jQuery(document).ready(function(){
 		var responseData2 = response2.stats[0].stats;
 		//Data for 2 weeks section
 		var responseData3 = response2.stats[1].stats;
-
+		*/
 
 
 		/*
@@ -291,7 +294,7 @@ jQuery(document).ready(function(){
 
 		//Call our different plugins here below
 
-		
+		/*		
 		//24 Hours ago Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
 		player_stats_recent.battlesPlayedPast(responseData1, responseData2);
@@ -343,7 +346,7 @@ jQuery(document).ready(function(){
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
 		//player_general_information.calculateTotalTimePlayed(response1);
-		
+		*/
 				
 	}
 	
