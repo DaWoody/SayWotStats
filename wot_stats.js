@@ -1,7 +1,7 @@
 /*
 *	Description: 	The jQuery engine WoodyWotStats for the site Say Wot?-Stats. Utilizing the unoffical WOT-API, (https://gist.github.com/bartku/4271798).
 *					This engine utilizes a different set of methods involving calculations on/and extracting data from the objects returned from the API. 					
-*	VersionInfo:  	Using WOT API v1.X	
+*	VersionInfo:  	Using WOT API v2.X	
 *	Author: 		Johan "DaWoody" Wedfelt 
 *	AuthorURL:  	https://github.com/DaWoody
 * 	Feedback/Dev:  	http://saywotstats.blogspot.se
@@ -272,7 +272,6 @@ jQuery(document).ready(function(){
 		//Data for older stats section
 		var responseData2 = response2.data[tankerId];
 
-		console.log(responseData1);
 
 
 
@@ -321,27 +320,28 @@ jQuery(document).ready(function(){
 		player_stats_older.averageTierPast(responseData1,responseData3);
 		player_stats_older.wn7Past(responseData1, responseData3);
 		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
-		
+		*/
 
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
 		player_stats_total.totalBattlesPlayed(responseData1);
+		
 		player_stats_total.averageWinRate(responseData1);
 		player_stats_total.averageExperience(responseData1);
 		player_stats_total.averageDamage(responseData1);
 		player_stats_total.averageFrags(responseData1);
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
-		player_stats_total.averageTier(responseData1);
-		player_stats_total.wn7Total(responseData1);
-		player_stats_total.favoriteVehicleTotal(responseData1);
-		*/
+		//player_stats_total.averageTier(responseData1);
+		//player_stats_total.wn7Total(responseData1);
+		//player_stats_total.favoriteVehicleTotal(responseData1);
+		
 
 		//General Information Plugins
 		player_general_information.playerName(responseData1);
 		//player_general_information.clan(responseData1, serverAbbreviation);
-		//player_general_information.printServer(server);
-		//player_general_information.lastUpdated(responseData1);
+		player_general_information.printServer(server);
+		player_general_information.lastUpdated(responseData1);
 		
 
 		//Test plugins, before going live...or just for fun ;)

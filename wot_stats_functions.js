@@ -1,6 +1,6 @@
 /*
 *	Description: 	Functions defined as plugins for the site, Say Wot? - stats (http://saywotstats.net)
-*	VersionInfo:  	Using WOT API v1.X
+*	VersionInfo:  	Using WOT API v2.X
 *	Author: 		Johan "DaWoody" Wedfelt
 *	AuthorUrl 		https://github.com/DaWoody
 * 	Feedback/Dev:  	http://saywotstats.blogspot.se 
@@ -104,10 +104,10 @@ jQuery(document).ready(function(){
 		var statName = 'averageWinRate';
 
 		//Get total battles
-		var totalBattlesPlayed = response.summary.battles_count;
+		var totalBattlesPlayed = response.statistics.all.battles;
 
 		//Get total wins, current
-		var totalWins = response.summary.wins;
+		var totalWins = response.statistics.all.wins;
 
 		//The average winrate
 		var averageWinRate = Math.round((totalWins/totalBattlesPlayed)*1000)/10;
@@ -175,7 +175,7 @@ jQuery(document).ready(function(){
 		//We define what we get in
 		var container = $(this);
 		//The average experience
-		var averageExperience = response.ratings.battle_avg_xp.value;
+		var averageExperience = response.statistics.all.battle_avg_xp;
 		//Write it back to the DOM
 		container.append('<h1>Average experience: ' + averageExperience + '</h1>');
 	}
@@ -187,9 +187,9 @@ jQuery(document).ready(function(){
 		//We define what we get in
 		var container = $(this);
 		//Total damage
-		var totalDamage = response.ratings.damage_dealt.value;
+		var totalDamage = response.statistics.all.damage_dealt;
 		//Total amount of battles
-		var battles = response.ratings.battles.value;
+		var battles = response.statistics.all.battles;
 
 		var averageDamage = Math.round(totalDamage/battles);
 
@@ -254,7 +254,7 @@ jQuery(document).ready(function(){
 		//We define what we get in
 		var container = $(this);
 		//Defining some variables
-		var totalBattlesPlayed = response.summary.battles_count;
+		var totalBattlesPlayed = response.statistics.all.battles;
 		//Lets get the color code for this specific stat
 		var color = container.printColorToStat(statName,totalBattlesPlayed);
 		container.append('<h1>Battles played: <span style="color:' + color + '">'+  totalBattlesPlayed + '</span></h1>');
@@ -462,9 +462,9 @@ jQuery(document).ready(function(){
 	$.fn.averageDefPoints = function(response) {
 		var container = $(this);
 		//Get the total number of def points
-		var totalDefPoints = response.ratings.dropped_ctf_points.value;
+		var totalDefPoints = response.statistics.all.dropped_capture_points;
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response.summary.battles_count;
+		var totalAmountOfBattles = response.statistics.all.battles;
 
 		if(totalAmountOfBattles === 0){
 			var averageDefPoints = 0;
@@ -825,9 +825,9 @@ jQuery(document).ready(function(){
 	$.fn.averageSpotted = function(response){
 		var container = $(this);
 		//Get the total amount of spots
-		var totalSpotted = response.battles.spotted;
+		var totalSpotted = response.statistics.all.spotted;
 		//Fetching the amount of battles
-		var totalBattlesPlayed = response.summary.battles_count;
+		var totalBattlesPlayed = response.statistics.all.battles;
 		//Get the average spot, by dividing the spots with battles, and the rounding it for display
 		var averageSpotted = Math.round((totalSpotted/totalBattlesPlayed)*100)/100;
 		//Print to DOM
@@ -866,9 +866,9 @@ jQuery(document).ready(function(){
 	$.fn.averageFrags = function(response){
 		var container = $(this);
 		//Fetching the amount of battles
-		var totalBattlesPlayed = response.summary.battles_count;
+		var totalBattlesPlayed = response.statistics.all.battles;
 		//Fetching the amount of total frags
-		var totalFrags = response.battles.frags;
+		var totalFrags = response.statistics.all.frags;
 		//Calculating average frags
 		var averageFrags = Math.round((totalFrags/totalBattlesPlayed)*100)/100;
 		container.append('<h1>Average kills: ' + averageFrags + '</h1>')
