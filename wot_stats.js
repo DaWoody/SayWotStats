@@ -99,7 +99,6 @@ jQuery(document).ready(function(){
 				dataType: 'json',
 				method: 'post',
 				data: {
-					//tanker_name: tankerName,
 					url: apiFetchNameUrl
 				},
 				beforeSend: function() {
@@ -132,16 +131,19 @@ jQuery(document).ready(function(){
 							
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
-							var playerPastStatsPromise = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24); 
+							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24);
+							var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
+							var playerVehicleStatsPromise = AjaxPlayerVehicleStats.getPlayerVehicleStats(id, serverAbbreviation, apiVer); 
 
-							$.when(playerTotalStatsPromise,playerPastStatsPromise).done(function(response1, response2){
+							$.when(playerTotalStatsPromise,playerPastStatsPromise1, playerPastStatsPromise2, playerVehicleStatsPromise).done(function(response1, response2, response3, response4){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
-								console.log('We succeded in retriveing both promises! YEAY');
+								
 
-								CalculateStatsEngine(response1, response2, serverName, serverAbbreviation, id);
+								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id);
+								//remove our css class, when we are done
+								player_stats_container.removeClass('loading');
 							});
-							//remove our css class, when we are done
-							player_stats_container.removeClass('loading');
+							
 							
 			
 						
@@ -194,7 +196,6 @@ jQuery(document).ready(function(){
 				dataType: 'json',
 				method: 'post',
 				data: {
-					tanker_id: tankerId,
 					url: apiFetchStatsUrl
 				},
 
@@ -228,7 +229,6 @@ jQuery(document).ready(function(){
 
 			$.ajax(httpShowPlayer, {
 				data: {
-					tanker_id: tankerId,
 					url: apiFetchStatsUrl
 				},
 				dataType: 'json',
@@ -252,16 +252,56 @@ jQuery(document).ready(function(){
 
 	}
 
+
+	//Declaring the vehicle promise as an object
+	var AjaxPlayerVehicleStats = {
+		getPlayerVehicleStats: function(tankerId, serverAbbreviation, apiVer, hoursAgo) {
+
+			var promise = $.Deferred();
+
+
+			var	apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/account/tanks/?application_id=' + apiKey +'&account_id=' + tankerId;
+
+			$.ajax(httpShowPlayer, {
+				data: {
+					url: apiFetchStatsUrl
+				},
+				dataType: 'json',
+				method: 'post',
+				success: function(response){
+
+					promise.resolve(response);
+
+				},
+
+				error: function(response){
+					console.log('error from AjaxPlayerPastStats');
+					player_general_information.html('<h1>Ops seems like some gremlins are messing with the server at the moment, please try again! ;)</h1>');
+					player_stats_recent.html('').addClass('on_first_load_css_fix');
+					player_stats_total.html('').addClass('on_first_load_css_fix');
+				}
+			});
+
+			return promise;
+		}
+
+	}
+
+
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, server, serverAbbreviation, tankerId) {
+	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId) {
 
 		
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object:');
 		console.log(response1);
-		console.log('Player Recent Stats Object:');
+		console.log('Player 24 hours ago Stats Object:');
 		console.log(response2);
+		console.log('Player 1 week ago Stats Object:');
+		console.log(response3);
+		console.log('Player Vehicle Stats Object:');
+		console.log(response4);
 		console.log('The tankerId ' + tankerId);
 		
 
@@ -269,8 +309,12 @@ jQuery(document).ready(function(){
 		//First we modify our responses to work with our methods
 		//Data for total stats section
 		var responseData1 = response1.data[tankerId];
-		//Data for older stats section
-		var responseData2 = response2.data[tankerId];
+		//Data for 24 ago stats section
+		var responseData2 = response2.data[0];
+		//Data for 1 week ago stats section
+		var responseData3 = response3.data[0];
+		//Data for vehicles
+		var responseData4 = response4.data[tankerId];
 
 
 
@@ -294,7 +338,7 @@ jQuery(document).ready(function(){
 
 		//Call our different plugins here below
 
-		/*		
+				
 		//24 Hours ago Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
 		player_stats_recent.battlesPlayedPast(responseData1, responseData2);
@@ -304,9 +348,9 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageFragsPast(responseData1, responseData2);
 		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
-		player_stats_recent.averageTierPast(responseData1,responseData2);
-		player_stats_recent.wn7Past(responseData1, responseData2);
-		player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
+		//player_stats_recent.averageTierPast(responseData1,responseData2);
+		//player_stats_recent.wn7Past(responseData1, responseData2);
+		//player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
 		
 		//2 Weeks ago Stats Plugins
 		player_stats_older.printOlderStatsHeader();
@@ -317,10 +361,10 @@ jQuery(document).ready(function(){
 		player_stats_older.averageFragsPast(responseData1, responseData3);
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
-		player_stats_older.averageTierPast(responseData1,responseData3);
-		player_stats_older.wn7Past(responseData1, responseData3);
-		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
-		*/
+		//player_stats_older.averageTierPast(responseData1,responseData3);
+		//player_stats_older.wn7Past(responseData1, responseData3);
+		//player_stats_older.favoriteVehiclePast(responseData1, responseData3);
+		
 
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();

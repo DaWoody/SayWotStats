@@ -1,6 +1,6 @@
 <xml>
 	<version_title>
-	V1.3
+	V1.4
 	</version_title>
 
 	<version_info_title>
@@ -8,8 +8,8 @@
 	</version_info_title>	
 
 	<version_info>
-		Currently using unofficial Wot API version 1.X
-		All servers working except the SEA server atm. V1.3 does show total statistics and statistics for the last 24 hours aswell as the last 2 weeks since the last server update.
+		Currently using unofficial Wot API version 2.X
+		All servers working. V1.4 does show total statistics and statistics for the last 24 hours aswell as the last 2 weeks since the last server update. Temporary delay in network request since Wargamings API seems to be a bit overloaded atm.
 	</version_info>
 
 	<dev_blog_url>
