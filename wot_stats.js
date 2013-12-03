@@ -112,9 +112,13 @@ jQuery(document).ready(function(){
 				//contentType: 'application/json',
 				success: function(response) {
 
-					
+					console.log('The Check ID request');
+					console.log(response);
 					
 					var status = response.status;
+					var clan = response.data[0].clan_id;
+
+					
 
 					//The error message we will print out if there is something wrong with the search
 					var htmlMsg = '<h1>Ops the magic kitten did not find that Tanker on the ' + serverName + ' server, please try again ;)..</h1>';	
@@ -125,21 +129,26 @@ jQuery(document).ready(function(){
 						
 							var id = response.data[0].id;	
 
-							console.log('player id is: ' + id);
+							//console.log('player id is: ' + id);
+
+							if(clan!=null){
+
+							}
+
 
 
 							
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
-							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24);
-							var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
+							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, '24');
+							//var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
 							var playerVehicleStatsPromise = AjaxPlayerVehicleStats.getPlayerVehicleStats(id, serverAbbreviation, apiVer); 
 
-							$.when(playerTotalStatsPromise,playerPastStatsPromise1, playerPastStatsPromise2, playerVehicleStatsPromise).done(function(response1, response2, response3, response4){
+							$.when(playerTotalStatsPromise,playerPastStatsPromise1, /*playerPastStatsPromise2,*/ playerVehicleStatsPromise).done(function(response1, response2, response3/*, response4*/){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								
 
-								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id);
+								CalculateStatsEngine(response1, response2, response3, /*response4,*/ serverName, serverAbbreviation, id);
 								//remove our css class, when we are done
 								player_stats_container.removeClass('loading');
 							});
@@ -171,7 +180,7 @@ jQuery(document).ready(function(){
 					player_stats_older.html('');
 				},
 
-				timeout: 10000 //Really slow system now.. 10 seconds delay
+				timeout: 20000 //Really slow system now.. 20 seconds delay
 
 			});
 	}
@@ -290,7 +299,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId) {
+	function CalculateStatsEngine(response1, response2, response3, /*response4,*/ server, serverAbbreviation, tankerId) {
 
 		
 		//Dev stuff below... could be removed later.
@@ -298,11 +307,11 @@ jQuery(document).ready(function(){
 		console.log(response1);
 		console.log('Player 24 hours ago Stats Object:');
 		console.log(response2);
-		console.log('Player 1 week ago Stats Object:');
+		console.log('Player 1 week ago Stats Object!!!!!:');
 		console.log(response3);
-		console.log('Player Vehicle Stats Object:');
-		console.log(response4);
-		console.log('The tankerId ' + tankerId);
+		//console.log('Player Vehicle Stats Object:');
+		//console.log(response4);
+		//console.log('The tankerId ' + tankerId);
 		
 
 		
@@ -312,9 +321,9 @@ jQuery(document).ready(function(){
 		//Data for 24 ago stats section
 		var responseData2 = response2.data[0];
 		//Data for 1 week ago stats section
-		var responseData3 = response3.data[0];
+		//var responseData3 = response3.data[0];
 		//Data for vehicles
-		var responseData4 = response4.data[tankerId];
+		//var responseData4 = response4.data[tankerId];
 
 
 
