@@ -374,9 +374,9 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageFragsPast(responseData1, responseData2);
 		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
-		//player_stats_recent.averageTierPast(responseData1,responseData2);
+		player_stats_recent.averageTierPast(responseData1,responseData2);
 		//player_stats_recent.wn7Past(responseData1, responseData2);
-		//player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
+		player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
 		
 		//2 Weeks ago Stats Plugins
 		player_stats_older.printOlderStatsHeader();
@@ -387,9 +387,9 @@ jQuery(document).ready(function(){
 		player_stats_older.averageFragsPast(responseData1, responseData3);
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
-		//player_stats_older.averageTierPast(responseData1,responseData3);
+		player_stats_older.averageTierPast(responseData1,responseData3);
 		//player_stats_older.wn7Past(responseData1, responseData3);
-		//player_stats_older.favoriteVehiclePast(responseData1, responseData3);
+		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
 		
 
 		//Total Stats Plugins
@@ -402,14 +402,14 @@ jQuery(document).ready(function(){
 		player_stats_total.averageFrags(responseData1);
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
-		//player_stats_total.averageTier(responseData1);
-		//player_stats_total.wn7Total(responseData1);
-		//player_stats_total.favoriteVehicleTotal(responseData1);
+		player_stats_total.averageTier(responseData1);
+		player_stats_total.wn7Total(responseData1);
+		player_stats_total.favoriteVehicleTotal(responseData1);
 		
 
 		//General Information Plugins
 		player_general_information.playerName(responseData1);
-		//player_general_information.clan(responseData1, serverAbbreviation);
+		player_general_information.clan(responseData1, serverAbbreviation);
 		player_general_information.printServer(server);
 		player_general_information.lastUpdated(responseData1);
 		
@@ -417,7 +417,7 @@ jQuery(document).ready(function(){
 		//Test plugins, before going live...or just for fun ;)
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
-		//player_general_information.calculateTotalTimePlayed(response1);
+		player_general_information.calculateTotalTimePlayed(response1);
 		
 				
 	}

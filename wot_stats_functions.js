@@ -344,7 +344,8 @@ jQuery(document).ready(function(){
 		var container = $(this),
 			battles24HoursAgo,
 			totalAmountOfBattles,
-			battlesLast24Hours;
+			battlesLast24Hours,
+			noResponse ="";
 		//Total amount of battles, to last update.
 		totalAmountOfBattles = response1.statistics.all.battles;
 
@@ -354,11 +355,12 @@ jQuery(document).ready(function(){
 		}
 		catch(error){
 			battles24HoursAgo = totalAmountOfBattles;
+			noResponse = "(No response with data recieved from API, blame it on the boggie ;))";
 			//console.log("The error from battlesPlayedPast func is:" +  error);
 		}
 		//The amount of battles the last 24 hours
 		battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
-		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1>');
+		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1><h4 style="color:#f54747">' + noResponse + '</h4>');
 	} 
 
 
@@ -1413,132 +1415,245 @@ jQuery(document).ready(function(){
 
 		//Fetching the amount of battles we played
 		function battlesPlayedPast(response1, response2){
+			var totalAmountOfBattles,
+				battles24HoursAgo,
+				battlesLast24Hours;
+
 			//Total amount of battles, to last update.
-			var totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.summary.battles_count;
 			//Total amount of battles 24 hours ago
-			var battles24HoursAgo = response2.summary.battles_count;
+			try{
+				battles24HoursAgo = response2.summary.battles_count;
+			}
+			catch(error){
+				battles24HoursAgo = totalAmountOfBattles;
+			}
+			
 			//The amount of battles the last 24 hours
-			var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+			battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 			return battlesLast24Hours;
 		}	
 
 
 		//Fetching the average amount of frags
 		function averageFragsPast(response1, response2){
+			var totalBattlesPlayed,
+				battles24HoursAgo,
+				totalFrags,
+				totalFragsLast24,
+				totalFragsPast24,
+				battlesPast24,
+				averageFrags;
+
 			//Fetching the amount of battles in total
-			var totalBattlesPlayed = response1.summary.battles_count;
+			totalBattlesPlayed = response1.summary.battles_count;
 			//Total amount of battles 24 hours ago
-			var battles24HoursAgo = response2.summary.battles_count;
+			try{
+				battles24HoursAgo = response2.summary.battles_count;
+			}
+			catch(error){
+				battles24HoursAgo = totalBattlesPlayed;
+			}
+			
 			//Fetching the amount of total frags
-			var totalFrags = response1.battles.frags;
+			totalFrags = response1.battles.frags;
 			//Fetching the amount of frags 24 hours ago
-			var totalFragsLast24 = response2.battles.frags;
+			try{
+				totalFragsLast24 = response2.battles.frags;	
+			}
+			catch(error){
+				totalFragsLast24 = totalFrags;
+			}
+			
 			//Calculate total frags during the past 24 hours
-			var totalFragsPast24 = totalFrags - totalFragsLast24;
+			totalFragsPast24 = totalFrags - totalFragsLast24;
 			//Calculate total battles during the past 24 hours
-			var battlesPast24 = totalBattlesPlayed - battles24HoursAgo;
+			battlesPast24 = totalBattlesPlayed - battles24HoursAgo;
 
 
 			//Calculating average frags
-			var averageFrags = totalFragsPast24/battlesPast24;
+			averageFrags = totalFragsPast24/battlesPast24;
 			return averageFrags;
 		}
 
 		//Fetching average spoting per game
 		function averageSpottedPast(response1, response2){
+			var totalSpotted,
+				totalBattlesPlayed,
+				totalSpottedLast24,
+				battlesLast24Hours,
+				battlesPast24,
+				spottedPast24,
+				averageSpotted;
+
 			//Get the total amount of spots
-			var totalSpotted = response1.battles.spotted;
+			totalSpotted = response1.battles.spotted;
 			//Fetching the amount of battles
-			var totalBattlesPlayed = response1.summary.battles_count;
+			totalBattlesPlayed = response1.summary.battles_count;
 
 			//Lets get the total spotted as it were 24 hours ago
-			var totalSpottedLast24 = response2.battles.spotted;
+			try {
+				totalSpottedLast24 = response2.battles.spotted;
+			}
+			catch(error){
+				totalSpottedLast24 = totalSpotted;
+			}
+			
 			//Total amount of battles 24 hours ago
-			var battlesLast24Hours = response2.summary.battles_count;
+			try {
+				battlesLast24Hours = response2.summary.battles_count;
+			}
+			catch(error){
+				battlesLast24Hours = totalBattlesPlayed;
+			}
+			
 			//The amount of battles the last 24 hours
-			var battlesPast24 = totalBattlesPlayed - battlesLast24Hours;
+			battlesPast24 = totalBattlesPlayed - battlesLast24Hours;
 			//The amount of spots the last 24 hours
-			var spottedPast24 = totalSpotted - totalSpottedLast24;
+			spottedPast24 = totalSpotted - totalSpottedLast24;
 
 			//Get the average spot, by dividing the spots with battles
-			var averageSpotted = spottedPast24/battlesPast24;
+			averageSpotted = spottedPast24/battlesPast24;
 			return averageSpotted;
 		}
 
 		//Fetching average damage
 		function averageDamagePast(response1, response2){
-			//Total damage 24 hours ago.	
-			var damage24HoursAgo = response2.battles.damage_dealt;
+			var damage24HoursAgo,
+				totalDamage,
+				damageLast24Hours,
+				battles24HoursAgo,
+				totalAmountOfBattles,
+				battlesLast24Hours,
+				averageDamageLast24Hours;
+
 			//Total damage, according to last update
-			var totalDamage = response1.battles.damage_dealt;
-			//The accumulated damage the last 24 hours
-			var damageLast24Hours = totalDamage - damage24HoursAgo;
-			//Total amount of battles 24 hours ago
-			var battles24HoursAgo = response2.summary.battles_count;
+			totalDamage = response1.battles.damage_dealt;
 			//Total amount of battles, to last update.
-			var totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.summary.battles_count;	
+
+			//Total damage 24 hours ago.
+			try{
+				damage24HoursAgo = response2.battles.damage_dealt;
+			}
+			catch(error){
+				damage24HoursAgo = totalDamage;
+			}	
+			//The accumulated damage the last 24 hours
+			damageLast24Hours = totalDamage - damage24HoursAgo;
+
+			//Total amount of battles 24 hours ago
+			try{
+				battles24HoursAgo = response2.summary.battles_count;
+			}
+			catch(error){
+				battles24HoursAgo = totalAmountOfBattles;
+			}
+			
+			
 			//The amount of battles the last 24 hours
-			var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+			battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 			//Calculate the average damage done last 24 hours.
-			var averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
+			averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
 			return averageDamageLast24Hours;
 		}
 
 		//Get the average def points
 		function averageDefPointsPast(response1, response2) {
+			var totalDefPoints,
+				totalDefPoints24Last,
+				defPointsPast24,
+				totalAmountOfBattles,
+				totalAmountOfBattlesLast24,
+				battlesPast24,
+				averageDefPoints;
+
 			//Get the total number of def points
-			var totalDefPoints = response1.ratings.dropped_ctf_points.value;
+			totalDefPoints = response1.ratings.dropped_ctf_points.value;
 			//Get the total number of def points 24 hours ago
-			var totalDefPoints24Last = response2.ratings.dropped_ctf_points.value;
+			try{
+				totalDefPoints24Last = response2.ratings.dropped_ctf_points.value;
+			}
+			catch(error){
+				totalDefPoints24Last = totalDefPoints;
+			}
+			
 			//Calculate the difference
-			var defPointsPast24 = totalDefPoints - totalDefPoints24Last;
+			defPointsPast24 = totalDefPoints - totalDefPoints24Last;
 
 			//Total amount of battles, to last update
-			var totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.summary.battles_count;
+
 			//Total amount of battles, 24 hours ago
-			var totalAmountOfBattlesLast24 = response2.summary.battles_count;
+			try{
+				totalAmountOfBattlesLast24 = response2.summary.battles_count;
+			}
+			catch(error){
+				totalAmountOfBattlesLast24 = totalAmountOfBattles;
+			}
+			
 			//Calculate the difference
-			var battlesPast24 = totalAmountOfBattles - totalAmountOfBattlesLast24;
+			battlesPast24 = totalAmountOfBattles - totalAmountOfBattlesLast24;
 
 			if(battlesPast24 === 0){
-				var averageDefPoints = 0;
+				averageDefPoints = 0;
 			}
 			else {
-				var averageDefPoints = defPointsPast24/battlesPast24;
+				averageDefPoints = defPointsPast24/battlesPast24;
 			}
 			return averageDefPoints;
 		}
 
 		//Get the winrate
 		function winRatePast(response1, response2){
+			var totalAmountOfBattles,
+				battles24HoursAgo,
+				battlesLast24Hours,
+				totalWins,
+				totalWinsLast24,
+				winsPast24,
+				winRatioPast24;
+
 			//First we will get the amount of battles for the past 24 hours
 			//Total amount of battles, to last update.
-			var totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.summary.battles_count;
 			//Total amount of battles 24 hours ago
-			var battles24HoursAgo = response2.summary.battles_count;
+			try {
+				battles24HoursAgo = response2.summary.battles_count;
+			}
+			catch(error){
+				battles24HoursAgo = totalAmountOfBattles;
+			}
+			
 			//The amount of battles the last 24 hours
-			var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+			battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 
 			//Get amount of wins for the past 24 hours
 			//Get total wins, current
-			var totalWins = response1.summary.wins;
+			totalWins = response1.summary.wins;
 			//Get total wins, 24 hours ago
-			var totalWinsLast24 = response2.summary.wins;
+			try {
+				totalWinsLast24 = response2.summary.wins;
+			}
+			catch(error){
+				totalWinsLast24 = totalWins;
+			}
+			
 			//Subtract to get amount of wins for the past 24 hours
-			var winsPast24 = totalWins - totalWinsLast24;
+			winsPast24 = totalWins - totalWinsLast24;
 			//Divide to get the win percentage from the past 24 hours
-			var winRatioPast24 = (winsPast24/battlesLast24Hours)*100;
+			winRatioPast24 = (winsPast24/battlesLast24Hours)*100;
 			return winRatioPast24;
 		}
 
 		//Creating our objects from the functions above, these variables, containing values calculated fom the functions above, will go into our WN7 formula
-		var averageTier = averageTierPast(response1, response2);
-		var averageFrags = averageFragsPast(response1, response2);
-		var averageDamage = averageDamagePast(response1, response2);
-		var theWinRate = winRatePast(response1, response2);
-		var averageDefPoints = averageDefPointsPast(response1, response2);
-		var averageSpotted = averageSpottedPast(response1, response2);
-		var battlesPlayed = battlesPlayedPast(response1, response2);
+		var averageTier = averageTierPast(response1, response2),
+			averageFrags = averageFragsPast(response1, response2),
+			averageDamage = averageDamagePast(response1, response2),
+			theWinRate = winRatePast(response1, response2),
+			averageDefPoints = averageDefPointsPast(response1, response2),
+			averageSpotted = averageSpottedPast(response1, response2),
+			battlesPlayed = battlesPlayedPast(response1, response2);
 
 
 		//Lets start defining our functions as objects
