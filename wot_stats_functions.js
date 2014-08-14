@@ -651,8 +651,7 @@ jQuery(document).ready(function(){
 			for(key in tanksArray) {
 				//console.log(key);
 				if(key == response4[i].tank_id){
-					count++;
-					//console.log(key);
+					
 
 					var modifiedTankNameArray = (tanksArray[key].name).split(':'),
 						modifiedTankName = (modifiedTankNameArray[1]).toLowerCase();
@@ -671,32 +670,27 @@ jQuery(document).ready(function(){
 									'image_url': imgUrl
 					};
 
-					newTankArray.push(newTank);
+					window.newTankDataArray.push(newTank);
 				}
 			}
 		}
-		console.log(count);
-		console.log(newTankArray);
 
-		/*
-		for(var tank in tanksArray){
-			//Getting the specific tier for this tank
-			var tier = tanksArray[tank].level;
-			//Getting the number of battles played in this tank
-			var matches = tanksArray[tank].battle_count;
-			//Iterating over all tanks and counting the amount of total games played
-			countMatchesIteration = countMatchesIteration + matches;
-			//Iterating and summing up the product of this tank's matches*tier
-			countMatchesLevelIteration = countMatchesLevelIteration + (matches*tier);
+		//console.log(window.newTankDataArray);
+		
+		var theTankArray = window.newTankDataArray,
+			battlesMultipliedWithTier = 0;
+
+		for(var i=0, x=theTankArray.length; i<x; i++){
+			battlesMultipliedWithTier += (theTankArray[i].battles * theTankArray[i].level);
 		}
+
+		
 		//Do our average tier calculation
-		averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
+		averageTier = Math.round((battlesMultipliedWithTier/totalAmountOfBattles)*100)/100;
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTier + '</h1>');
-		*/
-		console.log("Leeengthy is " + tanksArrayLength);
-
-		console.log("Leeengthy2 is " + tankDataArrayLength);
+		
+		
 	}
 
 	/*

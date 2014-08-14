@@ -33,6 +33,7 @@ jQuery(document).ready(function(){
 
 	//Empty tankdata array on init!
 	var tankDataArray = [];
+	window.newTankDataArray = [];
 
 
 	/*
@@ -193,7 +194,8 @@ jQuery(document).ready(function(){
 							}
 
 
-
+							//Lets reset our tanks on the window object
+							window.newTankDataArray = [];
 							
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
