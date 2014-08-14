@@ -15,17 +15,17 @@ jQuery(document).ready(function(){
 	var sourceToken 	= 	'WG-WoT_Assistant-1.4.1'; //NOT USED ANYMORE?
 
 	//The DOM elements to manipulate, can be changed to your needs.
-	var player_stats_container = $("#player_stats_container");
-	var player_general_information = $("#player_general_information");
-	var player_stats_total = $("#total_stats");
-	var player_stats_recent = $("#recent_stats");
-	var player_stats_older = $("#older_stats");
-	var the_form = $('#search_player_form_section');
+	var player_stats_container = $("#player_stats_container"),
+	player_general_information = $("#player_general_information"),
+	player_stats_total = $("#total_stats"),
+	player_stats_recent = $("#recent_stats"),
+	player_stats_older = $("#older_stats"),
+	the_form = $('#search_player_form_section');
 
 
 	//Building the API http request, internally
-	var httpFindPlayer = 'wot_find_player.php';
-	var httpShowPlayer = 'wot_show_player_stats.php';
+	var httpFindPlayer = 'wot_find_player.php',
+	httpShowPlayer = 'wot_show_player_stats.php';
 	
 	//Some CSS fixes on first load
 	player_stats_recent.addClass('on_first_load_css_fix');
@@ -38,10 +38,9 @@ jQuery(document).ready(function(){
 		event.preventDefault();
 
 			//Create some variables for displaying the correct server
-			var serverName, serverAbbreviation;
-
+			var serverName, serverAbbreviation,
 			//Here we need to fetch our options from the select input
-			var server = $('#server_selection').find('select').find('option:selected').val();
+			server = $('#server_selection').find('select').find('option:selected').val();
 
 			switch(server){
 				case 'ru': {
@@ -112,26 +111,42 @@ jQuery(document).ready(function(){
 				//contentType: 'application/json',
 				success: function(response) {
 
-					console.log('The Check ID request');
-					console.log(response);
+					//console.log('The Check ID request');
+					//console.log(response);
 					
-					var status = response.status;
-					var clan = response.data[0].clan_id;
+					var status = response.status,
+					clan,
+					playerFound = true;
 
+					try{
+						clan = response.data[0].clan_id;
+					}
+					catch(error){
+						clan = "";
+					}
+
+					try {
+						typeof response.data[0].account_id === typeof undefined;
+					}
+					catch(error){
+						playerFound = false;
+					}
+					
+					//console.log(response.data[0].account_id);
 					
 
 					//The error message we will print out if there is something wrong with the search
 					var htmlMsg = '<h1>Ops the magic kitten did not find that Tanker on the ' + serverName + ' server, please try again ;)..</h1>';	
 
 					
-					if(status==="ok") {
+					if(status==="ok" && playerFound) {
 						//Since we know the status is ok, we check if the player exist.
 						
-							var id = response.data[0].id;	
+							var id = response.data[0].account_id;	
 
 							//console.log('player id is: ' + id);
 
-							if(clan!=null){
+							if(clan!==null){
 
 							}
 
@@ -140,15 +155,15 @@ jQuery(document).ready(function(){
 							
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
-							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, '24');
-							//var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
+							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24);
+							var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
 							var playerVehicleStatsPromise = AjaxPlayerVehicleStats.getPlayerVehicleStats(id, serverAbbreviation, apiVer); 
 
-							$.when(playerTotalStatsPromise,playerPastStatsPromise1, /*playerPastStatsPromise2,*/ playerVehicleStatsPromise).done(function(response1, response2, response3/*, response4*/){
+							$.when(playerTotalStatsPromise,playerPastStatsPromise1, playerPastStatsPromise2, playerVehicleStatsPromise).done(function(response1, response2, response3, response4){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								
 
-								CalculateStatsEngine(response1, response2, response3, /*response4,*/ serverName, serverAbbreviation, id);
+								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id);
 								//remove our css class, when we are done
 								player_stats_container.removeClass('loading');
 							});
@@ -198,6 +213,8 @@ jQuery(document).ready(function(){
 			//API for fetching the player stats
 			//var apiVer = '2.0'; /* 1.0 -> 1.1 */
 			
+			//console.log("This is a test tanker: " + tankerId + " serverAbbreviation: " + serverAbbreviation + " and Api ver: " + apiVer);
+
 			var apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/account/info/?application_id=' + apiKey + '&account_id=' + tankerId;
 
 			
@@ -232,7 +249,7 @@ jQuery(document).ready(function(){
 		getPlayerPastStats: function(tankerId, serverAbbreviation, apiVer, hoursAgo) {
 
 			var promise = $.Deferred();
-
+			console.log(tankerId + " "  + serverAbbreviation + " "  +  apiVer + " "  +  hoursAgo);
 
 			var	apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/stats/accountbytime/?application_id=' + apiKey +'&account_id=' + tankerId + '&hours_ago=' + hoursAgo;
 
@@ -299,7 +316,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, response3, /*response4,*/ server, serverAbbreviation, tankerId) {
+	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId) {
 
 		
 		//Dev stuff below... could be removed later.
@@ -309,8 +326,8 @@ jQuery(document).ready(function(){
 		console.log(response2);
 		console.log('Player 1 week ago Stats Object!!!!!:');
 		console.log(response3);
-		//console.log('Player Vehicle Stats Object:');
-		//console.log(response4);
+		console.log('Player Vehicle Stats Object:');
+		console.log(response4);
 		//console.log('The tankerId ' + tankerId);
 		
 
@@ -321,22 +338,22 @@ jQuery(document).ready(function(){
 		//Data for 24 ago stats section
 		var responseData2 = response2.data[0];
 		//Data for 1 week ago stats section
-		//var responseData3 = response3.data[0];
+		var responseData3 = response3.data[0];
 		//Data for vehicles
-		//var responseData4 = response4.data[tankerId];
+		var responseData4 = response4.data[tankerId];
 
 
 
 
-		/*
+		
 		//Dev stuff below... could be removed later.
-		console.log('Player Total Stats Object:');
+		console.log('Player Total Stats Object FIXED:');
 		console.log(responseData1);
 		console.log('Player Recent Stats Object:');
 		console.log(responseData2);
 		console.log('Player Older Stats Object:');
 		console.log(responseData3);
-		*/
+		
 
 		
 		//We clear our DOM from previous searches

@@ -297,22 +297,43 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.averageDamagePast = function(response1, response2) {
 
-		var container = $(this);
+		var container = $(this),
+		damage24HoursAgo,
+		totalDamage,
+		damageLast24Hours,
+		battlesLast24Hours,
+		battles24HoursAgo,
+		totalAmountOfBattles,
+		averageDamageLast24Hours;
 
-		//Total damage 24 hours ago.	
-		var damage24HoursAgo = response2.stat.statistics.all.damage_dealt;
-		//Total damage, according to last update
-		var totalDamage = response1.statistics.all.damage_dealt;
-		//The accumulated damage the last 24 hours
-		var damageLast24Hours = totalDamage - damage24HoursAgo;
+		//Total damage 24 hours ago.
+		try {
+			damage24HoursAgo = response2.stat.statistics.all.damage_dealt;
+		}
+		catch(error){
+			damage24HoursAgo = 0;
+		}	
+
 		//Total amount of battles 24 hours ago
-		var battles24HoursAgo = response2.stat.statistics.all.battles;
+		try {
+			battles24HoursAgo = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battles24HoursAgo = 0;
+		}
+		
+
+		//Total damage, according to last update
+		totalDamage = response1.statistics.all.damage_dealt;
+		//The accumulated damage the last 24 hours
+		damageLast24Hours = totalDamage - damage24HoursAgo;
+		
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
 		//The amount of battles the last 24 hours
-		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+		battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 		//Calculate the average damage done last 24 hours.
-		var averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
+		averageDamageLast24Hours = Math.round(damageLast24Hours/battlesLast24Hours);
 		container.append('<h1>Average damage: ' +  averageDamageLast24Hours + '</h1>');
 	}
 
@@ -320,13 +341,23 @@ jQuery(document).ready(function(){
 	*	Show amount of battles played the past 24 hours
 	*/
 	$.fn.battlesPlayedPast = function(response1, response2) {
-		var container = $(this);
+		var container = $(this),
+			battles24HoursAgo,
+			totalAmountOfBattles,
+			battlesLast24Hours;
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
+
 		//Total amount of battles 24 hours ago
-		var battles24HoursAgo = response2.stat.statistics.all.battles;
+		try {
+			battles24HoursAgo = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battles24HoursAgo = totalAmountOfBattles;
+			//console.log("The error from battlesPlayedPast func is:" +  error);
+		}
 		//The amount of battles the last 24 hours
-		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+		battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 		container.append('<h1>Battles played: ' + battlesLast24Hours + '</h1>');
 	} 
 
@@ -336,24 +367,46 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.averageExperiencePast = function(response1, response2) {
 		//Define what we get in
-		var container = $(this);
+		var container = $(this),
+			battles24HoursAgo,
+			totalXpGainedLast24,
+			totalAmountOfBattles,
+			battlesLast24Hours,
+			totalXpGained,
+			xpGainedPast24,
+			averageXpGainedPast24;
+			
+
 		//First we will get the amount of battles for the past 24 hours
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
 		//Total amount of battles 24 hours ago
-		var battles24HoursAgo = response2.stat.statistics.all.battles;
+		try{
+			battles24HoursAgo = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battles24HoursAgo = totalAmountOfBattles;
+			//console.log("No battles recorded the 24 last hours... TT. From averageExperiencePast func");
+		}	
+		
 		//The amount of battles the last 24 hours
-		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+		battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 
 		//Now we will get the total xp gain and subtract how it looked 24 hours ago
 		//Get the total XP so far
-		var totalXpGained = response1.statistics.all.xp;
+		totalXpGained = response1.statistics.all.xp;
 		//Get the total XP from 24 hours back
-		var totalXpGainedLast24 = response2.stat.statistics.all.xp;
+		try{
+			totalXpGainedLast24 = response2.stat.statistics.all.xp;
+		}
+		catch(error){
+			totalXpGainedLast24 = totalXpGained;
+		}
+		
 		//Subtract the difference to get the xp gained the past 24 hours
-		var xpGainedPast24 = totalXpGained - totalXpGainedLast24;
+		xpGainedPast24 = totalXpGained - totalXpGainedLast24;
 		//Now we calculate the average xp gained per fight the last 24 hours
-		var averageXpGainedPast24 = Math.round(xpGainedPast24/battlesLast24Hours);
+		averageXpGainedPast24 = Math.round(xpGainedPast24/battlesLast24Hours);
 		//Print it to the DOM
 		container.append('<h1>Average experience: ' + averageXpGainedPast24 + '</h1>');
 	}
@@ -363,34 +416,56 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.averageWinRatePast = function(response1, response2) {
 		//Define what we get in
-		var container = $(this);
+		var container = $(this),
+		battles24HoursAgo,
+		totalWinsLast24,
+		statName,
+		totalAmountOfBattles,
+		battlesLast24Hours,
+		totalWins,
+		winsPast24,
+		winRatioPast24,
+		color;
 
 		//We define what we send to the color code
-		var statName = 'averageWinRate';
+		statName = 'averageWinRate';
 
 		//What to do.
 		//Get amount of battles and amount of wins, divide to get percentage
 
 		//First we will get the amount of battles for the past 24 hours
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
 		//Total amount of battles 24 hours ago
-		var battles24HoursAgo = response2.stat.statistics.all.battles;
+		try {
+			battles24HoursAgo = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battles24HoursAgo = totalAmountOfBattles;
+			//console.log("No battles recorded last 24 hours...");
+		}
+		
 		//The amount of battles the last 24 hours
-		var battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
+		battlesLast24Hours = totalAmountOfBattles - battles24HoursAgo;
 
 		//Get amount of wins for the past 24 hours
 		//Get total wins, current
-		var totalWins = response1.statistics.all.wins;
+		totalWins = response1.statistics.all.wins;
 		//Get total wins, 24 hours ago
-		var totalWinsLast24 = response2.stat.statistics.all.wins;
+		try {
+			totalWinsLast24 = response2.stat.statistics.all.wins;
+		}
+		catch(error){
+			totalWinsLast24 = totalWins;
+		}
+		
 		//Subtract to get amount of wins for the past 24 hours
-		var winsPast24 = totalWins - totalWinsLast24;
+		winsPast24 = totalWins - totalWinsLast24;
 		//Divide to get the win percentage from the past 24 hours
-		var winRatioPast24 = (Math.round(((winsPast24/battlesLast24Hours)*1000)))/10;
+		winRatioPast24 = (Math.round(((winsPast24/battlesLast24Hours)*1000)))/10;
 
 		//Lets get the color code for this specific stat
-		var color = container.printColorToStat(statName,winRatioPast24);
+		color = container.printColorToStat(statName,winRatioPast24);
 
 		//Print to DOM
 		container.append('<h1>Average winrate: <span style="color:' + color + '">'+ winRatioPast24 + '&#37;</span></h1>');
@@ -400,18 +475,21 @@ jQuery(document).ready(function(){
 	*	Calculates average capture points over all battles
 	*/
 	$.fn.averageCapPoints = function(response) {
-		var container = $(this);
+		var container = $(this),
+		totalCapPoints,
+		totalAmountOfBattles,
+		averageCapPoints;
 
-		var totalCapPoints = response.statistics.all.capture_points;
+		totalCapPoints = response.statistics.all.capture_points;
 
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response.statistics.all.battles;
+		totalAmountOfBattles = response.statistics.all.battles;
 		
 		if(totalAmountOfBattles === 0){
-			var averageCapPoints = 0;
+			averageCapPoints = 0;
 		}
 		else {
-			var averageCapPoints = Math.round((totalCapPoints/totalAmountOfBattles)*100)/100;
+			averageCapPoints = Math.round((totalCapPoints/totalAmountOfBattles)*100)/100;
 		}
 		container.append('<h1>Average capture points: ' + averageCapPoints + '</h1>');
 	}
@@ -420,27 +498,46 @@ jQuery(document).ready(function(){
 	*	Calculates average capture points over the last period
 	*/
 	$.fn.averageCapPointsPast = function(response1, response2) {
-		var container = $(this);
+		var container = $(this),
+		totalCapPointsLast24,
+		totalAmountOfBattles24Last,
+		capPointsPast24,
+		totalAmountOfBattles,
+		battlesPast24,
+		averageCapPoints,
+		totalCapPoints;
 
 		//Getting the total cap points
-		var totalCapPoints = response1.statistics.all.capture_points;
+		totalCapPoints = response1.statistics.all.capture_points;
 		//Getting total cap points from 24 hours ago
-		var totalCapPointsLast24 = response2.stat.statistics.all.capture_points;
+		try {
+			totalCapPointsLast24 = response2.stat.statistics.all.capture_points;
+		}
+		catch(error){
+			totalCapPointsLast24 = totalCapPoints;
+		}
+		
 
-		var capPointsPast24 = totalCapPoints - totalCapPointsLast24;
+		capPointsPast24 = totalCapPoints - totalCapPointsLast24;
 
 		//Total amount of battles, to last update.
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
 		//Total amount of battles, 24 hours ago.
-		var totalAmountOfBattles24Last = response2.stat.statistics.all.battles;
+		try {
+			totalAmountOfBattles24Last = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			totalAmountOfBattles24Last = totalAmountOfBattles;
+		}
+		
 		//Calculate the battles the past 24 hours
-		var battlesPast24 = totalAmountOfBattles - totalAmountOfBattles24Last;
+		battlesPast24 = totalAmountOfBattles - totalAmountOfBattles24Last;
 
 		if(battlesPast24 === 0){
-			var averageCapPoints = 0;
+			averageCapPoints = 0;
 		}
 		else {
-			var averageCapPoints = Math.round((capPointsPast24/battlesPast24)*100)/100;
+			averageCapPoints = Math.round((capPointsPast24/battlesPast24)*100)/100;
 		}
 		
 		container.append('<h1>Average capture points: ' + averageCapPoints + '</h1>');
@@ -472,26 +569,46 @@ jQuery(document).ready(function(){
 	*	Calculate average defense points the last period
 	*/
 	$.fn.averageDefPointsPast = function(response1, response2) {
-		var container = $(this);
+		var container = $(this),
+		totalDefPoints,
+		totalDefPoints24Last,
+		defPointsPast24,
+		totalAmountOfBattles,
+		totalAmountOfBattlesLast24,
+		battlesPast24,
+		averageDefPoints;
+
 		//Get the total number of def points
-		var totalDefPoints = response1.statistics.all.dropped_capture_points;
+		totalDefPoints = response1.statistics.all.dropped_capture_points;
 		//Get the total number of def points 24 hours ago
-		var totalDefPoints24Last = response2.stat.statistics.all.dropped_capture_points;
+		try{
+			totalDefPoints24Last = response2.stat.statistics.all.dropped_capture_points;
+		}
+		catch(error){
+			totalDefPoints24Last = totalDefPoints;
+		}
+		
 		//Calculate the difference
-		var defPointsPast24 = totalDefPoints - totalDefPoints24Last;
+		defPointsPast24 = totalDefPoints - totalDefPoints24Last;
 
 		//Total amount of battles, to last update
-		var totalAmountOfBattles = response1.statistics.all.battles;
+		totalAmountOfBattles = response1.statistics.all.battles;
 		//Total amount of battles, 24 hours ago
-		var totalAmountOfBattlesLast24 = response2.stat.statistics.all.battles;
+		try {
+			totalAmountOfBattlesLast24 = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			totalAmountOfBattlesLast24 = totalAmountOfBattles;
+		}
+		
 		//Calculate the difference
-		var battlesPast24 = totalAmountOfBattles - totalAmountOfBattlesLast24;
+		battlesPast24 = totalAmountOfBattles - totalAmountOfBattlesLast24;
 
 		if(battlesPast24 === 0){
-			var averageDefPoints = 0;
+			averageDefPoints = 0;
 		}
 		else {
-			var averageDefPoints = Math.round((defPointsPast24/battlesPast24)*100)/100;
+			averageDefPoints = Math.round((defPointsPast24/battlesPast24)*100)/100;
 		}
 		container.append('<h1>Average defence points: ' + averageDefPoints + '</h1>');
 	}
@@ -502,13 +619,19 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.averageTier = function(response){
 		//Defining our container
-		var container = $(this);
+		var container = $(this),
+		countMatchesIteration,
+		countMatchesLevelIteration,
+		tanksArray,
+		averageTier;
+		
+
 		//Defining some variables we need when we iterate through the array
-		var countMatchesIteration = 0;
-		var countMatchesLevelIteration = 0;
+		countMatchesIteration = 0;
+		countMatchesLevelIteration = 0;
 
 		//Getting in our vehicles array from the object
-		var tanksArray = response.vehicles;
+		tanksArray = response.vehicles;
 		
 		for(var tank in tanksArray){
 			//Getting the specific tier for this tank
@@ -521,7 +644,7 @@ jQuery(document).ready(function(){
 			countMatchesLevelIteration = countMatchesLevelIteration + (matches*tier);
 		}
 		//Do our average tier calculation
-		var averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
+		averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTier + '</h1>');
 	}
@@ -830,22 +953,42 @@ jQuery(document).ready(function(){
 	*	Average Spotted per game the last period
 	*/
 	$.fn.averageSpottedPast = function(response1, response2){
-		var container = $(this);
+		var container = $(this),
+		totalSpotted,
+		totalBattlesPlayed,
+		totalSpottedLast24,
+		battlesLast24Hours,
+		battlesPast24,
+		spottedPast24,
+		averageSpotted;
+
 		//Get the total amount of spots
-		var totalSpotted = response1.statistics.all.spotted;
+		totalSpotted = response1.statistics.all.spotted;
 		//Fetching the amount of battles
-		var totalBattlesPlayed = response1.statistics.all.battles;
+		totalBattlesPlayed = response1.statistics.all.battles;
 		//Lets get the total spotted as it were 24 hours ago
-		var totalSpottedLast24 = response2.stat.statistics.all.spotted;
+		try {
+			totalSpottedLast24 = response2.stat.statistics.all.spotted;
+		}
+		catch(error){
+			totalSpottedLast24 = totalSpotted;
+		}
+		
 		//Total amount of battles 24 hours ago
-		var battlesLast24Hours = response2.stat.statistics.all.battles;
+		try{
+			battlesLast24Hours = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battlesLast24Hours = totalBattlesPlayed;
+		}
+		
 		//The amount of battles the last 24 hours
-		var battlesPast24 = totalBattlesPlayed - battlesLast24Hours;
+		battlesPast24 = totalBattlesPlayed - battlesLast24Hours;
 		//The amount of spots the last 24 hours
-		var spottedPast24 = totalSpotted - totalSpottedLast24;
+		spottedPast24 = totalSpotted - totalSpottedLast24;
 
 		//Get the average spot, by dividing the spots with battles
-		var averageSpotted = Math.round((spottedPast24/battlesPast24)*100)/100;
+		averageSpotted = Math.round((spottedPast24/battlesPast24)*100)/100;
 		
 		container.append('<h1>Average spotted: ' + averageSpotted + '</h1>');
 	}
@@ -855,13 +998,16 @@ jQuery(document).ready(function(){
 	*	Average Frags Total
 	*/
 	$.fn.averageFrags = function(response){
-		var container = $(this);
+		var container = $(this),
+		totalBattlesPlayed,
+		totalFrags,
+		averageFrags;
 		//Fetching the amount of battles
-		var totalBattlesPlayed = response.statistics.all.battles;
+		totalBattlesPlayed = response.statistics.all.battles;
 		//Fetching the amount of total frags
-		var totalFrags = response.statistics.all.frags;
+		totalFrags = response.statistics.all.frags;
 		//Calculating average frags
-		var averageFrags = Math.round((totalFrags/totalBattlesPlayed)*100)/100;
+		averageFrags = Math.round((totalFrags/totalBattlesPlayed)*100)/100;
 		container.append('<h1>Average kills: ' + averageFrags + '</h1>')
 	}	
 
@@ -869,21 +1015,40 @@ jQuery(document).ready(function(){
 	*	Average Frags Past
 	*/
 	$.fn.averageFragsPast = function(response1, response2){
-		var container = $(this);
+		var container = $(this),
+		totalBattlesPlayed,
+		battles24HoursAgo,
+		totalFrags,
+		totalFragsLast24,
+		totalFragsPast24,
+		battlesPast24,
+		averageFrags;
+
 		//Fetching the amount of battles in total
-		var totalBattlesPlayed = response1.statistics.all.battles;
+		totalBattlesPlayed = response1.statistics.all.battles;
 		//Total amount of battles 24 hours ago
-		var battles24HoursAgo = response2.stat.statistics.all.battles;
+		try {
+			battles24HoursAgo = response2.stat.statistics.all.battles;
+		}
+		catch(error){
+			battles24HoursAgo = totalBattlesPlayed;
+		}
 		//Fetching the amount of total frags
-		var totalFrags = response1.statistics.all.frags;
+		totalFrags = response1.statistics.all.frags;
 		//Fetching the amount of frags 24 hours ago
-		var totalFragsLast24 = response2.stat.statistics.all.frags;
+		try {
+			totalFragsLast24 = response2.stat.statistics.all.frags;
+		}
+		catch(error){
+			totalFragsLast24 = totalFrags;
+		}
+		
 		//Calculate total frags during the past 24 hours
-		var totalFragsPast24 = totalFrags - totalFragsLast24;
+		totalFragsPast24 = totalFrags - totalFragsLast24;
 		//Calculate total battles during the past 24 hours
-		var battlesPast24 = totalBattlesPlayed - battles24HoursAgo;
+		battlesPast24 = totalBattlesPlayed - battles24HoursAgo;
 		//Calculating average frags
-		var averageFrags = Math.round((totalFragsPast24/battlesPast24)*100)/100;
+		averageFrags = Math.round((totalFragsPast24/battlesPast24)*100)/100;
 		//Print it to the DOM
 		container.append('<h1>Average kills: ' + averageFrags + '</h1>')	
 	}
