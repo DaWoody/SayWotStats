@@ -619,22 +619,66 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows the average tier played in total
 	*/
-	$.fn.averageTier = function(response){
+	$.fn.averageTier = function(response1, response4, tankDataArray){
 		//Defining our container
 		var container = $(this),
 		countMatchesIteration,
 		countMatchesLevelIteration,
 		tanksArray,
-		averageTier;
+		tanksArrayLength,
+		tankDataArrayLength,
+		averageTier,
+		totalAmountOfBattles,
+		newTankArray = [];
 		
 
 		//Defining some variables we need when we iterate through the array
 		countMatchesIteration = 0;
 		countMatchesLevelIteration = 0;
 
-		//Getting in our vehicles array from the object
-		tanksArray = response.vehicles;
 		
+
+		totalAmountOfBattles = response1.statistics.all.battles;
+
+
+		//Getting in our vehicles array from the object
+		var count=0;
+		tanksArray = tankDataArray.data;
+		
+		
+		for(var i=0, tanksArrayLength = response4.length; i<tanksArrayLength; i++){
+			
+			for(key in tanksArray) {
+				//console.log(key);
+				if(key == response4[i].tank_id){
+					count++;
+					//console.log(key);
+
+					var modifiedTankNameArray = (tanksArray[key].name).split(':'),
+						modifiedTankName = (modifiedTankNameArray[1]).toLowerCase();
+
+					var imgUrl = 'http://worldoftanks.eu/static/3.21.0.4/encyclopedia/tankopedia/vehicle/' + tanksArray[key].nation + '-' + modifiedTankName + '.png'; 
+					
+					var newTank = {
+									'tank_id': tanksArray[key].tank_id,
+									'level': tanksArray[key].level,
+									'name': tanksArray[key].name,
+									'nation': tanksArray[key].nation,
+									'short_name': tanksArray[key].name_i18n,
+									'battles': response4[i].statistics.battles,
+									'wins': response4[i].statistics.wins,
+									'mark_of_mastery': response4[i].mark_of_mastery,
+									'image_url': imgUrl
+					};
+
+					newTankArray.push(newTank);
+				}
+			}
+		}
+		console.log(count);
+		console.log(newTankArray);
+
+		/*
 		for(var tank in tanksArray){
 			//Getting the specific tier for this tank
 			var tier = tanksArray[tank].level;
@@ -649,6 +693,10 @@ jQuery(document).ready(function(){
 		averageTier = Math.round((countMatchesLevelIteration/countMatchesIteration)*100)/100;
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTier + '</h1>');
+		*/
+		console.log("Leeengthy is " + tanksArrayLength);
+
+		console.log("Leeengthy2 is " + tankDataArrayLength);
 	}
 
 	/*
@@ -1119,7 +1167,7 @@ jQuery(document).ready(function(){
 		//Fetching the amount of battles we played
 		function battlesPlayed(response){
 			//Defining some variables
-			var totalBattlesPlayed = response.summary.battles_count;
+			var totalBattlesPlayed = response.statistics.all.battles;
 			return totalBattlesPlayed;
 		}	
 
@@ -1127,9 +1175,10 @@ jQuery(document).ready(function(){
 		//Fetching the average amount of frags
 		function averageFrags(response){
 			//Fetching the amount of battles
-			var totalBattlesPlayed = response.summary.battles_count;
+			console.log(response);
+			var totalBattlesPlayed = response.statistics.all.battles;
 			//Fetching the amount of total frags
-			var totalFrags = response.battles.frags;
+			var totalFrags = response.statistics.all.frags;
 			//Calculating average frags
 			var averageFrags = totalFrags/totalBattlesPlayed;
 			return averageFrags;
@@ -1138,9 +1187,9 @@ jQuery(document).ready(function(){
 		//Fetching average spoting per game
 		function averageSpotted(response){
 			//Get the total amount of spots
-			var totalSpotted = response.battles.spotted;
+			var totalSpotted = response.statistics.all.spotted;
 			//Fetching the amount of battles
-			var totalBattlesPlayed = response.summary.battles_count;
+			var totalBattlesPlayed = response.statistics.all.battles;
 			//Get the average spot, by dividing the spots with battles
 			var averageSpotted = totalSpotted/totalBattlesPlayed;
 			return averageSpotted;
@@ -1149,9 +1198,9 @@ jQuery(document).ready(function(){
 		//Fetching average damage
 		function averageDamage(response){
 			//Defining some variables
-			var totalBattlesPlayed = response.summary.battles_count;
+			var totalBattlesPlayed = response.statistics.all.battles;
 			//Getting the total damage
-			var totalDamage = response.battles.damage_dealt;
+			var totalDamage = response.statistics.all.damage_dealt;
 			//Calculate the average damage
 			var averageDamage = totalDamage/totalBattlesPlayed;
 			return averageDamage;
@@ -1160,9 +1209,9 @@ jQuery(document).ready(function(){
 		//Get the average def points
 		function averageDefPoints(response) {
 			//Get the total number of def points
-			var totalDefPoints = response.ratings.dropped_ctf_points.value;
+			var totalDefPoints = response.statistics.all.dropped_capture_points;
 			//Total amount of battles, to last update.
-			var totalAmountOfBattles = response.summary.battles_count;
+			var totalAmountOfBattles = response.statistics.all.battles;
 
 			if(totalAmountOfBattles === 0){
 				var averageDefPoints = 0;
@@ -1176,9 +1225,9 @@ jQuery(document).ready(function(){
 		//Get the winrate
 		function winRate(response){
 			//Get total amount of wins
-			var totalWins = response.summary.wins;
+			var totalWins = response.statistics.all.wins;
 			//Total amount of battles, to last update.
-			var totalAmountOfBattles = response.summary.battles_count;
+			var totalAmountOfBattles = response.statistics.all.battles;
 			//Calculate the win ratio
 			var winRate = (totalWins/totalAmountOfBattles)*100;
 			return winRate;

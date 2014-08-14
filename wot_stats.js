@@ -31,6 +31,48 @@ jQuery(document).ready(function(){
 	player_stats_recent.addClass('on_first_load_css_fix');
 	player_stats_total.addClass('on_first_load_css_fix');
 
+	//Empty tankdata array on init!
+	var tankDataArray = [];
+
+
+	/*
+	*	Load tank data prior to execution
+	*/
+	(function loadTankData(){
+
+
+		var serverAbbreviation = '.eu',
+			apiVer = '2.0',
+			apiKey = 'd0a293dc77667c9328783d489c8cef73',
+			apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' +  apiVer + '/encyclopedia/tanks/?application_id=' + apiKey;
+
+			//http://api.worldoftanks.ru/2.0/encyclopedia/tanks/?application_id=
+
+
+		$.ajax(httpShowPlayer, {
+				dataType: 'json',
+				method: 'post',
+				data: {
+					url: apiFetchStatsUrl
+				},
+
+				success: function(response) {
+					//console.log("Yaya we did it!");
+					tankDataArray = response;
+					console.log(tankDataArray);
+				},
+
+				error: function(response) {
+					//console.log('error from somewhere..');
+				}
+
+			});
+
+
+	})();
+
+
+
 	/*
 	*	Search Player Function
 	*/
@@ -163,7 +205,7 @@ jQuery(document).ready(function(){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								
 
-								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id);
+								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id, tankDataArray);
 								//remove our css class, when we are done
 								player_stats_container.removeClass('loading');
 							});
@@ -316,7 +358,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId) {
+	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId, tankDataArray) {
 
 		
 		//Dev stuff below... could be removed later.
@@ -341,6 +383,8 @@ jQuery(document).ready(function(){
 		var responseData3 = response3.data[0];
 		//Data for vehicles
 		var responseData4 = response4.data[tankerId];
+
+		var theTankDataArray = tankDataArray;
 
 
 
@@ -402,7 +446,7 @@ jQuery(document).ready(function(){
 		player_stats_total.averageFrags(responseData1);
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
-		player_stats_total.averageTier(responseData1);
+		player_stats_total.averageTier(responseData1, responseData4, theTankDataArray);
 		player_stats_total.wn7Total(responseData1);
 		player_stats_total.favoriteVehicleTotal(responseData1);
 		
@@ -417,7 +461,7 @@ jQuery(document).ready(function(){
 		//Test plugins, before going live...or just for fun ;)
 		//player_stats_container.getAccountCreationTime(response1);
 		//player_stats_total.hitPercentage(response1);
-		player_general_information.calculateTotalTimePlayed(response1);
+		//player_general_information.calculateTotalTimePlayed(response1);
 		
 				
 	}
