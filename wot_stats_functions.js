@@ -277,8 +277,8 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.clan = function(response, serverAbbreviation){
 		
-		var container = $(this);
-		var clan = response.clan.clan;
+		var container = $(this),
+		clan = response.clan.clan;
 		
 		if(clan!==null){
 			var clanName = response.clan.clan.abbreviation
