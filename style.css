@@ -255,6 +255,7 @@ a:hover {
 .vehicle_image {
 	margin-bottom:-0.866667em; /* 10/12 = 0.83333em */
 	margin-left:0.4166667em;
+	max-height: 35px;
 }
 
 .on_first_load_css_fix {

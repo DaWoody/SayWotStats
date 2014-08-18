@@ -675,7 +675,7 @@ jQuery(document).ready(function(){
 			}
 		}
 
-		//console.log(window.newTankDataArray);
+		console.log(window.newTankDataArray);
 		
 		var theTankArray = window.newTankDataArray,
 			battlesMultipliedWithTier = 0;
@@ -698,6 +698,33 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.averageTierPast = function(response1, response2){
 
+		//Use our global variable tanksDataArray to verify against
+		//Response2 is our most recent data where we make comparison against
+		//Build a new array on the fly with most recent tankdata
+
+		var oldTankArray = window.newTankDataArray;
+
+		var recentTankArray = response2.stat.vehicles,
+		newTankArray = [];
+
+		
+		console.log(recentTankArray);
+
+		var count=0;
+		/*
+		for(key in recentTankArray) {
+			console.log("ya");
+		} 
+	*/
+		
+		for(var i=0, x=recentTankArray.length; i<x; i++){
+			//Build up a new array with
+		}
+		console.log(count);
+
+
+
+		/*
 		//Define our first vehicles array
 		var tanksArray1 = response1.vehicles;
 		var tanksArray2 = response2.vehicles
@@ -778,12 +805,14 @@ jQuery(document).ready(function(){
 			//Iterating and summing up the product of this tank's matches*tier
 			countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesTotal*tier);
 		}
-
+	*/
+		/*
 
 		//Do our average tier calculation
-		var averageTierPast24 = Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
+		var averageTierPast24 = "HOOO";//Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
 		//Print it to the DOM
 		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
+		*/
 
 	}
 
@@ -793,45 +822,30 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.favoriteVehicleTotal = function(response) {
 		//Define what we get in
-		var container = $(this);
+		var container = $(this),
 		//Define our vehicles array
-		var tanksArray = response.vehicles;
-		//Define our battles variable, this will increase as we iterate through
-		var mostBattlesPlayed = 0;
-		//Define the variable we will call to fetch the tank which is most used, we start with a really large number since then it won't be undefined in the array, but just not show up
-		var tankIdMostPlayed = 99999999;
+		tanksArray = window.newTankDataArray,
+		mostBattles =0,
+		tankId,
+		imgUrl,
+		vehicleName,
+		vehicleImgObject;
 
-		//Now we iterate through all vehicles
-		for(var tank in tanksArray){
-			
-			//Fetch the amount of battles for this vehicle
-			var battles = tanksArray[tank].battle_count;
-			
-			
-			//If the battles in this vehicle is more than our current max, mostBattlesPlayed, then we update our mostBattlesPlayed with this amount of battles and set tankIdMostPlayed to this tank
-			if(battles>mostBattlesPlayed){
-				mostBattlesPlayed = battles;
-				tankIdMostPlayed = tank;
-			}
-
-		}
-		//We check to see if there are any battles played at all
-		if(typeof(tanksArray[tankIdMostPlayed])!== 'undefined'){
-			//Define the vehicle name of the most played tank
-			var vehicleName = tanksArray[tankIdMostPlayed].localized_name;
-			//Define part of the url we need to show the image of the most played tank
-			var vehiclePartImgUrl = tanksArray[tankIdMostPlayed].image_url;
-			//Define the whole url of the most played tank
-			var vehicleImgUrl = 'http://worldoftanks.eu' + vehiclePartImgUrl;
-
-			var vehicleImgObject = '<img class="vehicle_image" src="' + vehicleImgUrl + '">';
-		}
-		else{
-			var vehicleName = '..Never gonna..';
-			var vehiclePartImgUrl = '';
-			var vehicleImgObject = '';
-		}
 		
+		for(var i=0, x=tanksArray.length; i<x; i++){
+			if(tanksArray[i].battles>mostBattles){
+
+				
+				mostBattles = tanksArray[i].battles;
+				tankId = tanksArray[i].tank_id;
+				imgUrl = tanksArray[i].image_url;
+				vehicleName = tanksArray[i].short_name;
+				//console.log(imgUrl);
+			}
+		}
+
+		//Define our battles variable, this will increase as we iterate through
+		vehicleImgObject = '<img class="vehicle_image" src="' + imgUrl + '">';
 		//Print it to the DOM
 		container.append('<h1>Most played: ' + vehicleName + vehicleImgObject);
 	}
