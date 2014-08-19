@@ -675,7 +675,7 @@ jQuery(document).ready(function(){
 			}
 		}
 
-		console.log(window.newTankDataArray);
+		//console.log(window.newTankDataArray);
 		
 		var theTankArray = window.newTankDataArray,
 			battlesMultipliedWithTier = 0;
@@ -696,38 +696,83 @@ jQuery(document).ready(function(){
 	/*
 	*	Shows the average tier over the last period, decided by the input
 	*/
-	$.fn.averageTierPast = function(response1, response2){
+	$.fn.averageTierPast = function(vehicleTotalObject, response2, tankDataArray){
 
 		//Use our global variable tanksDataArray to verify against
 		//Response2 is our most recent data where we make comparison against
 		//Build a new array on the fly with most recent tankdata
 
-		var oldTankArray = window.newTankDataArray;
+/*
+		var oldTankArray = tankDataArray.data;
 
 		var recentTankArray = response2.stat.vehicles,
 		newTankArray = [];
 
-		
-		console.log(recentTankArray);
+
+
+		console.log(oldTankArray);
 
 		var count=0;
-		/*
-		for(key in recentTankArray) {
-			console.log("ya");
-		} 
-	*/
+		
 		
 		for(var i=0, x=recentTankArray.length; i<x; i++){
-			//Build up a new array with
+			//Build up a new array with the difference on the tanks
+			var fightsRecent = recentTankArray[i].battles,
+				tankId = recentTankArray[i].tank_id,
+				fightsOld,
+				recentFights,
+				count=0;
+
+				
+
+			for(tank in oldTankArray){
+				if(oldTankArray[tank].tank_id===tankId){
+					fightsOld = oldTankArray[tank].battles;
+				}
+			}
+
+			console.log(count)	
+				
+			for(var j=0, y=oldTankArray.length; j<y; j++){
+				console.log("Hulken");
+				if(oldTankArray[j].tank_id===tankId){
+					fightsOld = oldTankArray[j].battles;
+				}
+			}
+			
+
+			recentFights = fightsRecent - fightsOld;
+
+			newTankArray.push({
+				'oldBattles': fightsOld,
+				'newBattles': fightsRecent,
+				'tankId': tankId,
+				'battles': recentFights,
+				'troll':'Tove'
+			});
+
 		}
-		console.log(count);
+		console.log("YAA");
+		console.log(newTankArray);
+		*/
 
-
-
-		/*
+		
 		//Define our first vehicles array
-		var tanksArray1 = response1.vehicles;
-		var tanksArray2 = response2.vehicles
+		var container = $(this),
+			tanksArray1 = vehicleTotalObject,
+			tanksArray2 = response2.stat.vehicles,
+			theTankDataArray = tankDataArray.data,
+			tanksArrayJoinedLength,
+			totalAmountOfBattles=0,
+			totalAmountOfLevelsWeighted=0;
+
+		console.log(tanksArray1);
+		console.log("trt");
+		console.log(tanksArray2);
+		console.log("AAA");
+		console.log(theTankDataArray);
+
+
 		
 		//This is the new array with elements from total stats, that also resides in recent stats
 		var tanksArrayJoined = [];
@@ -736,19 +781,72 @@ jQuery(document).ready(function(){
 
 		//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
 		//Here we will put our data that coincides over both recent and total stats, in a new array
-		for(var tank2 in tanksArray2){
+		for(var j=0, y=tanksArray2.length; j<y; j++){
 
-			var tankName2 = tanksArray2[tank2].localized_name;
-			
-			for(var i=0; i<tanksArray1.length; i++){
-			
-				if(tanksArray1[i].localized_name===tankName2){
-					//Save the tank object in the new array, now that we found it
-					tanksArrayJoined.push(tanksArray1[i]);
-				}	
+			var tankId = tanksArray2[j].tank_id,
+				tankLevel =0,
+				tankName,
+				tanksArrayJoinedLength;
+
+			for(tank in theTankDataArray){
+				if(theTankDataArray[tank].tank_id === tankId){
+					tankLevel = theTankDataArray[tank].level;
+					tankName = theTankDataArray[tank].name;
+				}
 			}
-		}	
 
+			//Get level of tank as a value from the tankDataArray
+
+			
+			//Push the tank to a new array which we will work with
+			//Here we will modify the game value etc if it exist
+			
+			tanksArrayJoined.push({
+				'tankId': tanksArray2[j].tank_id,
+				'battles': tanksArray2[j].battles,
+				'wins':tanksArray2[j].wins,
+				'markOfMastery': tanksArray2[j].mark_of_mastery,
+				'level':tankLevel,
+				'name': tankName
+			});
+	
+
+		}
+		
+		tanksArrayJoinedLength = tanksArrayJoined.length;
+
+		//Now lets modify the values in our newly created array by, subtracting the values we have from the old values
+		for(var i=0, x=tanksArray1.length; i<x; i++){
+			var oldTankId = tanksArray1[i].tank_id,
+				oldBattles=tanksArray1[i].statistics.battles,
+				newBattles;
+				for(var j=0; j<tanksArrayJoinedLength; j++){
+					if(tanksArrayJoined[j].tankId === oldTankId){
+						newBattles = oldBattles - tanksArrayJoined[j].battles;
+						tanksArrayJoined[j].battles = newBattles;
+					}
+					
+				}
+		}
+
+		
+		
+		//Now lets do the actual calculation of the average Tier
+		for(var i=0; i<tanksArrayJoinedLength; i++){
+			
+			totalAmountOfLevelsWeighted += Number(tanksArrayJoined[i].battles) * Number(tanksArrayJoined[i].level);
+			totalAmountOfBattles += Number(tanksArrayJoined[i].battles);
+		}	
+			
+
+		//Resulting value is here, for average tier
+		var averageTierPast24 = Math.round((totalAmountOfLevelsWeighted/totalAmountOfBattles)*100)/100;
+		//Print it to the DOM
+		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
+		
+
+
+		/*
 		//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
 		for(var tank1 in tanksArray1){
 
@@ -805,15 +903,9 @@ jQuery(document).ready(function(){
 			//Iterating and summing up the product of this tank's matches*tier
 			countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesTotal*tier);
 		}
-	*/
-		/*
-
-		//Do our average tier calculation
-		var averageTierPast24 = "HOOO";//Math.round((countMatchesLevelIterationPast24/countMatchesIterationPast24)*100)/100;
-		//Print it to the DOM
-		container.append('<h1>Average tier: ' + averageTierPast24 + '</h1>');
 		*/
-
+	
+		
 	}
 
 	
@@ -868,11 +960,11 @@ jQuery(document).ready(function(){
 		//Here we will put our data that coincides over both recent and total stats, in a new array
 		for(var tank2 in tanksArray2){
 
-			var tankName2 = tanksArray2[tank2].localized_name;
+			var tankId2 = tanksArray2[tank2].tank_id;
 			
 			for(var i=0; i<tanksArray1.length; i++){
 			
-				if(tanksArray1[i].localized_name===tankName2){
+				if(tanksArray1[i].localized_name===tankId2){
 					//Save the tank object in the new array, now that we found it
 					tanksArrayJoined.push(tanksArray1[i]);
 				}	

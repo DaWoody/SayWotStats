@@ -32,8 +32,9 @@ jQuery(document).ready(function(){
 	player_stats_total.addClass('on_first_load_css_fix');
 
 	//Empty tankdata array on init!
-	var tankDataArray = [];
+	
 	window.newTankDataArray = [];
+	var tankDataArray;
 
 
 	/*
@@ -41,6 +42,7 @@ jQuery(document).ready(function(){
 	*/
 	(function loadTankData(){
 
+		//var promise = $.Deferred();
 
 		var serverAbbreviation = '.eu',
 			apiVer = '2.0',
@@ -58,21 +60,24 @@ jQuery(document).ready(function(){
 				},
 
 				success: function(response) {
-					//console.log("Yaya we did it!");
 					tankDataArray = response;
-					console.log(tankDataArray);
+					console.log("Yaya we did it!");
+					//promise.resolve(response);
 				},
 
 				error: function(response) {
-					//console.log('error from somewhere..');
+					//promise.resolve(response);
+					console.log('error from the first tank stat fetch');
+
 				}
 
 			});
-
-
+		//return promise;
 	})();
 
 
+
+	console.log(tankDataArray);
 
 	/*
 	*	Search Player Function
@@ -362,7 +367,7 @@ jQuery(document).ready(function(){
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
 	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId, tankDataArray) {
 
-		
+		/*
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object:');
 		console.log(response1);
@@ -373,7 +378,7 @@ jQuery(document).ready(function(){
 		console.log('Player Vehicle Stats Object:');
 		console.log(response4);
 		//console.log('The tankerId ' + tankerId);
-		
+		*/
 
 		
 		//First we modify our responses to work with our methods
@@ -391,7 +396,7 @@ jQuery(document).ready(function(){
 
 
 
-		
+		/*
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object FIXED:');
 		console.log(responseData1);
@@ -399,7 +404,7 @@ jQuery(document).ready(function(){
 		console.log(responseData2);
 		console.log('Player Older Stats Object:');
 		console.log(responseData3);
-		
+		*/
 
 		
 		//We clear our DOM from previous searches
@@ -420,9 +425,9 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageFragsPast(responseData1, responseData2);
 		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
-		player_stats_recent.averageTierPast(responseData1,responseData2);
+		player_stats_recent.averageTierPast(responseData4,responseData2, tankDataArray);
 		//player_stats_recent.wn7Past(responseData1, responseData2);
-		player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
+		//player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
 		
 		//2 Weeks ago Stats Plugins
 		player_stats_older.printOlderStatsHeader();
@@ -433,9 +438,9 @@ jQuery(document).ready(function(){
 		player_stats_older.averageFragsPast(responseData1, responseData3);
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
-		player_stats_older.averageTierPast(responseData1,responseData3);
+		player_stats_older.averageTierPast(responseData4,responseData3, tankDataArray);
 		//player_stats_older.wn7Past(responseData1, responseData3);
-		player_stats_older.favoriteVehiclePast(responseData1, responseData3);
+		//player_stats_older.favoriteVehiclePast(responseData1, responseData3);
 		
 
 		//Total Stats Plugins
