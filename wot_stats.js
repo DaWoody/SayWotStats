@@ -61,13 +61,13 @@ jQuery(document).ready(function(){
 
 				success: function(response) {
 					tankDataArray = response;
-					console.log("Yaya we did it!");
+					console.log("General tank data fetched ok!");
 					//promise.resolve(response);
 				},
 
 				error: function(response) {
 					//promise.resolve(response);
-					console.log('error from the first tank stat fetch');
+					console.log('error from fetching general tank data!');
 
 				}
 
@@ -415,6 +415,10 @@ jQuery(document).ready(function(){
 
 		//Call our different plugins here below
 
+
+		var playerTankData = player_stats_total.allPlayerTanks(responseData4, tankDataArray);
+
+		
 				
 		//24 Hours ago Stats Plugins
 		player_stats_recent.printRecentStatsHeader();
@@ -427,7 +431,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
 		player_stats_recent.averageTierPast(responseData4,responseData2, tankDataArray);
 		//player_stats_recent.wn7Past(responseData1, responseData2);
-		//player_stats_recent.favoriteVehiclePast(responseData1, responseData2);
+		player_stats_recent.favoriteVehiclePast(responseData2, playerTankData);
 		
 		//2 Weeks ago Stats Plugins
 		player_stats_older.printOlderStatsHeader();
@@ -440,7 +444,7 @@ jQuery(document).ready(function(){
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
 		player_stats_older.averageTierPast(responseData4,responseData3, tankDataArray);
 		//player_stats_older.wn7Past(responseData1, responseData3);
-		//player_stats_older.favoriteVehiclePast(responseData1, responseData3);
+		player_stats_older.favoriteVehiclePast(responseData3, playerTankData);
 		
 
 		//Total Stats Plugins
@@ -453,9 +457,9 @@ jQuery(document).ready(function(){
 		player_stats_total.averageFrags(responseData1);
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
-		player_stats_total.averageTier(responseData1, responseData4, theTankDataArray);
+		player_stats_total.averageTier(responseData1, responseData4, playerTankData);
 		player_stats_total.wn7Total(responseData1);
-		player_stats_total.favoriteVehicleTotal(responseData1);
+		player_stats_total.favoriteVehicleTotal(responseData1, playerTankData);
 		
 
 		//General Information Plugins
