@@ -21,6 +21,7 @@ jQuery(document).ready(function(){
 	player_stats_recent = $("#recent_stats"),
 	player_stats_older = $("#older_stats"),
 	the_form = $('#search_player_form_section');
+	first_loading_div = $('#first_load_message_div');
 
 
 	//Building the API http request, internally
@@ -62,7 +63,8 @@ jQuery(document).ready(function(){
 				success: function(response) {
 					tankDataArray = response;
 					console.log("General tank data fetched ok!");
-					//promise.resolve(response);
+					the_form.removeClass('hidden');
+					first_loading_div.addClass('hidden');
 				},
 
 				error: function(response) {
@@ -205,7 +207,7 @@ jQuery(document).ready(function(){
 							//Declaring our promises.
 							var playerTotalStatsPromise = AjaxPlayerTotalStats.getPlayerTotalStats(id, serverAbbreviation, apiVer);
 							var playerPastStatsPromise1 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 24);
-							var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 336);  
+							var playerPastStatsPromise2 = AjaxPlayerPastStats.getPlayerPastStats(id, serverAbbreviation, apiVer, 168);  
 							var playerVehicleStatsPromise = AjaxPlayerVehicleStats.getPlayerVehicleStats(id, serverAbbreviation, apiVer); 
 
 							$.when(playerTotalStatsPromise,playerPastStatsPromise1, playerPastStatsPromise2, playerVehicleStatsPromise).done(function(response1, response2, response3, response4){
@@ -458,7 +460,7 @@ jQuery(document).ready(function(){
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
 		player_stats_total.averageTier(responseData1, responseData4, playerTankData);
-		player_stats_total.wn7Total(responseData1);
+		//player_stats_total.wn7Total(responseData1);
 		player_stats_total.favoriteVehicleTotal(responseData1, playerTankData);
 		
 

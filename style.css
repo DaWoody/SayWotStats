@@ -32,6 +32,10 @@ a:hover {
 	color:rgb(249,184,93);
 }
 
+.hidden {
+	display:none;
+}
+
 .group:before,
 .group:after {
 	content:"";
@@ -104,6 +108,11 @@ a:hover {
 
 #wot_stats_version_info a:hover {
 	color:rgba(86,47,41, 0.8);
+}
+
+#first_load_message_div{
+	height:180px;
+	text-align: center;
 }
 
 .loading {

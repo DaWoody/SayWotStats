@@ -52,7 +52,7 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.printOlderStatsHeader = function() {
 		var container = $(this);
-		var headline = '<div class="recent_total_stats_headline_div"><h1>2 Weeks</h1></div>';
+		var headline = '<div class="recent_total_stats_headline_div"><h1>1 Week</h1></div>';
 		container.prepend(headline);
 	}
 
