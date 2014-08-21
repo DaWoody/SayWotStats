@@ -62,24 +62,20 @@ jQuery(document).ready(function(){
 
 				success: function(response) {
 					tankDataArray = response;
-					console.log("General tank data fetched ok!");
+					//console.log("General tank data fetched ok!");
 					the_form.removeClass('hidden');
 					first_loading_div.addClass('hidden');
 				},
 
 				error: function(response) {
-					//promise.resolve(response);
-					console.log('error from fetching general tank data!');
+					//console.log('error from fetching general tank data!');
 
 				}
 
 			});
-		//return promise;
+		
 	})();
 
-
-
-	console.log(tankDataArray);
 
 	/*
 	*	Search Player Function
@@ -300,7 +296,6 @@ jQuery(document).ready(function(){
 		getPlayerPastStats: function(tankerId, serverAbbreviation, apiVer, hoursAgo) {
 
 			var promise = $.Deferred();
-			console.log(tankerId + " "  + serverAbbreviation + " "  +  apiVer + " "  +  hoursAgo);
 
 			var	apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' + apiVer + '/stats/accountbytime/?application_id=' + apiKey +'&account_id=' + tankerId + '&hours_ago=' + hoursAgo;
 
@@ -398,7 +393,7 @@ jQuery(document).ready(function(){
 
 
 
-		/*
+		/*		
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object FIXED:');
 		console.log(responseData1);
@@ -432,7 +427,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
 		player_stats_recent.averageTierPast(responseData4,responseData2, tankDataArray);
-		//player_stats_recent.wn7Past(responseData1, responseData2);
+		player_stats_recent.wn7Past(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
 		player_stats_recent.favoriteVehiclePast(responseData2, playerTankData);
 		
 		//2 Weeks ago Stats Plugins
@@ -445,7 +440,7 @@ jQuery(document).ready(function(){
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
 		player_stats_older.averageTierPast(responseData4,responseData3, tankDataArray);
-		//player_stats_older.wn7Past(responseData1, responseData3);
+		player_stats_older.wn7Past(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
 		player_stats_older.favoriteVehiclePast(responseData3, playerTankData);
 		
 
@@ -460,7 +455,7 @@ jQuery(document).ready(function(){
 		player_stats_total.averageSpotted(responseData1);
 		player_stats_total.averageDefPoints(responseData1);
 		player_stats_total.averageTier(responseData1, responseData4, playerTankData);
-		//player_stats_total.wn7Total(responseData1);
+		player_stats_total.wn7Total(responseData1, playerTankData);
 		player_stats_total.favoriteVehicleTotal(responseData1, playerTankData);
 		
 

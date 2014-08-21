@@ -673,44 +673,6 @@ jQuery(document).ready(function(){
 
 		totalAmountOfBattles = response1.statistics.all.battles;
 
-
-		//Getting in our vehicles array from the object
-		//var count=0;
-		/*
-		tanksArray = tankDataArray.data;
-		
-		
-		for(var i=0, tanksArrayLength = response4.length; i<tanksArrayLength; i++){
-			
-			for(key in tanksArray) {
-				//console.log(key);
-				if(key == response4[i].tank_id){
-					
-
-					var modifiedTankNameArray = (tanksArray[key].name).split(':'),
-						modifiedTankName = (modifiedTankNameArray[1]).toLowerCase();
-
-					var imgUrl = 'http://worldoftanks.eu/static/3.21.0.4/encyclopedia/tankopedia/vehicle/' + tanksArray[key].nation + '-' + modifiedTankName + '.png'; 
-					
-					var newTank = {
-									'tank_id': tanksArray[key].tank_id,
-									'level': tanksArray[key].level,
-									'name': tanksArray[key].name,
-									'nation': tanksArray[key].nation,
-									'short_name': tanksArray[key].name_i18n,
-									'battles': response4[i].statistics.battles,
-									'wins': response4[i].statistics.wins,
-									'mark_of_mastery': response4[i].mark_of_mastery,
-									'image_url': imgUrl
-					};
-
-					window.newTankDataArray.push(newTank);
-				}
-			}
-		}
-		*/
-
-		//console.log(window.newTankDataArray);
 		
 		var theTankArray =  playerTanks;//window.newTankDataArray,
 			battlesMultipliedWithTier = 0;
@@ -1059,7 +1021,7 @@ jQuery(document).ready(function(){
 	/*
 	*	WN7 Agreggated function calculation, for total stats
 	*/
-	$.fn.wn7Total = function(response) {
+	$.fn.wn7Total = function(response, playerTanks) {
 		//Defining our container
 		var container = $(this);
 
@@ -1093,19 +1055,19 @@ jQuery(document).ready(function(){
 
 		//First lets fetch the values we need, averagetier, games, averagespot, averagedefencepoints, winrate
 		//Starting with our average tier
-		function averageTier(response){
+		function averageTier(response, playerTanks){
 				//Defining some variables we need when we iterate through the array
 				var countMatchesIteration = 0;
 				var countMatchesLevelIteration = 0;
-
+				
 				//Getting in our vehicles array from the object
-				var tanksArray = response.vehicles;
+				var tanksArray = playerTanks;
 				
 				for(var tank in tanksArray){
 					//Getting the specific tier for this tank
 					var tier = tanksArray[tank].level;
 					//Getting the number of battles played in this tank
-					var matches = tanksArray[tank].battle_count;
+					var matches = tanksArray[tank].battles;
 					//Iterating over all tanks and counting the amount of total games played
 					countMatchesIteration = countMatchesIteration + matches;
 					//Iterating and summing up the product of this tank's matches*tier
@@ -1127,7 +1089,6 @@ jQuery(document).ready(function(){
 		//Fetching the average amount of frags
 		function averageFrags(response){
 			//Fetching the amount of battles
-			console.log(response);
 			var totalBattlesPlayed = response.statistics.all.battles;
 			//Fetching the amount of total frags
 			var totalFrags = response.statistics.all.frags;
@@ -1186,7 +1147,7 @@ jQuery(document).ready(function(){
 		}
 
 		//Creating our objects from the functions above, these variables, containing values calculated fom the functions above, will go into our WN7 formula
-		var averageTier = averageTier(response);
+		var averageTier = averageTier(response, playerTanks);
 		var averageFrags = averageFrags(response);
 		var averageDamage = averageDamage(response);
 		var theWinRate = winRate(response);
@@ -1292,7 +1253,7 @@ jQuery(document).ready(function(){
 	/*
 	*	WN7 Agreggated function calculation, for recent stats
 	*/
-	$.fn.wn7Past = function(response1, response2) {
+	$.fn.wn7Past = function(response1, response2, playerTankData, tankDataArray, vehicleTotalObject) {
 		//Defining our container
 		var container = $(this);
 
@@ -1326,92 +1287,111 @@ jQuery(document).ready(function(){
 
 		//First lets fetch the values we need, averagetier, games, averagespot, averagedefencepoints, winrate
 		//Starting with our average tier
-		function averageTierPast(response1, response2){
-				//Define our first vehicles array
-				var tanksArray1 = response1.vehicles;
-				var tanksArray2 = response2.vehicles
+		function averageTierPast(response2, tankDataArray, vehicleTotalObject){
 				
-				//This is the new array with elements from total stats, that also resides in recent stats
-				var tanksArrayJoined = [];
-				//This is the array that will hold new vehicle data, only available through total stats..
-				var tanksArrayNew = [];
 
-				//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
-				//Here we will put our data that coincides over both recent and total stats, in a new array
-				for(var tank2 in tanksArray2){
+				//Use our global variable tanksDataArray to verify against
+		//Response2 is our most recent data where we make comparison against
+		//Build a new array on the fly with most recent tankdata
 
-					var tankName2 = tanksArray2[tank2].localized_name;
-					
-					for(var i=0; i<tanksArray1.length; i++){
-					
-						if(tanksArray1[i].localized_name===tankName2){
-							//Save the tank object in the new array, now that we found it
-							tanksArrayJoined.push(tanksArray1[i]);
-						}	
+
+			//Define our first vehicles array
+			var container = $(this),
+				tanksArray1 = vehicleTotalObject,
+				tanksArray2,
+				theTankDataArray = tankDataArray.data,
+				tanksArrayJoinedLength,
+				totalAmountOfBattles=0,
+				totalAmountOfLevelsWeighted=0;
+
+
+				try{
+					if(response2.stat!==null){
+						tanksArray2 = response2.stat.vehicles
 					}
-				}	
+					else {
+						throw new Error("stat.vehicles doesn't exist currently, cause of backend trouble from the API 2.0, blame it on the russian backend devs ;)");
+						tanksArray2 = [];
+					}
+						
+				}
+				catch(error){
+					console.log(error + "Object that got returned just below in console");
+					console.log(response2);
+					tanksArray2 = [];
+				}
+				
+			
+			//This is the new array with elements from total stats, that also resides in recent stats
+			var tanksArrayJoined = [];
+			//This is the array that will hold new vehicle data, only available through total stats..
+			var tanksArrayNew = [];
 
-				//Now lets find the odd elements, the new vehicles that recently showed up and push them into a new array.
-				for(var tank1 in tanksArray1){
+			//Lets start splitting the different length arrays in two, on with the elements that match and one with the newly added tanks
+			//Here we will put our data that coincides over both recent and total stats, in a new array
+			for(var j=0, y=tanksArray2.length; j<y; j++){
 
-					var tankName1 = tanksArray1[tank1].localized_name;
-					var tankExist = false;
+				var tankId = tanksArray2[j].tank_id,
+					tankLevel =0,
+					tankName,
+					tanksArrayJoinedLength;
 
-					for(var i=0; i<tanksArray2.length; i++){
-						var tankName2 = tanksArray2[i].localized_name;
+				for(tank in theTankDataArray){
+					if(theTankDataArray[tank].tank_id === tankId){
+						tankLevel = theTankDataArray[tank].level;
+						tankName = theTankDataArray[tank].name;
+					}
+				}
 
-						if(tankName1 === tankName2){
-							tankExist = true;
+				//Get level of tank as a value from the tankDataArray
+
+				
+				//Push the tank to a new array which we will work with
+				//Here we will modify the game value etc if it exist
+				
+				tanksArrayJoined.push({
+					'tankId': tanksArray2[j].tank_id,
+					'battles': tanksArray2[j].battles,
+					'wins':tanksArray2[j].wins,
+					'markOfMastery': tanksArray2[j].mark_of_mastery,
+					'level':tankLevel,
+					'name': tankName
+				});
+		
+
+			}
+			
+			tanksArrayJoinedLength = tanksArrayJoined.length;
+
+			//Now lets modify the values in our newly created array by, subtracting the values we have from the old values
+			for(var i=0, x=tanksArray1.length; i<x; i++){
+				var oldTankId = tanksArray1[i].tank_id,
+					oldBattles=tanksArray1[i].statistics.battles,
+					newBattles;
+					for(var j=0; j<tanksArrayJoinedLength; j++){
+						if(tanksArrayJoined[j].tankId === oldTankId){
+							newBattles = oldBattles - tanksArrayJoined[j].battles;
+							tanksArrayJoined[j].battles = newBattles;
 						}
-
+						
 					}
+			}
 
-					if(tankExist===false){
-						//Do the splitting here, else do nothing..
-						tanksArrayNew.push(tanksArray1[tank1]);
-					}
-				}
-
-				//Defining what we get in
-				var container = $(this);
-
-				//Defining some variables we will use to iterate through the arrays and build up the integers for calculation
-				var countMatchesIterationPast24 = 0;
-				var countMatchesLevelIterationPast24 = 0;
-
+			
+			
+			//Now lets do the actual calculation of the average Tier
+			for(var i=0; i<tanksArrayJoinedLength; i++){
 				
-				for(var tank in tanksArrayJoined){
-					//Getting the specific tier for this tank
-					var tier = tanksArrayJoined[tank].level;
-					//Getting the number of battles played in this tank
-					var matchesTotal = tanksArrayJoined[tank].battle_count;
-					//Getting the number of battles played in this tank, at least how it looked 24 hours ago
-					var matchesLast24 = tanksArray2[tank].battle_count;
-					//Subtracting the difference to get the number of fights in this tank during the past 24 hours
-					var matchesPast24 = matchesTotal - matchesLast24;
-					//Iterating over all tanks and counting the amount of total games played the past 24 hours
-					countMatchesIterationPast24 = countMatchesIterationPast24 + matchesPast24;
-					//Iterating and summing up the product of this tank's matches*tier
-					countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesPast24*tier);
-				}
+				totalAmountOfLevelsWeighted += Number(tanksArrayJoined[i].battles) * Number(tanksArrayJoined[i].level);
+				totalAmountOfBattles += Number(tanksArrayJoined[i].battles);
+			}	
+				
 
-				//Now lets check the new array, which only contains stats about vehicles bought during the past 24 hours
-				for(var tank in tanksArrayNew){
-					//Getting the specific tier for this tank
-					var tier = tanksArrayNew[tank].level;
-					//Getting the number of battles played in this tank
-					var matchesTotal = tanksArrayNew[tank].battle_count;
-					//Iterating over all tanks and counting the amount of total games played the past 24 hours
-					countMatchesIterationPast24 = countMatchesIterationPast24 + matchesTotal;
-					//Iterating and summing up the product of this tank's matches*tier
-					countMatchesLevelIterationPast24 = countMatchesLevelIterationPast24 + (matchesTotal*tier);
-				}
-
-
-				//Do our average tier calculation
-				var averageTierPast24 = countMatchesLevelIterationPast24/countMatchesIterationPast24;
-				//Return the result
-				return averageTierPast24;
+			//Resulting value is here, for average tier
+			var averageTierPast24 = Math.round((totalAmountOfLevelsWeighted/totalAmountOfBattles)*100)/100;
+			//Return the object
+			return averageTierPast24;
+		
 		}
 
 		//Fetching the amount of battles we played
@@ -1421,10 +1401,10 @@ jQuery(document).ready(function(){
 				battlesLast24Hours;
 
 			//Total amount of battles, to last update.
-			totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.statistics.all.battles;
 			//Total amount of battles 24 hours ago
 			try{
-				battles24HoursAgo = response2.summary.battles_count;
+				battles24HoursAgo = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				battles24HoursAgo = totalAmountOfBattles;
@@ -1447,20 +1427,20 @@ jQuery(document).ready(function(){
 				averageFrags;
 
 			//Fetching the amount of battles in total
-			totalBattlesPlayed = response1.summary.battles_count;
+			totalBattlesPlayed = response1.statistics.all.battles;
 			//Total amount of battles 24 hours ago
 			try{
-				battles24HoursAgo = response2.summary.battles_count;
+				battles24HoursAgo = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				battles24HoursAgo = totalBattlesPlayed;
 			}
 			
 			//Fetching the amount of total frags
-			totalFrags = response1.battles.frags;
+			totalFrags = response1.statistics.all.frags;
 			//Fetching the amount of frags 24 hours ago
 			try{
-				totalFragsLast24 = response2.battles.frags;	
+				totalFragsLast24 = response2.stat.statistics.all.frags;	
 			}
 			catch(error){
 				totalFragsLast24 = totalFrags;
@@ -1488,13 +1468,13 @@ jQuery(document).ready(function(){
 				averageSpotted;
 
 			//Get the total amount of spots
-			totalSpotted = response1.battles.spotted;
+			totalSpotted = response1.statistics.all.spotted;
 			//Fetching the amount of battles
-			totalBattlesPlayed = response1.summary.battles_count;
+			totalBattlesPlayed = response1.statistics.all.battles;
 
 			//Lets get the total spotted as it were 24 hours ago
 			try {
-				totalSpottedLast24 = response2.battles.spotted;
+				totalSpottedLast24 = response2.stat.statistics.all.spotted;
 			}
 			catch(error){
 				totalSpottedLast24 = totalSpotted;
@@ -1502,7 +1482,7 @@ jQuery(document).ready(function(){
 			
 			//Total amount of battles 24 hours ago
 			try {
-				battlesLast24Hours = response2.summary.battles_count;
+				battlesLast24Hours = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				battlesLast24Hours = totalBattlesPlayed;
@@ -1529,13 +1509,13 @@ jQuery(document).ready(function(){
 				averageDamageLast24Hours;
 
 			//Total damage, according to last update
-			totalDamage = response1.battles.damage_dealt;
+			totalDamage = response1.statistics.all.damage_dealt;
 			//Total amount of battles, to last update.
-			totalAmountOfBattles = response1.summary.battles_count;	
+			totalAmountOfBattles = response1.statistics.all.battles;	
 
 			//Total damage 24 hours ago.
 			try{
-				damage24HoursAgo = response2.battles.damage_dealt;
+				damage24HoursAgo = response2.stat.statistics.all.damage_dealt;
 			}
 			catch(error){
 				damage24HoursAgo = totalDamage;
@@ -1545,7 +1525,7 @@ jQuery(document).ready(function(){
 
 			//Total amount of battles 24 hours ago
 			try{
-				battles24HoursAgo = response2.summary.battles_count;
+				battles24HoursAgo = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				battles24HoursAgo = totalAmountOfBattles;
@@ -1570,10 +1550,10 @@ jQuery(document).ready(function(){
 				averageDefPoints;
 
 			//Get the total number of def points
-			totalDefPoints = response1.ratings.dropped_ctf_points.value;
+			totalDefPoints = response1.statistics.all.dropped_capture_points;
 			//Get the total number of def points 24 hours ago
 			try{
-				totalDefPoints24Last = response2.ratings.dropped_ctf_points.value;
+				totalDefPoints24Last = response2.stat.statistics.all.dropped_capture_points;
 			}
 			catch(error){
 				totalDefPoints24Last = totalDefPoints;
@@ -1583,11 +1563,11 @@ jQuery(document).ready(function(){
 			defPointsPast24 = totalDefPoints - totalDefPoints24Last;
 
 			//Total amount of battles, to last update
-			totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.statistics.all.battles;
 
 			//Total amount of battles, 24 hours ago
 			try{
-				totalAmountOfBattlesLast24 = response2.summary.battles_count;
+				totalAmountOfBattlesLast24 = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				totalAmountOfBattlesLast24 = totalAmountOfBattles;
@@ -1617,10 +1597,10 @@ jQuery(document).ready(function(){
 
 			//First we will get the amount of battles for the past 24 hours
 			//Total amount of battles, to last update.
-			totalAmountOfBattles = response1.summary.battles_count;
+			totalAmountOfBattles = response1.statistics.all.battles;
 			//Total amount of battles 24 hours ago
 			try {
-				battles24HoursAgo = response2.summary.battles_count;
+				battles24HoursAgo = response2.stat.statistics.all.battles;
 			}
 			catch(error){
 				battles24HoursAgo = totalAmountOfBattles;
@@ -1631,10 +1611,10 @@ jQuery(document).ready(function(){
 
 			//Get amount of wins for the past 24 hours
 			//Get total wins, current
-			totalWins = response1.summary.wins;
+			totalWins = response1.statistics.all.wins;
 			//Get total wins, 24 hours ago
 			try {
-				totalWinsLast24 = response2.summary.wins;
+				totalWinsLast24 = response2.stat.statistics.all.wins;
 			}
 			catch(error){
 				totalWinsLast24 = totalWins;
@@ -1648,7 +1628,7 @@ jQuery(document).ready(function(){
 		}
 
 		//Creating our objects from the functions above, these variables, containing values calculated fom the functions above, will go into our WN7 formula
-		var averageTier = averageTierPast(response1, response2),
+		var averageTier = averageTierPast(response2, tankDataArray, vehicleTotalObject),
 			averageFrags = averageFragsPast(response1, response2),
 			averageDamage = averageDamagePast(response1, response2),
 			theWinRate = winRatePast(response1, response2),
@@ -1727,12 +1707,12 @@ jQuery(document).ready(function(){
 		*	So lets instatiate the objects and get our values for the things
 		*/
 		//Instating and getting the calculated values for each part of the formula
-		var frags = fragsObject(averageFrags, averageTier);
-		var damage = damageObject(averageDamage, averageTier);
-		var spotted = spottedObject(averageSpotted, averageTier);
-		var defencePoints = defencePointsObject(averageDefPoints);
-		var winRate = winRateObject(theWinRate);
-		var games = gamesObject(battlesPlayed, averageTier);
+		var frags = fragsObject(averageFrags, averageTier),
+			damage = damageObject(averageDamage, averageTier),
+			spotted = spottedObject(averageSpotted, averageTier),
+			defencePoints = defencePointsObject(averageDefPoints),
+			winRate = winRateObject(theWinRate),
+			games = gamesObject(battlesPlayed, averageTier);
 
 		//Adding upp the values, and getting the wn7 value
 		var wn7 = frags + damage + spotted + defencePoints + winRate - games; 
@@ -1749,36 +1729,6 @@ jQuery(document).ready(function(){
 		//Print the result to the DOM
 		container.append('<h1>WN7 Rating: <span style="color:' + color +'">'  + wn7Rounded + '</span></h1>');
 
-	
-
-		/*
-		//TEST CONSOLE PRINTS
-		//HMm lets see the errors..
-		console.log('wn7 RECENT STARTING FROM HERE:::::');
-		console.log('General STATS, unmodified:');
-
-		console.log('tier: '+ averageTier);
-		console.log('frags: '+ averageFrags);
-		console.log('dmg :' + averageDamage);
-		console.log('winrate ' + theWinRate);
-		console.log('defpoints ' + averageDefPoints);
-		console.log('spotted ' + averageSpotted);
-		console.log('battles ' + battlesPlayed);
-
-		console.log('');
-
-		console.log('Modified STATS weighted parameters in WN7');
-		console.log('frags part: ' + frags);
-		console.log('damage part: ' + damage);
-		console.log('spotted part: ' + spotted);
-		console.log('defencePoints part: ' + defencePoints);
-		console.log('winRate part: ' + winRate);
-		console.log('games part: ' + games);
-
-		console.log('');
-		console.log('WN7 in total is: ' + wn7);
-		console.log('WN7Round in total is: ' + wn7Rounded);
-		*/
 
 	}
 

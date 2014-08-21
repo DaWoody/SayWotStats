@@ -41,7 +41,7 @@ jQuery(document).ready(function(){
 							var versionInfo = $(data).find('version_info').text();
 							var dev_blog_url = $(data).find('dev_blog_url').text();
 
-							console.log('Say Wot Stats Engine ' + versionTitle + ' up and running! ;)');
+							//console.log('Say Wot Stats Engine ' + versionTitle + ' up and running! ;)');
 
 							//Print it to the DOM
 							version_link.text(versionTitle);
