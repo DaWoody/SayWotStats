@@ -1,15 +1,16 @@
 Description:
 ==========================================================================
-A web-application displaying stats and other goddies to players in the World of Tanks Community. Based on retrieving stats and data from API's provided by other awesome ppl and by Wargaming. A HTML 5 project based on much jQuery and AJAX.
+A web-application displaying stats and other goddies to players in the World of Tanks Community. Based on retrieving stats and data from API's provided by other awesome ppl and by Wargaming. A HTML 5 project based on much jQuery and AJAX. The current project is using unoffical api 2.0 as described by thunder-spb (https://github.com/thunder-spb/wot-api-description). Currently there are a number of different aggregated stats that are shown.
+In the future weighted measures such as WN8 is possible to implement etc.
+But my idea with this is to make the code public and more collaborative, so that if anyone feels like they wanna use my ideas from the javascript front-end perspective feel free to do so (would appreciate a mention somewhere though ;)), or help me make saywotstats better :). 
 
 Todo:
 ===========================================================================
-Lots of stuff ;).
+Lots of stuff if the community wants ;).
 
-* Next up is checking the vehicle used the most
-* If demand is high... fix WN7! :D
+For instance implement WN8 plugins that can be used in the application.
 
 
 Recently Done:
 ==========================================================
-* Fixed more plugins, did fix the average tier for the past 24 hours etc
+* Migrated from api 1.x to api 2.0. Now working (but only up until 168 hours/1 week back).
