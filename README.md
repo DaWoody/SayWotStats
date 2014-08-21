@@ -4,6 +4,8 @@ A web-application displaying stats and other goddies to players in the World of 
 In the future weighted measures such as WN8 is possible to implement etc.
 But my idea with this is to make the code public and more collaborative, so that if anyone feels like they wanna use my ideas from the javascript front-end perspective feel free to do so (would appreciate a mention somewhere though ;)), or help me make saywotstats better :). If you wanna check out more of my stuff, visit my dev blog (http://dawoodydev.blogspot.se/) or my official web-home (http://wedfelt.se).
 
+P.s. I did save some of the old files in the project that used api 1.x. If you check out the wot_stats_functions_v1_backup.js file u will see the older jQuery plugins adjusted to api 1.x.
+
 Peace to you all!
 /Johan "DaWoody" Wedfelt
 
