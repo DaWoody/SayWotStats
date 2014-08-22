@@ -277,16 +277,36 @@ jQuery(document).ready(function(){
 	*/
 	$.fn.clan = function(response, serverAbbreviation){
 		
+		
 		var container = $(this),
-		clan = response.clan.clan;
+		clan=null;
+
+		try{
+			clan = response.clan_id;
+			
+		}
+		catch(error){
+			console.log(error);
+		}
 		
 		if(clan!==null){
-			var clanName = response.clan.clan.abbreviation
-			var clanImageUrl = response.clan.clan.emblems_urls.small;
-			var clanId = response.clan.clan.id;
-			var clanUrl = 'http://worldoftanks' + serverAbbreviation +  '/uc/clans/' + clanId + '-' + clanName + '/';
-			container.append('<h1>Clan: ' + clanName + '<a href="' + clanUrl +'" target="wot_stats_clans"><img class ="clan_image" src="' + clanImageUrl + '" /></a>');	
+			
+			//http://clans.worldoftanks.eu/media/clans/emblems/cl_562/500020562/emblem_64x64.png
+			
+			var clanId = clan.toString(),
+				clanIdLength = clanId.length,
+				firstPartOfStringInteger = parseInt(clanIdLength, 10) - 3,
+				secondPartOfString = clanId.substring(firstPartOfStringInteger);
+
+			var clanUrl = 'http://clans.worldoftanks' + serverAbbreviation +  '/media/clans/emblems/cl_' + secondPartOfString + '/' + clanId + '/emblem_32x32.png';
+
+			container.append('<h1>Clan: <img class ="clan_image" src="' + clanUrl + '" /></h1>');	
+			
 		}
+		else{
+			container.append('<h1>Clan: Has no clan</h1>');
+		}
+		
 			
 	}
 

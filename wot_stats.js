@@ -400,7 +400,7 @@ jQuery(document).ready(function(){
 
 
 
-		/*		
+		/*	
 		//Dev stuff below... could be removed later.
 		console.log('Player Total Stats Object FIXED:');
 		console.log(responseData1);
@@ -468,7 +468,7 @@ jQuery(document).ready(function(){
 
 		//General Information Plugins
 		player_general_information.playerName(responseData1);
-		//player_general_information.clan(responseData1, serverAbbreviation);
+		player_general_information.clan(responseData1, serverAbbreviation);
 		player_general_information.printServer(server);
 		player_general_information.lastUpdated(responseData1);
 		
