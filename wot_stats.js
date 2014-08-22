@@ -20,6 +20,7 @@ jQuery(document).ready(function(){
 	player_stats_total = $("#total_stats"),
 	player_stats_recent = $("#recent_stats"),
 	player_stats_older = $("#older_stats"),
+	player_no_access = $("#player_no_access"),
 	the_form = $('#search_player_form_section');
 	first_loading_div = $('#first_load_message_div');
 
@@ -210,15 +211,34 @@ jQuery(document).ready(function(){
 								//Now lets send the collected AJAX responses to our engine to calculate stats.
 								
 
-								CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id, tankDataArray);
-								//remove our css class, when we are done
-								player_stats_container.removeClass('loading');
+
+								//Lets make a try and catch statement here
+								try {
+							
+									if(response2.status=="ok" && response3.status=="ok"){
+										player_no_access.addClass('hidden');
+										CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id, tankDataArray);
+										//remove our css class, when we are done
+										player_stats_container.removeClass('loading');
+										player_stats_container.removeClass('hidden');
+									}
+									else {
+										throw new Error("The object we recieved from the recent data did not have status ok, instead access was denied from the API");
+									}
+									
+								}
+								catch(error){
+									//console.log(error);
+									player_stats_container.addClass('hidden');
+									player_stats_container.removeClass('loading');
+									player_no_access.removeClass('hidden');
+
+								}
+
+								
 							});
 							
-							
-			
-						
-						
+	
 
 					}
 					else{
