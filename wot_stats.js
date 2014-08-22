@@ -364,19 +364,6 @@ jQuery(document).ready(function(){
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
 	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId, tankDataArray) {
 
-		/*
-		//Dev stuff below... could be removed later.
-		console.log('Player Total Stats Object:');
-		console.log(response1);
-		console.log('Player 24 hours ago Stats Object:');
-		console.log(response2);
-		console.log('Player 1 week ago Stats Object!!!!!:');
-		console.log(response3);
-		console.log('Player Vehicle Stats Object:');
-		console.log(response4);
-		//console.log('The tankerId ' + tankerId);
-		*/
-
 		
 		//First we modify our responses to work with our methods
 		//Data for total stats section
@@ -430,7 +417,7 @@ jQuery(document).ready(function(){
 		player_stats_recent.wn7Past(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
 		player_stats_recent.favoriteVehiclePast(responseData2, playerTankData);
 		
-		//2 Weeks ago Stats Plugins
+		//1 Weeks ago Stats Plugins
 		player_stats_older.printOlderStatsHeader();
 		player_stats_older.battlesPlayedPast(responseData1, responseData3);
 		player_stats_older.averageWinRatePast(responseData1,responseData3);
@@ -440,7 +427,7 @@ jQuery(document).ready(function(){
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
 		player_stats_older.averageTierPast(responseData4,responseData3, tankDataArray);
-		player_stats_older.wn7Past(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
+		player_stats_older.wn7Past(responseData1, responseData3, playerTankData, tankDataArray, responseData4);
 		player_stats_older.favoriteVehiclePast(responseData3, playerTankData);
 		
 
