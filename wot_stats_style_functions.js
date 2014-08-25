@@ -22,6 +22,11 @@ jQuery(document).ready(function(){
 			}
 			break;
 
+			case 'wn8': {
+				result = setWN8Color(value);
+			}
+			break;
+
 			case 'totalBattlesPlayed':{
 				result = setBattlesPlayedColor(value);
 			}
@@ -33,7 +38,7 @@ jQuery(document).ready(function(){
 			break; 
 		}	
 		return result;
-	}
+	};
 	//Color the winratio
 	function setWinRateColor(value){
 		var color;
@@ -93,6 +98,42 @@ jQuery(document).ready(function(){
 			}
 		return color;
 	}
+
+	//Color the WN8 stats
+	function setWN8Color(value){
+		var color;	
+			//Unicum
+			if (value>2400) {
+				color = '#e2c0ff';
+			}
+			//Really Great
+			else if(value>=1900&&value<2399) {
+				color = '#a1d7fd';
+			}
+			//Great
+			else if(value>=1600&&value<1899) {
+				color = '#7feee7';
+			}
+			//Good
+			else if(value>=1250&&value<1599) {
+				color = '#68f06b';
+			}
+			//Average
+			else if(value>=900&&value<1249){
+				color = '#f8ec87';
+			}
+			//Bad
+			else if(value<900){
+				color = '#f54747';
+			}
+			//Default color
+			else {
+				color = 'rgba(249,194,183,0.8)';
+			}
+		return color;
+	}
+
+
  	//Color the total battles played
 	function setBattlesPlayedColor(value){
 		var color;

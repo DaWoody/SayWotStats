@@ -12,7 +12,8 @@ jQuery(document).ready(function(){
 	/*
 	*	Some global variables
 	*/
-	var sourceToken 	= 	'WG-WoT_Assistant-1.4.1'; //NOT USED ANYMORE?
+	
+	var urlToWN8 = 'http://www.wnefficiency.net/exp/expected_tank_values_15.json';
 
 	//The DOM elements to manipulate, can be changed to your needs.
 	var player_stats_container = $("#player_stats_container"),
@@ -34,50 +35,86 @@ jQuery(document).ready(function(){
 	player_stats_total.addClass('on_first_load_css_fix');
 
 	//Empty tankdata array on init!
-	
-	window.newTankDataArray = [];
-	var tankDataArray;
-
+	var tankDataArray,
+		wn8DataArray;
 
 	/*
-	*	Load tank data prior to execution
+	*	Get tank data promise
 	*/
-	(function loadTankData(){
 
-		//var promise = $.Deferred();
+	var initialTankData = {
+		getTankData: function(){
+			var promise = $.Deferred(),
+				serverAbbreviation = '.eu',
+				apiVer = '2.0',
+				apiKey = 'd0a293dc77667c9328783d489c8cef73',
+				apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' +  apiVer + '/encyclopedia/tanks/?application_id=' + apiKey;
 
-		var serverAbbreviation = '.eu',
-			apiVer = '2.0',
-			apiKey = 'd0a293dc77667c9328783d489c8cef73',
-			apiFetchStatsUrl = 'http://api.worldoftanks' + serverAbbreviation + '/' +  apiVer + '/encyclopedia/tanks/?application_id=' + apiKey;
+				$.ajax(httpShowPlayer, {
+					dataType: 'json',
+					method: 'post',
+					data: {
+						url: apiFetchStatsUrl
+					},
 
-			//http://api.worldoftanks.ru/2.0/encyclopedia/tanks/?application_id=
+					success: function(response) {
+						promise.resolve(response);
+					},
 
+					error: function(response) {
+						console.log('error from fetching general tank data!');
+					}
 
-		$.ajax(httpShowPlayer, {
-				dataType: 'json',
-				method: 'post',
-				data: {
-					url: apiFetchStatsUrl
-				},
+				});
+				return promise;
+		},
 
-				success: function(response) {
-					tankDataArray = response;
-					//console.log("General tank data fetched ok!");
-					the_form.removeClass('hidden');
-					first_loading_div.addClass('hidden');
-				},
+		getWN8Data: function(urlToWN8){
+			var promise = $.Deferred(),
+				apiFetchStatsUrl = urlToWN8;
+				$.ajax(httpShowPlayer, {
+					dataType: 'json',
+					method: 'post',
+					data: {
+						url: apiFetchStatsUrl
+					},
 
-				error: function(response) {
-					//console.log('error from fetching general tank data!');
+					success: function(response) {
+						promise.resolve(response);
+					},
 
-				}
+					error: function(response) {
+						console.log('error from fetching the WN8 Data, check the url!');
+					}
 
-			});
+				});
+				return promise;
+		}
+
+	};
+
+	/*
+	*	Load tank data prior to execution.
+	*/
+	(function loadTankData(url){
+		var tankData = initialTankData.getTankData();
+		var wn8Data = initialTankData.getWN8Data(url);
+
+		$.when(tankData, wn8Data).done(function(tankDataResponse, wn8DataResponse){
+			//Load the data into our arrays
+			tankDataArray = tankDataResponse;
+			wn8DataArray = wn8DataResponse;
+			//DOM changes
+			the_form.removeClass('hidden');
+			first_loading_div.addClass('hidden');
+					
+		});
 		
-	})();
+	})(urlToWN8);
 
 
+
+	//Below the application is driven by user actions
 	/*
 	*	Search Player Function
 	*/
@@ -158,8 +195,6 @@ jQuery(document).ready(function(){
 				//contentType: 'application/json',
 				success: function(response) {
 
-					//console.log('The Check ID request');
-					//console.log(response);
 					
 					var status = response.status,
 					clan,
@@ -217,7 +252,7 @@ jQuery(document).ready(function(){
 							
 									if(response2.status=="ok" && response3.status=="ok"){
 										player_no_access.addClass('hidden');
-										CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id, tankDataArray);
+										CalculateStatsEngine(response1, response2, response3, response4, serverName, serverAbbreviation, id, tankDataArray, wn8DataArray);
 										//remove our css class, when we are done
 										player_stats_container.removeClass('loading');
 										player_stats_container.removeClass('hidden');
@@ -382,7 +417,7 @@ jQuery(document).ready(function(){
 
 	
 	//This function gathers all ajax data and then fires it off to our plugins which will do the heavy lifting
-	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId, tankDataArray) {
+	function CalculateStatsEngine(response1, response2, response3, response4, server, serverAbbreviation, tankerId, tankDataArray, wn8DataArray) {
 
 		
 		//First we modify our responses to work with our methods
@@ -454,7 +489,6 @@ jQuery(document).ready(function(){
 		//Total Stats Plugins
 		player_stats_total.printTotalStatsHeader();
 		player_stats_total.totalBattlesPlayed(responseData1);
-		
 		player_stats_total.averageWinRate(responseData1);
 		player_stats_total.averageExperience(responseData1);
 		player_stats_total.averageDamage(responseData1);
@@ -463,6 +497,7 @@ jQuery(document).ready(function(){
 		player_stats_total.averageDefPoints(responseData1);
 		player_stats_total.averageTier(responseData1, responseData4, playerTankData);
 		player_stats_total.wn7Total(responseData1, playerTankData);
+		player_stats_total.wn8Total(wn8DataArray, playerTankData, tankDataArray, responseData4, responseData1);
 		player_stats_total.favoriteVehicleTotal(responseData1, playerTankData);
 		
 
