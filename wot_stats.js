@@ -469,7 +469,8 @@ jQuery(document).ready(function(){
 		player_stats_recent.averageSpottedPast(responseData1, responseData2);
 		player_stats_recent.averageDefPointsPast(responseData1, responseData2);
 		player_stats_recent.averageTierPast(responseData4,responseData2, tankDataArray);
-		player_stats_recent.wn7Past(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
+		player_stats_recent.wn7Recent(responseData1, responseData2, playerTankData, tankDataArray, responseData4);
+		player_stats_recent.wn8Recent(wn8DataArray, playerTankData, tankDataArray, responseData4, responseData1, responseData2);
 		player_stats_recent.favoriteVehiclePast(responseData2, playerTankData);
 		
 		//1 Weeks ago Stats Plugins
@@ -482,7 +483,8 @@ jQuery(document).ready(function(){
 		player_stats_older.averageSpottedPast(responseData1, responseData3);
 		player_stats_older.averageDefPointsPast(responseData1, responseData3);
 		player_stats_older.averageTierPast(responseData4,responseData3, tankDataArray);
-		player_stats_older.wn7Past(responseData1, responseData3, playerTankData, tankDataArray, responseData4);
+		player_stats_older.wn7Recent(responseData1, responseData3, playerTankData, tankDataArray, responseData4);
+		player_stats_older.wn8Recent(wn8DataArray, playerTankData, tankDataArray, responseData4, responseData1, responseData3);
 		player_stats_older.favoriteVehiclePast(responseData3, playerTankData);
 		
 
