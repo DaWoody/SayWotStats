@@ -133,7 +133,7 @@ jQuery(document).ready(function(){
 
 		var cookieTankerName = readCookie('saywotstatsTankerCookie');
 		var cookieServerName = readCookie('saywotstatsServerCookie');
-		if(cookieTankerName){
+		if(cookieTankerName && cookieTankerName!=='Tanker Name'){
 			
 			//Setting our Tanker and server values
 			the_form.find('input[type=text]').val(cookieTankerName);
