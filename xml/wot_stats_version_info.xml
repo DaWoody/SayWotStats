@@ -1,6 +1,6 @@
 <xml>
 	<version_title>
-	V1.5
+	V1.6
 	</version_title>
 
 	<version_info_title>
@@ -8,9 +8,8 @@
 	</version_info_title>	
 
 	<version_info>
-		Currently using unofficial Wot API version 2.X
-		Russian server working fully, rest is kind of mixed depending on the API not really serving correct data all the time (consistency guys, make it happen if u want devs to help u improve the community! ;)). V1.5 does show total statistics and statistics for the last 24 hours aswell as the last 1 weeks since the last server update (This might change in next version since the data from the recent time period seem to be unstable on some servers). 
-		Maybe I'll get to work on wn8 or something else cool in the future if I got time and interest :).
+		Currently using unofficial Wot API version 2.X. Servers working to give stats about 1 week back.
+		V1.6 does show total statistics and statistics for the last 24 hours aswell as the last 1 weeks since the last server update. WN8 has now been implemented both for total and recent statistics. Cheers! :)
 	</version_info>
 
 	<dev_blog_url>

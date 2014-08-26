@@ -304,6 +304,24 @@ a:hover {
 	cursor:pointer;
 }
 
+#save_player_search{
+	width:90px;
+	height:10px;
+	margin:0 auto;
+	padding-bottom: 0px;
+}
+
+#save_player_search form input{
+	margin:0 auto;
+	display: inline;
+	border:1px solid yellow;
+}
+#save_player_search h4 {
+	text-align: center;
+	font-size: 0.9em;
+	line-height: 0.5em;
+	display: inline;
+}
 
 
 
