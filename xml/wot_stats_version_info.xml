@@ -1,6 +1,6 @@
 <xml>
 	<version_title>
-	V1.6
+	V1.7
 	</version_title>
 
 	<version_info_title>
@@ -9,7 +9,7 @@
 
 	<version_info>
 		Currently using unofficial Wot API version 2.X. Servers working to give stats about 1 week back.
-		V1.6 does show total statistics and statistics for the last 24 hours aswell as the last 1 weeks since the last server update. WN8 has now been implemented both for total and recent statistics. Cheers! :)
+		V1.7 does show total statistics and statistics for the last 24 hours aswell as the last 1 weeks since the last server update. WN8 has now been implemented both for total and recent statistics. New in this version is that now users can save their latest search in a cookie, which will make SayWotStats remember that search the next time the user enters SayWotStats. Cheers! :)
 	</version_info>
 
 	<dev_blog_url>
