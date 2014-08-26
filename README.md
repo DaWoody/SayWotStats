@@ -1,7 +1,7 @@
 Description:
 ==========================================================================
 A web-application displaying stats and other goddies to players in the World of Tanks Community. Based on retrieving stats and data from API's provided by other awesome ppl and by Wargaming. the site currently residing at (http://saywotstats.net) is A HTML 5 project based on much jQuery and AJAX. The current project is using unoffical api 2.0 as described by thunder-spb (https://github.com/thunder-spb/wot-api-description). Currently there are a number of different aggregated stats that are shown.
-In the future weighted measures such as WN8 is possible to implement etc.
+Some metrics involves: average damage, average frags, average spot, most played tank, WN7 and WN8 etc.
 But my idea with this is to make the code public and more collaborative, so that if anyone feels like they wanna use my ideas from the javascript front-end perspective feel free to do so (would appreciate a mention somewhere though ;)), or help me make saywotstats better :). If you wanna check out more of my stuff, visit my dev blog (http://dawoodydev.blogspot.se/) or my official web-home (http://wedfelt.se).
 
 P.s. I did save some of the old files in the project that used api 1.x. If you check out the wot_stats_functions_v1_backup.js file u will see the older jQuery plugins adjusted to api 1.x.
@@ -13,7 +13,7 @@ Todo:
 ===========================================================================
 Lots of stuff if the community wants ;).
 
-For instance implement WN8 plugins that can be used in the application.
+Give me a PM here or something if u wanna help out :)
 
 
 Recently Done:
