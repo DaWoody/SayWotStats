@@ -22,8 +22,12 @@ jQuery(document).ready(function(){
 	player_stats_recent = $("#recent_stats"),
 	player_stats_older = $("#older_stats"),
 	player_no_access = $("#player_no_access"),
-	the_form = $('#search_player_form_section');
-	first_loading_div = $('#first_load_message_div');
+	the_form = $('#search_player_form_section'),
+	server_selection = $('#server_selection'),
+	first_loading_div = $('#first_load_message_div'),
+	save_search_checkbox = $('#save_player_search'),
+	save_player_checked = false,
+	saving_player_data = false;
 
 
 	//Building the API http request, internally
@@ -37,6 +41,10 @@ jQuery(document).ready(function(){
 	//Empty tankdata array on init!
 	var tankDataArray,
 		wn8DataArray;
+
+
+		//document.saywotstatsTankerCookie ="Serb";
+		//document.saywotstatsServerCookie ="ru";
 
 	/*
 	*	Get tank data promise
@@ -93,6 +101,59 @@ jQuery(document).ready(function(){
 
 	};
 
+
+	//Create, Read and Overwrite cookies
+	function createCookie(name,value,days) {
+	if (days) {
+			var date = new Date();
+			date.setTime(date.getTime()+(days*24*60*60*1000));
+			var expires = "; expires="+date.toGMTString();
+		}
+		else var expires = "";
+		document.cookie = name+"="+value+expires+"; path=/";
+	}
+
+	function readCookie(name) {
+		var nameEQ = name + "=";
+		var ca = document.cookie.split(';');
+		for(var i=0;i < ca.length;i++) {
+			var c = ca[i];
+			while (c.charAt(0)==' ') c = c.substring(1,c.length);
+			if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+		}
+		return null;
+	}
+
+	function eraseCookie(name) {
+		createCookie(name,"",-1);
+	}
+
+	//The function that will check if a cookie is present
+	function checkSaveSearch(){
+
+		var cookieTankerName = readCookie('saywotstatsTankerCookie');
+		var cookieServerName = readCookie('saywotstatsServerCookie');
+		if(cookieTankerName){
+			
+			//Setting our Tanker and server values
+			the_form.find('input[type=text]').val(cookieTankerName);
+			server_selection.find('option').filter(function() {
+    			//may want to use $.trim in here
+    			return $(this).val() == cookieServerName;
+			}).prop('selected', true);
+			//Now lets run our search
+			the_form.find('input[type=submit]').trigger('submit');
+			save_search_checkbox.find('input').prop('checked', true);
+
+		}
+
+	}
+
+
+	
+
+
+
 	/*
 	*	Load tank data prior to execution.
 	*/
@@ -107,10 +168,19 @@ jQuery(document).ready(function(){
 			//DOM changes
 			the_form.removeClass('hidden');
 			first_loading_div.addClass('hidden');
+
+			checkSaveSearch();
+
+			
+
 					
 		});
 		
 	})(urlToWN8);
+
+
+
+
 
 
 
@@ -170,7 +240,9 @@ jQuery(document).ready(function(){
 			var tankerName = $('#search_player_form_section').find('input[type=text]').val();
 			var apiFetchNameUrl	= 'http://api.worldoftanks' + serverAbbreviation +'/'+ apiVer +'/account/list/?application_id='+ apiKey +'&search='+ tankerName +''; //+'&offset=0&limit=1';
 
-			//http://<CLUSTER_API_ADDRESS>/2.0/account/list/?application_id=<APP_ID>&search=<PARTIAL_NICKNAME>
+
+
+			
 
 
 			//Do some quick css fixes to our DOM
@@ -189,7 +261,17 @@ jQuery(document).ready(function(){
 				},
 
 				complete: function() {
-					
+					//Lets see if we have the checkbox triggered
+					if(save_player_checked){
+						//Lets save the Tanker name and server abbreviation to our cookies
+						createCookie('saywotstatsTankerCookie', tankerName, 30);
+						createCookie('saywotstatsServerCookie', server, 30);
+					}
+					else {
+						eraseCookie('saywotstatsTankerCookie');
+						eraseCookie('saywotstatsServerCookie');
+						//Lets delete our cookies
+					}
 				},
 
 				//contentType: 'application/json',
@@ -518,9 +600,20 @@ jQuery(document).ready(function(){
 				
 	}
 	
-	/*
-	*	Search Player Listener
-	*/
+	//Listeners
+	//Search Player Listener
 	the_form.find('form').on('submit', SearchPlayer);
+	//Save search listener
+	save_search_checkbox.find('input').on('click', function(){
+		if(this.checked){
+			save_player_checked = true;
+		}
+		else {
+			save_player_checked = false;
+		}
+		
+	})
+
+
 
 });
