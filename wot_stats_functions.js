@@ -1993,7 +1993,6 @@ jQuery(document).ready(function(){
 			temporaryTankId,
 			tankId,
 			expTotalWins = 0,
-			totalWins = 0,
 			rWins = 0,
 			rWinsCap = 0,
 			averageWinsPerGame = 0;	
@@ -2026,6 +2025,8 @@ jQuery(document).ready(function(){
 				}		
 			}
 
+
+
 			
 			for(var i=0, x=recentBattlesArray.length; i<x; i++){
 				tankId = recentBattlesArray[i].tank_id.toString();
@@ -2035,15 +2036,19 @@ jQuery(document).ready(function(){
 				for(var j=0, y=wn8DataArray.data.length; j<y; j++){
 
 					if(wn8DataArray.data[j].IDNum === tankId){
+						console.log(wn8DataArray.data[j]);
 						//Add the frags
 						averageWinsPerGame = parseFloat(wn8DataArray.data[j].expWinRate);
 						expTotalWins += averageWinsPerGame * battles;
+
+						console.log(expTotalWins);
 					}
 				}
 			}
 			
 
 			rWins = (totalWins / (expTotalWins/100));
+			console.log(rWins);
 			rWinsCap = (rWins - 0.71) / (1 - 0.71);
 			//Set min value
 			if(rWinsCap<0){
@@ -2091,6 +2096,8 @@ jQuery(document).ready(function(){
 			if(rDamageCap<0){
 				rDamageCap = 0;
 			}
+
+
 			//Return the capped damage object
 			return parseFloat(rDamageCap);
 			
@@ -2134,6 +2141,8 @@ jQuery(document).ready(function(){
 			if(rFragsCap > (rDamageCap + 0.2)){
 				rFragsCap = rDamageCap + 0.2;
 			}
+
+
 			//Return our frags object	
 			return parseFloat(rFragsCap);
 		};
@@ -2173,6 +2182,7 @@ jQuery(document).ready(function(){
 			if(rSpotCap > (rDamageCap + 0.1)){
 				rSpotCap = rDamageCap + 0.1;
 			}
+
 			//Return our object
 			return parseFloat(rSpotCap);	
 		};
@@ -2206,7 +2216,7 @@ jQuery(document).ready(function(){
 			
 			
 			rDef = (totalDef / expTotalDef);
-			rDefCap = (rDef - 0.1) / (1 - 0.1);
+			rDefCap = (rDef - 0.10) / (1 - 0.10);
 
 			//Set min value
 			if(rDefCap < 0){
@@ -2216,6 +2226,7 @@ jQuery(document).ready(function(){
 			if(rDefCap > (rDamageCap + 0.1)){
 				rDefCap = rDamageCap + 0.1;
 			}
+			
 			//Return our object
 			return parseFloat(rDefCap);
 		};
@@ -2237,9 +2248,26 @@ jQuery(document).ready(function(){
 			rWINcNormalized = winNormalized_object(rWINc);
 		
 
+
+
+		/*
+		//Console Logs To track the errors in WN8 Recent
+		console.log("=== START WN8 RECENT FORMULA ===");
+		console.log("rWINc: " + rWINc);
+		console.log("rDAMAGEc: " + rDAMAGEc);
+		console.log("rFRAGSc: " + rFRAGSc);
+		console.log("rSPOTc: " + rSPOTc);
+		console.log("rDEFc: " + rWINc);
+		console.log("rWINcNormalized: " + rWINcNormalized);
+		console.log("==== END WN8 RECENT FORMULA ===");
+		*/
+
 		//WN8 = 980*rDAMAGEc + 210*rDAMAGEc*rFRAGc + 155*rFRAGc*rSPOTc + 75*rDEFc*rFRAGc + 145*MIN(1.8,rWINc)
-		wn8Recent = parseInt((parseFloat(980*rDAMAGEc) + parseFloat(210*rDAMAGEc*rFRAGSc) + parseFloat(155*rFRAGSc*rSPOTc) + parseFloat(75*rDEFc*rFRAGSc) + parseFloat(145*rWINcNormalized)), 10);
+		//wn8Recent = parseInt((parseFloat(980*rDAMAGEc) + parseFloat(210*rDAMAGEc*rFRAGSc) + parseFloat(155*rFRAGSc*rSPOTc) + parseFloat(75*rDEFc*rFRAGSc) + parseFloat(145*rWINcNormalized)), 10);
 		
+		wn8Recent = parseInt((parseInt(980*rDAMAGEc) + parseInt(210*rDAMAGEc*rFRAGSc) + parseInt(155*rFRAGSc*rSPOTc) + parseInt(75*rDEFc*rFRAGSc) + parseInt(145*rWINcNormalized)), 10);
+
+
 		//Define the variables we need to color our wn7 result
 		var newcolor = container.printColorToStat(statName, wn8Recent);
 
