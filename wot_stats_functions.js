@@ -2006,12 +2006,17 @@ jQuery(document).ready(function(){
 				totalVehicleWins = totalVehicleData[j].statistics.wins;
 
 				for(var i=0, x=recentPlayerData.stat.vehicles.length; i<x; i++){
+
 					
 					if(recentPlayerData.stat.vehicles[i].tank_id === temporaryTankId){
+
 						recentBattles = recentPlayerData.stat.vehicles[i].battles;
 						recentWins = recentPlayerData.stat.vehicles[i].wins;
 						battles = totalBattles - recentBattles;
 						wins = totalVehicleWins - recentWins;
+
+
+
 						if(battles>0){
 							//Now lets push to the new array
 							recentBattlesArray.push({
@@ -2025,35 +2030,52 @@ jQuery(document).ready(function(){
 				}		
 			}
 
+			console.log("=== START RECENT BATTLES ARRAY ==");
+			for(var i= 0, arrayLength = recentBattlesArray.length; i<arrayLength; i++){
+
+				console.log("tankId: " + recentBattlesArray[i].tank_id);
+				console.log("battles: " + recentBattlesArray[i].battles);
+				console.log("wins: " + recentBattlesArray[i].wins);
+			}
+			console.log("=== END RECENT BATTLES ARRAY ==");
+
 
 
 			
 			for(var i=0, x=recentBattlesArray.length; i<x; i++){
 				tankId = recentBattlesArray[i].tank_id.toString();
 				battles = recentBattlesArray[i].battles;
-				//Now lets multiply the average damage for this particular tank with the amount of battles played
+				//Now lets multiply the average wins for this particular tank with the amount of battles played
 					
 				for(var j=0, y=wn8DataArray.data.length; j<y; j++){
 
 					if(wn8DataArray.data[j].IDNum === tankId){
-						console.log(wn8DataArray.data[j]);
+						console.log("wn8 DataArray Item: " + wn8DataArray.data[j]);
 						//Add the frags
-						averageWinsPerGame = parseFloat(wn8DataArray.data[j].expWinRate);
+						averageWinsPerGame = parseFloat(wn8DataArray.data[j].expWinRate)/100;
+
+						//console.log("THIS IS IT... :");
+						//console.log("averageWinsPerGame: " + averageWinsPerGame);
+						//console.log("battles: " + battles);
+
 						expTotalWins += averageWinsPerGame * battles;
 
 						console.log(expTotalWins);
 					}
 				}
 			}
-			
 
-			rWins = (totalWins / (expTotalWins/100));
+			console.log("== WINS ==");
+			console.log('totalWins: ' + totalWins);
+			console.log('expTotalWins: ' + expTotalWins);
+
+
+			rWins = (totalWins / (expTotalWins));
 			console.log(rWins);
-			rWinsCap = (rWins - 0.71) / (1 - 0.71);
+
+			rWinsCap = Math.max(0, (rWins - 0.71) / (1 - 0.71));
 			//Set min value
-			if(rWinsCap<0){
-				rWinsCap = 0;
-			}
+
 
 			//return our win capped object;
 			return parseFloat(rWinsCap);
@@ -2086,16 +2108,17 @@ jQuery(document).ready(function(){
 				}
 			}
 
+			console.log("== DMG ==");
+			console.log('totalDamage: ' + totalDamage);
+			console.log('expTotalDamage: ' + expTotalDamage);
+
 
 			//Now lets divide the reminder with the total damage value the player has acquired.
 			rDamage = (totalDamage / expTotalDamage)
 			//Now lets add the cap and use the formula in WN8
 			//rDAMAGEc = (rDAMAGE – 0.22) / (1 - 0.22)
-			rDamageCap = (rDamage - 0.22) / (1 - 0.22);
-			//Add the max/min value condition
-			if(rDamageCap<0){
-				rDamageCap = 0;
-			}
+			rDamageCap = Math.max(0, (rDamage - 0.22) / (1 - 0.22));
+
 
 
 			//Return the capped damage object
@@ -2108,8 +2131,6 @@ jQuery(document).ready(function(){
 			tankId,
 			expTotalFrags = 0,
 			totalFrags = totalPlayerData.statistics.all.frags - recentPlayerData.stat.statistics.all.frags,
-			rFrags = 0,
-			rFragsCap = 0,
 			averageFragsPerGame = 0;
 
 			for(var i=0, x=recentBattlesArray.length; i<x; i++){
@@ -2128,19 +2149,16 @@ jQuery(document).ready(function(){
 			}
 
 
+			console.log("== FRAGS ==");
+			console.log('totalFrags: ' + totalFrags);
+			console.log('expTotalFrags: ' + expTotalFrags);
+
 			//Lets get the ratio
 			rFrags = (totalFrags / expTotalFrags);
 
 			//Lets add the cap in the formula
-			rFragsCap = (rFrags - 0.12) / (1 - 0.12);
-			//Set min value
-			if(rFragsCap<0){
-				rFragsCap = 0;
-			}
-			//Set max value
-			if(rFragsCap > (rDamageCap + 0.2)){
-				rFragsCap = rDamageCap + 0.2;
-			}
+			rFragsCap = Math.max(0, Math.min((rDamageCap + 0.2),(rFrags - 0.12) / (1 - 0.12)));
+
 
 
 			//Return our frags object	
@@ -2152,8 +2170,6 @@ jQuery(document).ready(function(){
 			tankId,
 			expTotalSpot = 0,
 			totalSpot = totalPlayerData.statistics.all.spotted - recentPlayerData.stat.statistics.all.spotted,
-			rSpot = 0,
-			rSpotCap = 0,
 			averageSpotPerGame = 0;
 
 			for(var i=0, x=recentBattlesArray.length; i<x; i++){
@@ -2171,17 +2187,15 @@ jQuery(document).ready(function(){
 				}
 			}
 
-			rSpot = (totalSpot / expTotalSpot);
-			rSpotCap = (rSpot - 0.38) / (1 - 0.38);
+			console.log("== SPOTTED ==");
+			console.log('totalSpot: ' + totalSpot);
+			console.log('expTotalSpot: ' + expTotalSpot);
 
-			//Set min value
-			if(rSpotCap < 0){
-				rSpotCap = 0;
-			}
-			//Set max value
-			if(rSpotCap > (rDamageCap + 0.1)){
-				rSpotCap = rDamageCap + 0.1;
-			}
+
+			rSpot = (totalSpot / expTotalSpot);
+			rSpotCap = Math.max(0, Math.min((rDamageCap + 0.1), (rSpot - 0.38) / (1 - 0.38)));
+
+
 
 			//Return our object
 			return parseFloat(rSpotCap);	
@@ -2193,8 +2207,6 @@ jQuery(document).ready(function(){
 			tankId,
 			expTotalDef = 0,
 			totalDef = totalPlayerData.statistics.all.dropped_capture_points - recentPlayerData.stat.statistics.all.dropped_capture_points,
-			rDef = 0,
-			rDefCap = 0,
 			averageDefPerGame = 0;
 
 
@@ -2213,19 +2225,16 @@ jQuery(document).ready(function(){
 				}
 			}
 
+
+			console.log("== DEF ==");
+			console.log('totalDef: ' + totalDef);
+			console.log('expTotalDef: ' + expTotalDef);
 			
 			
 			rDef = (totalDef / expTotalDef);
-			rDefCap = (rDef - 0.10) / (1 - 0.10);
+			rDefCap = Math.max(0, Math.min((rDamageCap + 0.1), (rDef - 0.10) / (1 - 0.10)));
 
-			//Set min value
-			if(rDefCap < 0){
-				rDefCap = 0;
-			}
-			//Set max value
-			if(rDefCap > (rDamageCap + 0.1)){
-				rDefCap = rDamageCap + 0.1;
-			}
+
 			
 			//Return our object
 			return parseFloat(rDefCap);
@@ -2233,10 +2242,8 @@ jQuery(document).ready(function(){
 
 		//Extra function to calculate normalized winrate object
 		var winNormalized_object = function(rWINc){
-			if(rWINc>1.8){
-				rWINc = 1.8;
-			}
-			return rWINc;
+
+			return Math.min(1.8, rWINc);
 		};
 
 		//Instantiate our different objects
@@ -2246,11 +2253,8 @@ jQuery(document).ready(function(){
 			rSPOTc = rSPOT_object(wn8DataArray, totalVehicleData, totalPlayerData, rDAMAGEc, recentPlayerData),
 			rDEFc = rDEF_object(wn8DataArray, totalVehicleData, totalPlayerData, rDAMAGEc, recentPlayerData),
 			rWINcNormalized = winNormalized_object(rWINc);
-		
 
 
-
-		/*
 		//Console Logs To track the errors in WN8 Recent
 		console.log("=== START WN8 RECENT FORMULA ===");
 		console.log("rWINc: " + rWINc);
@@ -2260,13 +2264,13 @@ jQuery(document).ready(function(){
 		console.log("rDEFc: " + rWINc);
 		console.log("rWINcNormalized: " + rWINcNormalized);
 		console.log("==== END WN8 RECENT FORMULA ===");
-		*/
+
 
 		//WN8 = 980*rDAMAGEc + 210*rDAMAGEc*rFRAGc + 155*rFRAGc*rSPOTc + 75*rDEFc*rFRAGc + 145*MIN(1.8,rWINc)
 		//wn8Recent = parseInt((parseFloat(980*rDAMAGEc) + parseFloat(210*rDAMAGEc*rFRAGSc) + parseFloat(155*rFRAGSc*rSPOTc) + parseFloat(75*rDEFc*rFRAGSc) + parseFloat(145*rWINcNormalized)), 10);
 		
-		wn8Recent = parseInt((parseInt(980*rDAMAGEc) + parseInt(210*rDAMAGEc*rFRAGSc) + parseInt(155*rFRAGSc*rSPOTc) + parseInt(75*rDEFc*rFRAGSc) + parseInt(145*rWINcNormalized)), 10);
-
+		//wn8Recent = parseInt((parseInt(980*rDAMAGEc) + parseInt(210*rDAMAGEc*rFRAGSc) + parseInt(155*rFRAGSc*rSPOTc) + parseInt(75*rDEFc*rFRAGSc) + parseInt(145*rWINcNormalized)), 10);
+		wn8Recent = parseInt((parseFloat(980*rDAMAGEc) + parseFloat(210*rDAMAGEc*rFRAGSc) + parseFloat(155*rFRAGSc*rSPOTc) + parseFloat(75*rDEFc*rFRAGSc) + parseFloat(145*rWINcNormalized)), 10);
 
 		//Define the variables we need to color our wn7 result
 		var newcolor = container.printColorToStat(statName, wn8Recent);
