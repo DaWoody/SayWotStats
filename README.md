@@ -35,5 +35,6 @@ Peace to you all!
 * 	Released version 1.7, which includes saving searches in a cookie
 *	Migrated from api 1.x to api 2.0. Now working (but only up until 168 hours/1 week back).
 * 	Made all source code public
+*   Corrected wn8 calculations for recent statistics.
 
 *For more info read the [Dev blog](http://saywotstats.blogspot.se/)*
