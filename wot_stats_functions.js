@@ -2219,23 +2219,25 @@ jQuery(document).ready(function(){
 
 					if(wn8DataArray.data[j].IDNum === tankId){
 						//Add the frags
+						console.log("Def points for every instance etc: " + wn8DataArray.data[j].expDef);
+						console.log("Battles are: " + battles);
+
 						averageDefPerGame = parseFloat(wn8DataArray.data[j].expDef);
 						expTotalDef += averageDefPerGame * battles;
+
+
 					}
 				}
 			}
-
 
 			console.log("== DEF ==");
 			console.log('totalDef: ' + totalDef);
 			console.log('expTotalDef: ' + expTotalDef);
 			
-			
 			rDef = (totalDef / expTotalDef);
 			rDefCap = Math.max(0, Math.min((rDamageCap + 0.1), (rDef - 0.10) / (1 - 0.10)));
 
 
-			
 			//Return our object
 			return parseFloat(rDefCap);
 		};

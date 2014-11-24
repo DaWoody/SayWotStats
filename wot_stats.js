@@ -26,6 +26,7 @@ jQuery(document).ready(function(){
 	server_selection = $('#server_selection'),
 	first_loading_div = $('#first_load_message_div'),
 	save_search_checkbox = $('#save_player_search'),
+	error_span = $('.error_span'),
 	saving_player_data = false;
 
 
@@ -99,6 +100,12 @@ jQuery(document).ready(function(){
 		}
 
 	};
+
+	function updateErrorMessage(typeOfError){
+		switch(typeOfError){
+
+		}
+	}
 
 
 	//Create, Read and Overwrite cookies
