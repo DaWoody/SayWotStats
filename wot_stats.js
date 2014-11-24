@@ -13,7 +13,7 @@ jQuery(document).ready(function(){
 	*	Some global variables
 	*/
 	
-	var urlToWN8 = 'http://www.wnefficiency.net/exp/expected_tank_values_15.json';
+	var urlToWN8 = 'http://www.wnefficiency.net/exp/expected_tank_values_16.json';
 
 	//The DOM elements to manipulate, can be changed to your needs.
 	var player_stats_container = $("#player_stats_container"),
